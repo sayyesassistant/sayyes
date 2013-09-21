@@ -1,0 +1,81 @@
+<form action="/" method="post" id="signupForm">
+    <table>
+      <tr>
+        <td><label>Name:</label></td>
+        <td><input type="text" name="name" autofocus required placeholder="Fill out your name"></td>
+      </tr>
+      <tr>
+        <td><label>Password:</label></td>
+        <td>
+            <input type="password" id="pwd" name="pwd" autocomplete="off" required placeholder="At least 6 characters">
+            <div class="errorForm errorPwd"></div>
+        </td>
+      </tr>
+      <tr>
+        <td><label>Confirm Password:</label></td>
+        <td>
+            <input type="password" id="confirmPwd" name="confirm-pwd" autocomplete="off" required placeholder="At least 6 characters">
+            <div class="errorForm errorConfirmPwd"></div>
+        </td>
+      </tr>
+      <tr>
+        <td><label>E-mail:</label></td>
+        <td>
+            <input type="email" name="email" required placeholder="Enter a valid email address">
+            <div class="errorForm errorEmail"></div>
+        </td>
+      </tr>
+      <tr>
+        <td><label>Company Name:</label></td>
+        <td><input type="text" name="companyName" required placeholder="Fill out your company's name"></td>
+      </tr>
+      <tr>
+        <td><label>Main Website:</label></td>
+        <td><input type="url" name="website1" required placeholder="Website where the service will be used"></td>
+      </tr>
+      <tr>
+        <td><label>Secondary Website: (optional)</label></td>
+        <td><input type="url" name="website2" placeholder="Website where the service will be used"></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+            <div class=submit>
+                <input type="submit" value="Submit">
+            </div>
+        </td>
+      </tr>
+    </table>
+</form>
+<script type="text/javascript">
+    $(function(){
+        $('#signupForm').submit(function(){
+          var val = true;
+          if ($('#pwd').val().length < 6) {
+              val = false;
+              $('.errorPwd').html("Password must have at least 6 characters");
+          } else {
+              $('.errorPwd').html('');
+          }
+          if ($('#confirmPwd').val() != $('#pwd').val()) {
+              val = false;
+              $('.errorConfirmPwd').html("Your password and confirmation password do not match");
+          } else {
+              $('.errorConfirmPwd').html('');
+          }
+          if (!val) {
+              return false;
+          }
+          $.post('/signup', $(this).serialize(), function(data) {
+            if (data.status == 'success') {
+              window.location.href = "/cp";
+            } else {
+              if(data.message.errors.email) {
+                  $('.errorEmail').html(data.message.errors.email);
+              }
+            }
+          }, 'json');
+          return false;
+        });
+    });
+</script>

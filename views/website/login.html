@@ -1,0 +1,46 @@
+{% extends "views/layout/website.html" %}
+{% block body %}
+<form action="/" method="post" id="loginForm">
+    <h3 class="loginMessage">Wrong username or password</h3>
+    <table>
+        <tr>
+            <td><label>E-mail:</label></td>
+            <td>
+                <input type="email" name="email" required placeholder="Enter your registered email">
+                <div class="errorForm errorEmail"></div>
+            </td>
+        </tr>
+        <tr>
+            <td><label>Password:</label></td>
+            <td>
+                <input type="password" id="pwd" name="pwd" autocomplete="off" required placeholder="Enter your password">
+                <div class="errorForm errorPwd"></div>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <div class=submit>
+                    <input type="submit" value="Submit">
+                </div>
+            </td>
+        </tr>
+    </table>
+</form>
+<a href="/signup">Sign Up</a>
+<script type="text/javascript">
+    $(function(){
+        $('#loginForm').submit(function(){
+            $('.loginMessage').hide(300);
+            $.post('/login', $(this).serialize(), function(data) {
+                if (data.status == 'success') {
+                    window.location.href = "/cp";
+                } else {
+                    $('.loginMessage').show(300);
+                }
+            }, 'json');
+            return false;
+        });
+    });
+</script>
+{% endblock %}

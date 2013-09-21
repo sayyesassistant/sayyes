@@ -1,0 +1,14 @@
+{% extends "views/layout/website.html" %}
+  {% block body %}
+      
+      <h1>Home</h1>
+      {% if AuthUserName %}
+        Hi {{ AuthUserName }}! <a href="{{ logInOutUrl|safe }}">{{ logInOutText }}</a>
+      {% else %}
+        <a href="{{ logInOutUrl|safe }}">{{ logInOutText }}</a>
+        <a href="/signup">Sign Up</a>
+        <a href="/login">Login</a>
+      {% endif %}
+      <h1>{{ teste }}</h1>
+  
+  {% endblock %}

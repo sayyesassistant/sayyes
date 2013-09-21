@@ -1,0 +1,11 @@
+body {
+    font-family: Verdana, Helvetica, sans-serif;
+    background-color: #DDDDDD;
+}
+h3.loginMessage{
+    display:none;
+    color:red;
+}
+.errorForm{
+    color:red;
+}

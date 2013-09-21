@@ -1,0 +1,32 @@
+import hashlib
+from google.appengine.ext import ndb
+
+#https://developers.google.com/appengine/docs/python/ndb/properties
+
+class User(ndb.Model):
+    
+    name = ndb.StringProperty(required=True)
+    pwd = ndb.StringProperty(required=True)
+    email = ndb.StringProperty()
+    companyName = ndb.StringProperty(required=True)
+    website1 = ndb.StringProperty(required=True)
+    website2 = ndb.StringProperty()
+    accessKey = ndb.StringProperty()
+    created = ndb.DateTimeProperty(auto_now_add=True)
+    modified = ndb.DateTimeProperty(auto_now_add=True)
+
+    def hash(self, str):
+        return hashlib.sha224(str.strip()).hexdigest()
+    
+    def login(self, email, pwd):
+        pwd = self.hash(pwd)
+        return self.query(User.email == email.strip(), User.pwd == pwd).get()
+    
+class Session(ndb.Model):
+    
+    title = ndb.StringProperty(indexed=False, required=True)
+    instruction = ndb.JsonProperty(required=True)
+    data = ndb.StringProperty(indexed=False)
+    user = ndb.KeyProperty(kind=User)
+    created = ndb.DateTimeProperty(auto_now_add=True)
+    modified = ndb.DateTimeProperty(auto_now_add=True)
