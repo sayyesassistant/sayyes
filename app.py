@@ -59,6 +59,7 @@ class AppHandler(webapp2.RequestHandler):
     def json(self, dictionary):
         self.response.headers['Content-Type'] = 'application/json'
         self.response.write(json.dumps(dictionary))
+        return True
         
     def jsonSuccess(self, msg=";)"):
         r = {}

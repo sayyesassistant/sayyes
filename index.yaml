@@ -3,6 +3,3 @@ indexes:
   properties:
   - name: email
   - name: pwd
-- kind: User
-  properties:
-  - name: email
