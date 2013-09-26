@@ -28,10 +28,9 @@ class SignUp(AppHandler):
         
         try:
             user = User()
-            user.name = self.request.get('name')
+            user.name = self.util.stripTags(self.request.get('name'))
             
-            email = self.request.get('email').strip()
-        
+            email = self.util.stripTags(self.request.get('email').strip())
             usrEmail = User.query(User.email == email).get()
             
             if usrEmail is not None:
@@ -39,9 +38,10 @@ class SignUp(AppHandler):
                 raise Exception()
             
             user.email = self.request.get('email')
-            user.companyName = self.request.get('companyName')
+            user.companyName = self.util.stripTags(self.request.get('companyName'))
             user.pwd = user.hash(self.request.get('pwd'))
             user.website = self.request.get('website')
+            user.accessKey = user.pwdGenerator(12)
             # salva e pega a key
             newKey = user.put()
             
@@ -49,19 +49,20 @@ class SignUp(AppHandler):
                 errors['entity'] = "Entity not saved"
                 raise Exception()
         
-            user = newKey.get()
+            ss = newKey.get()
             # cria a sessao
             auth = {}
             auth['key'] = user.key.id()
             auth['name'] = user.name
             auth['email'] = user.email
+            auth['accessKey'] = user.accessKey
     
             #logging.info(auth)
             self.session['auth'] = auth
             
             self.jsonSuccess("Account created")
-        except:
-            #logging.info(errors)
+        except Exception as e:
+            logging.info(e.args)
             self.jsonError({'errors': errors})
 
 class LogIn(AppHandler):
@@ -83,6 +84,7 @@ class LogIn(AppHandler):
             auth['key'] = logged.key.id()
             auth['name'] = logged.name
             auth['email'] = logged.email
+            auth['accessKey'] = logged.accessKey
             logging.info(auth)
             self.session['auth'] = auth
             self.jsonSuccess()
@@ -144,7 +146,7 @@ class CP(AppHandler):
 
 config = {}
 config['webapp2_extras.sessions'] = {
-    'secret_key': '76859309657453542496749683645DCMS4',
+    'secret_key': Const.SESSION_SECRET_KEY,
 }
 
 application = webapp2.WSGIApplication([

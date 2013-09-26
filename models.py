@@ -19,8 +19,8 @@ class User(ndb.Model):
     def hash(self, str):
         return hashlib.sha224(str.strip()).hexdigest()
 
-    def pwdGenerator(self):
-        return ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(6))
+    def pwdGenerator(self, num=6):
+        return ''.join(random.choice(string.ascii_lowercase + string.ascii_uppercase + string.digits) for x in range(num))
     
     def login(self, email, pwd):
         pwd = self.hash(pwd)

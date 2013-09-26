@@ -1,5 +1,56 @@
 {% extends "views/layout/website.html" %}
 {% block body %}
-{{ auth }}
+<h3>Hi there {{ auth.name }}!</h3>
 <a href="/logout">Logout</a>
+
+<table>
+    <tr>
+        <td>
+            <h3>New Session</h3>
+            <h3 class="ajaxMessage">The system seems to be having problems, please try again later.</h3>
+            <form action="/" method="post" id="sessionForm">
+                <input type="hidden" name="accessKey" value="{{ auth.accessKey }}">
+                <table>
+                    <tr>
+                        <td><label>Title:</label></td>
+                        <td>
+                            <input type="text" name="title" required placeholder="Fill out the title of your session">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label>Json Instruction:</label></td>
+                        <td>
+                            <textarea name="instruction" required></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <div class=submit>
+                                <input type="submit" value="Submit">
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </td>
+        <td>
+
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    $(function(){
+        $('#sessionForm').submit(function(){
+            $.post('/session/create.py', $(this).serialize(), function(data) {
+                if (data.status == 'success') {
+                    window.location.href = "/cp";
+                } else {
+                    $('.ajaxMessage').show(300);
+                }
+            }, 'json');
+            return false;
+        });
+    });
+</script>
 {% endblock %}
