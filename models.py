@@ -29,8 +29,12 @@ class User(ndb.Model):
 class Session(ndb.Model):
     
     title = ndb.StringProperty(indexed=False, required=True)
-    instruction = ndb.JsonProperty(required=True)
-    userData = ndb.StringProperty(indexed=False)
+    instruction = ndb.JsonProperty(required=True, compressed=True)
+    userData = ndb.JsonProperty(indexed=False, compressed=True)
     user = ndb.KeyProperty(kind=User)
     created = ndb.DateTimeProperty(auto_now_add=True)
     modified = ndb.DateTimeProperty(auto_now_add=True)
+
+    @classmethod
+    def queryUser(cls, ancestorKey):
+        return cls.query(cls.user == ancestorKey).order(-cls.created)

@@ -4,12 +4,21 @@ import urllib
 import webapp2
 from app import AppHandler
 from google.appengine.api import mail
-from models import User
-from models import Session
-from util import Const
+from models import *
+from util import *
+from google.appengine.ext import ndb
+
+class Start(AppHandler):
+    def get(self):
+        
+        key = ndb.Key(urlsafe=self.request.get('key'))
+        s = key.get()
+        templateValues = {'session': s}
+        self.render(Const.SESSION + 'start.html', templateValues)
 
 class Create(AppHandler):
     def post(self):
+        logging.info(self.isAjax())
         
         errors = {}
 
@@ -19,7 +28,7 @@ class Create(AppHandler):
             accessKey = self.request.get('accessKey')
 
             user = User.query(User.accessKey == accessKey).get()
-            logging.info(user)
+            #logging.info(user)
             
             if user is None:
                 errors['accessKey'] = "Invalid access key"
@@ -56,4 +65,5 @@ config['webapp2_extras.sessions'] = {
 
 application = webapp2.WSGIApplication([
     ('/session/create.py', Create),
+    ('/session/start.py', Start),
 ], debug=True, config=config)

@@ -81,6 +81,13 @@ class AppHandler(webapp2.RequestHandler):
         r['status'] = "output"
         r['output'] = output
         self.json(r)
+
+    def isAjax(self):
+        if 'X-Requested-With' in self.request.headers.keys():
+          return True
+        else:
+          return False
+        
         
         
         

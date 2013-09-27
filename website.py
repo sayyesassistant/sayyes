@@ -4,13 +4,15 @@ import urllib
 import webapp2
 from app import AppHandler
 from google.appengine.api import mail
-from models import User
-from util import Const
+from models import *
+from util import *
+from time import gmtime, strftime
+from google.appengine.ext import ndb
 
 class HomePage(AppHandler):
     def get(self):
         
-        templateValues = {'teste':'xxx'}
+        templateValues = {'teste':'teste'}
         self.render(Const.WEBSITE + 'index.html', templateValues)
         
 class SignUp(AppHandler):
@@ -41,7 +43,7 @@ class SignUp(AppHandler):
             user.companyName = self.util.stripTags(self.request.get('companyName'))
             user.pwd = user.hash(self.request.get('pwd'))
             user.website = self.request.get('website')
-            user.accessKey = user.pwdGenerator(12)
+            user.accessKey = user.pwdGenerator(12) + strftime("%y%m%d%H%M%S", gmtime())
             # salva e pega a key
             newKey = user.put()
             
@@ -137,12 +139,23 @@ class ForgotPassword(AppHandler):
         
 class CP(AppHandler):
     def get(self):
+
         # verifica a sessao
         self.logged()
         if self.auth is None:
             self.redirect('/login')
+
+        templateValues = {}
+        templateValues['auth'] = self.auth
+
+        key = ndb.Key(User, self.auth['key'])
+        query = Session.queryUser(key)
         
-        self.render(Const.WEBSITE + 'cp.html', {'auth':self.auth})
+        logging.info(query.fetch(10))
+        
+        templateValues['sessions'] = query.fetch(10)
+        
+        self.render(Const.WEBSITE + 'cp.html', templateValues)
 
 config = {}
 config['webapp2_extras.sessions'] = {

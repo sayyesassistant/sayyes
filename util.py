@@ -2,6 +2,7 @@ import re
 
 class Const(object):
     WEBSITE = "views/website/"
+    SESSION = "views/session/"
     INC = "views/includes/"
     APP_SENDER_NAME = "Say Yes! Assistant Support Team"
     APP_SENDER_EMAIL = "thiago@sayyes.cc"

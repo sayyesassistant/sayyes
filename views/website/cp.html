@@ -35,7 +35,16 @@
             </form>
         </td>
         <td>
-
+            <h3>Last 10 sessions</h3>
+            <ul>
+                {% for session in sessions %}
+                <li>
+                    <a href="/session/start.py?key={{ session.key.urlsafe() }}" target="_blank">
+                        {{ session.title }}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
         </td>
     </tr>
 </table>
