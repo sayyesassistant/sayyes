@@ -6,11 +6,11 @@
 <script type="text/javascript">
     var j = '{{session.instruction}}';
     var obj = JSON.parse(j);
-    var txt = "Attendant Name: " + obj.Attendant.name;
-    txt += "\nAttendant E-mail: " + obj.Attendant.email;
-    txt += "\n\nClient Name: " + obj.Client.name;
-    txt += "\nClient E-mail: " + obj.Client.email;
-    txt += "\n\nText: " + obj.Text.content;
+    var txt = "Attendant Name: " + obj.attendant.name;
+    txt += "\nAttendant E-mail: " + obj.attendant.email;
+    txt += "\n\nClient Name: " + obj.client.name;
+    txt += "\nClient E-mail: " + obj.client.email;
+    txt += "\n\nOutput: " + obj.output.content;
     alert(txt)
 </script>
 

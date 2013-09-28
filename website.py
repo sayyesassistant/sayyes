@@ -157,27 +157,27 @@ class CP(AppHandler):
         templateValues['sessions'] = query.fetch(10)
         # um exemplo do json p/ testes
         j = {
-            'Attendant': {
+            'attendant': {
                 'name': 'Maria Das Couves',
                 'email': 'mary@email.com',
                 'phone': '+55 11 2233-4499'
             },
-            'Client': {
+            'client': {
                 'name': 'Alberto Das Couves',
                 'email': 'alberto@email.com'
             },
-            'Text': {
+            'output': {
                 'content': 'This switch does not happen at each animation step, but only when the ball reaches the edge of the window.',
                 'type': 'text'
             },
-            'Input': {
+            'input': {
                 'type': 'button',
                 'options': {
                     'value': 'Yes, please!',
                     'action': 'endSession'
                 }
             },
-            'Input': {
+            'input': {
                 'type': 'button',
                 'options': {
                     'value': 'No, thanks.',
