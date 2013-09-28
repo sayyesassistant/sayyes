@@ -1,0 +1,10 @@
+{
+	"name": "sayyes",
+	"version": "0.1.0",
+	"devDependencies": {
+		"grunt": "~0.4.1",
+		"grunt-contrib-nodeunit": "~0.1.2",
+		"mout":"~0.7.0",
+		"mustache": "~0.7.2"
+	}
+}
