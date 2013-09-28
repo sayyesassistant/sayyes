@@ -30,7 +30,7 @@ class Session(ndb.Model):
     
     title = ndb.StringProperty(indexed=False, required=True)
     instruction = ndb.JsonProperty(required=True, compressed=True)
-    userData = ndb.JsonProperty(indexed=False, compressed=True)
+    userData = ndb.JsonProperty(compressed=True)
     user = ndb.KeyProperty(kind=User)
     created = ndb.DateTimeProperty(auto_now_add=True)
     modified = ndb.DateTimeProperty(auto_now_add=True)

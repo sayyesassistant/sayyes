@@ -2,6 +2,7 @@
 import logging
 import urllib
 import webapp2
+import json
 from app import AppHandler
 from google.appengine.api import mail
 from models import *
@@ -154,6 +155,38 @@ class CP(AppHandler):
         logging.info(query.fetch(10))
         
         templateValues['sessions'] = query.fetch(10)
+        # um exemplo do json p/ testes
+        j = {
+            'Attendant': {
+                'name': 'Maria Das Couves',
+                'email': 'mary@email.com',
+                'phone': '+55 11 2233-4499'
+            },
+            'Client': {
+                'name': 'Alberto Das Couves',
+                'email': 'alberto@email.com'
+            },
+            'Text': {
+                'content': 'This switch does not happen at each animation step, but only when the ball reaches the edge of the window.',
+                'type': 'text'
+            },
+            'Input': {
+                'type': 'button',
+                'options': {
+                    'value': 'Yes, please!',
+                    'action': 'endSession'
+                }
+            },
+            'Input': {
+                'type': 'button',
+                'options': {
+                    'value': 'No, thanks.',
+                    'action': 'endSession'
+                }
+            }
+        }
+
+        templateValues['json'] = json.dumps(j)
         
         self.render(Const.WEBSITE + 'cp.html', templateValues)
 

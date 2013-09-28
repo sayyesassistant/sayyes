@@ -2,6 +2,7 @@
 import logging
 import urllib
 import webapp2
+import json
 from app import AppHandler
 from google.appengine.api import mail
 from models import *
@@ -12,8 +13,11 @@ class Start(AppHandler):
     def get(self):
         
         key = ndb.Key(urlsafe=self.request.get('key'))
-        s = key.get()
-        templateValues = {'session': s}
+        session = key.get()
+        templateValues = {'session': session}
+
+        #instruction = json.loads(session.instruction)
+
         self.render(Const.SESSION + 'start.html', templateValues)
 
 class Create(AppHandler):
@@ -26,13 +30,15 @@ class Create(AppHandler):
 
             user = User()
             accessKey = self.request.get('accessKey')
+            email = self.request.get('email')
 
-            user = User.query(User.accessKey == accessKey).get()
+            user = User.query(User.email == email).get()
             #logging.info(user)
             
-            if user is None:
-                errors['accessKey'] = "Invalid access key"
+            if user is None or user.accessKey != accessKey:
+                errors['accessKey'] = "Invalid e-mail or access key"
                 errors['accessKeySent'] = accessKey
+                errors['emailSent'] = email
                 raise Exception()
 
             session = Session()
