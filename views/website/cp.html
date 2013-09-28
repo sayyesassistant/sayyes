@@ -1,5 +1,66 @@
 {% extends "views/layout/website.html" %}
 {% block body %}
-{{ auth }}
+<h3>Hi there {{ auth.name }}!</h3>
 <a href="/logout">Logout</a>
+
+<table>
+    <tr>
+        <td>
+            <h3>New Session</h3>
+            <h3 class="ajaxMessage">The system seems to be having problems, please try again later.</h3>
+            <form action="/" method="post" id="sessionForm">
+                <input type="hidden" name="accessKey" value="{{ auth.accessKey }}">
+                <input type="hidden" name="email" value="{{ auth.email }}">
+                <table>
+                    <tr>
+                        <td><label>Title:</label></td>
+                        <td>
+                            <input type="text" name="title" required placeholder="Fill out the title of your session">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label>Json Instruction:</label></td>
+                        <td>
+                            <textarea name="instruction" required cols="40" rows="10">{{ json }}</textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <div class=submit>
+                                <input type="submit" value="Submit">
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </td>
+        <td>
+            <h3>Last 10 sessions</h3>
+            <ul>
+                {% for session in sessions %}
+                <li>
+                    <a href="/session/start.py?key={{ session.key.urlsafe() }}" target="_blank">
+                        {{ session.title }}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    $(function(){
+        $('#sessionForm').submit(function(){
+            $.post('/session/create.py', $(this).serialize(), function(data) {
+                if (data.status == 'success') {
+                    window.location.reload();
+                } else {
+                    $('.ajaxMessage').show(300);
+                }
+            }, 'json');
+            return false;
+        });
+    });
+</script>
 {% endblock %}

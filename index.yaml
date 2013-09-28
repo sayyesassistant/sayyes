@@ -3,6 +3,8 @@ indexes:
   properties:
   - name: email
   - name: pwd
-- kind: User
+- kind: Session
   properties:
-  - name: email
+  - name: user
+  - name: created
+    direction: desc

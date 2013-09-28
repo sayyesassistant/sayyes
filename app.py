@@ -4,6 +4,7 @@ import jinja2
 import logging
 import os
 import webapp2
+from util import Util
 from webapp2_extras import sessions
 
 JINJA_ENVIRONMENT = jinja2.Environment(
@@ -14,10 +15,12 @@ class AppHandler(webapp2.RequestHandler):
     
     templateValues = {}
     auth = None
+    util = None
     
     def __init__(self, request, response):
         # inicia webapp2
         self.initialize(request, response)
+        self.util = Util()
         #logging.info(self.logged()) sempre retorna False no contrutor :/
                 
     def logged(self):
@@ -59,6 +62,7 @@ class AppHandler(webapp2.RequestHandler):
     def json(self, dictionary):
         self.response.headers['Content-Type'] = 'application/json'
         self.response.write(json.dumps(dictionary))
+        return True
         
     def jsonSuccess(self, msg=";)"):
         r = {}
@@ -77,6 +81,13 @@ class AppHandler(webapp2.RequestHandler):
         r['status'] = "output"
         r['output'] = output
         self.json(r)
+
+    def isAjax(self):
+        if 'X-Requested-With' in self.request.headers.keys():
+          return True
+        else:
+          return False
+        
         
         
         

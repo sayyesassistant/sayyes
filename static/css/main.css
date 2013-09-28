@@ -2,7 +2,7 @@ body {
     font-family: Verdana, Helvetica, sans-serif;
     background-color: #DDDDDD;
 }
-h3.loginMessage{
+h3.ajaxMessage{
     display:none;
     color:red;
 }

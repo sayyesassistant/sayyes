@@ -12,6 +12,8 @@ handlers:
 - url: /img
   static_dir: static/img
 
+- url: /session/.*
+  script: session.application
 - url: /.*
   script: website.application
 
