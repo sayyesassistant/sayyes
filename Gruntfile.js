@@ -5,12 +5,12 @@ module.exports = function (grunt) {
 	var config   = {
 		"pages" : {
 			"app": {
-				"src"  : "main/main-app",
+				"src"  : "sayyes/main/main-app",
 				"dest" : "{{{dest_js_folder}}}/main-app-min.js",
 			}
 		},
 		"arguments" : {
-			"warn":"don't change! this property will be auto-filled",
+			"__warn":"don't change! this object will be auto-filled",
 			"env" : "dev",
 		},
 		"tasks" : {
@@ -41,30 +41,30 @@ module.exports = function (grunt) {
 		"requirejs"      : {
 			"baseUrl": ".",
 			"paths": {
-				"main": "{{{js_sources}}}/sayyes/main",
 				"lib": "{{{js_sources}}}/libs",
-				"mod": "{{{js_sources}}}/sayyes/modules",
-				"helper": "{{{js_sources}}}/sayyes/helper",
+				"sayyes": "{{{js_sources}}}/sayyes",
 				"mout": "{{{bower_path}}}/mout/src",
 				"zepto": "{{{bower_path}}}/zeptojs/src",
 				"req": "{{{bower_path}}}/requirejs",
 				"mustache": "{{{bower_path}}}/mustache/"
 			}
 		}
-	}, normalized = false;
+	}, ready = false;
 
 	grunt.initConfig(config);
 
 	//file String file path (not required)
 	function init(file) {
-		if (!!normalized){return;}
+		if (!!ready){return;}
 		require("./.grunt/modules/mod-arguments").fromCommandLine(grunt);
-		require("./.grunt/modules/mod-arguments").fromFile(file, grunt);
+		if (!!file) {
+			require("./.grunt/modules/mod-arguments").fromFile(file, grunt);
+		}
 		var args = grunt.config.get("arguments");
 		delete args.warn;
 		grunt.config.set("arguments",args);
 		grunt.log.writeflags(grunt.config.get("arguments"));
-		normalized = true;
+		ready = true;
 	}
 
 	grunt.registerTask( "default" , "use the given target file to figure out what to do.", function (value) {
