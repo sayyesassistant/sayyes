@@ -17,11 +17,11 @@ module.exports = function (grunt) {
 			"comp-js" : {
 				"dev" : {
 					"cmd"  : "node",
-					"args" : [".grunt/r.js","-o","baseUrl={{{baseUrl}}}","optimize=none","skipModuleInsertion=false","name={{{src}}}","out={{{dest}}}"]
+					"args" : ["bower_components/r.js/dist/r.js","-o","baseUrl={{{baseUrl}}}","optimize=none","skipModuleInsertion=false","name={{{src}}}","out={{{dest}}}"]
 				},
 				"final" : {
 					"cmd"  : "node",
-					"args" : [".grunt/r.js","-o","baseUrl={{{baseUrl}}}","optimize=uglify2","skipModuleInsertion=false","generateSourceMaps=false","preserveLicenseComments=false","name={{{src}}}","out={{{dest}}}"]
+					"args" : ["bower_components/r.js/dist/r.js","-o","baseUrl={{{baseUrl}}}","optimize=uglify2","skipModuleInsertion=false","generateSourceMaps=false","preserveLicenseComments=false","name={{{src}}}","out={{{dest}}}"]
 				}
 			}
 		},
