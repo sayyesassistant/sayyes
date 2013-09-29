@@ -2,9 +2,14 @@
 @grunt -task=comp-js -page=app -env=final
 */
 require([
-	"mod/core"
+	"mod/core",
+	"lib/domReady"
 ], function (
-	core
+	core,
+	domReady
 ){
-	console.log("ready to go!");
+	domReady(function(){
+		console.log("ready to go");
+	});
+	console.log("waiting dom ready");
 });

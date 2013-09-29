@@ -42,10 +42,11 @@ module.exports = function (grunt) {
 			"baseUrl": ".",
 			"paths": {
 				"main": "{{{js_sources}}}/sayyes/main",
+				"lib": "{{{js_sources}}}/libs",
 				"mod": "{{{js_sources}}}/sayyes/modules",
 				"helper": "{{{js_sources}}}/sayyes/helper",
 				"mout": "{{{bower_path}}}/mout/src",
-				"mini": "{{{bower_path}}}/minified/src",
+				"zepto": "{{{bower_path}}}/zeptojs/src",
 				"req": "{{{bower_path}}}/requirejs",
 				"mustache": "{{{bower_path}}}/mustache/"
 			}

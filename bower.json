@@ -2,7 +2,7 @@
 	"name": "sayyes",
 	"dependencies": {
 		"mout": "0.7",
-		"minified": "https://github.com/timjansen/minified.js.git",
+		"zeptojs": "",
 		"mustache": "",
 		"requirejs": ""
 	}

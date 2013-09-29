@@ -1,4 +1,8 @@
 define(function (require) {
-	require("mini/minified-full-src");
+	require("zepto/zepto");
+	require("zepto/touch");
+	require("zepto/fx");
+	require("zepto/detect");
+	require("zepto/ajax");
 	require("req/require");
 });
