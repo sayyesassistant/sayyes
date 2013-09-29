@@ -4,6 +4,7 @@
 	"devDependencies": {
 		"grunt": "~0.4.1",
 		"grunt-contrib-nodeunit": "~0.1.2",
+		"grunt-contrib-concat": "~0.3.0",
 		"mout":"~0.7.0",
 		"mustache": "~0.7.2"
 	}

@@ -2,6 +2,9 @@
 global module: true, process:true
 */
 module.exports = function (grunt) {
+
+	grunt.loadNpmTasks('grunt-contrib-concat');
+
 	var config   = {
 		"pages" : {
 			"app": {
@@ -48,6 +51,16 @@ module.exports = function (grunt) {
 				"req": "{{{bower_path}}}/requirejs",
 				"mustache": "{{{bower_path}}}/mustache/"
 			}
+		},
+		concat: {
+			tests: {
+				src: [
+					'static/tests/inc-header.html',
+					'static/templates/simple-template.mustache',
+					'static/tests/inc-footer.html'
+				],
+				dest: 'static/tests/test.html',
+			},
 		}
 	}, ready = false;
 
@@ -88,6 +101,10 @@ module.exports = function (grunt) {
 		init();
 		var task = require("./.grunt/tasks/task-comp-js");
 		task.run(grunt, this);
+	});
+
+	grunt.task.registerTask('run-tests', "create tests for templates", function () {
+		grunt.task.run("concat:tests");
 	});
 
 	grunt.task.registerTask('comp-js-all', "run the task 'comp-js' to all targets", function () {
