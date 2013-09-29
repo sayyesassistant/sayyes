@@ -2,9 +2,9 @@
 	"name": "sayyes",
 	"dependencies": {
 		"mout": "0.7",
-		"zeptojs": "",
-		"mustache": "",
-		"requirejs": "",
-		"r.js": ""
+		"zeptojs": "git://github.com/iki/zepto.git",
+		"mustache": "0.7.2",
+		"requirejs": "2.1.8",
+		"r.js": "2.1.8"
 	}
 }

@@ -61,7 +61,7 @@ module.exports = function (grunt) {
 			require("./.grunt/modules/mod-arguments").fromFile(file, grunt);
 		}
 		var args = grunt.config.get("arguments");
-		delete args.warn;
+		delete args.__warn;
 		grunt.config.set("arguments",args);
 		grunt.log.writeflags(grunt.config.get("arguments"));
 		ready = true;
