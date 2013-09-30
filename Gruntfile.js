@@ -6,44 +6,9 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-concat');
 
 	var config   = {
-		"pages" : {
-			"test-view": {
-				"src"  : "sayyes/main/test-view",
-				"dest" : "{{{dest_js_folder}}}/test-view-min.js",
-			}
-		},
 		"arguments" : {
 			"__warn":"don't change! this object will be auto-filled",
 			"env" : "dev",
-		},
-		"tasks" : {
-			"comp-js" : {
-				"dev" : {
-					"cmd"  : "node",
-					"args" : ["bower_components/r.js/dist/r.js","-o","baseUrl={{{baseUrl}}}","optimize=none","skipModuleInsertion=false","name={{{src}}}","out={{{dest}}}"]
-				},
-				"final" : {
-					"cmd"  : "node",
-					"args" : ["bower_components/r.js/dist/r.js","-o","baseUrl={{{baseUrl}}}","optimize=uglify2","skipModuleInsertion=false","generateSourceMaps=false","preserveLicenseComments=false","name={{{src}}}","out={{{dest}}}"]
-				}
-			}
-		},
-		"path" : {
-
-			"root"           : "static",
-			"store"          : "",
-
-			"templates"		: "{{{root}}}/templates",
-			"tests"			: "{{{root}}}/tests",
-			"test_index"	: "{{{root}}}/templates/test-index.mustache",
-
-			"js_sources"     : "{{{root}}}/js",
-			"dest_js_folder" : "{{{root}}}/js-min",
-
-			"sass_sources"   : "{{{root}}}/sass",
-			"dest_css_folder": "{{{root}}}/css-min",
-
-			"bower_path": "bower_components"
 		},
 		"requirejs"      : {
 			"baseUrl": ".",
@@ -55,17 +20,13 @@ module.exports = function (grunt) {
 				"req": "{{{bower_path}}}/requirejs",
 				"mustache": "{{{bower_path}}}/mustache/"
 			}
-		},
-		"tests" : {
-			"test1" : {
-				"dest" : "{{{tests}}}/test1.html",
-				"view" : "{{{templates}}}/test-view.mustache",
-				"template" : "{{{templates}}}/simple-template.mustache",
-				"js_src":"/{{{dest_js_folder}}}/test-view-min.js",
-				"mock_data" : '{"title":"Foo Bar", "description":"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. "}'
-			}
 		}
-	}, ready = false;
+	},	ready = false;
+
+	config.tasks = grunt.file.readJSON("./.grunt/tasks.json");
+	config.pages = grunt.file.readJSON("./.grunt/pages.json");
+	config.paths = grunt.file.readJSON("./.grunt/paths.json");
+	config.tests = grunt.file.readJSON("./.grunt/tests.json");
 
 	grunt.initConfig(config);
 
@@ -112,15 +73,6 @@ module.exports = function (grunt) {
 	});
 
 	grunt.task.registerTask('comp-js-all', "run the task 'comp-js' to all targets", function () {
-
-	});
-
-	grunt.task.registerTask('test-views', "run the task 'comp-js' to all targets", function () {
-		var task = require("./.grunt/tasks/task-run-tests");
-		task.run(grunt, this);
-	});
-
-	grunt.task.registerTask('run-tests', "create tests for templates", function () {
 		init();
 		var page = grunt.config.get("pages"),
 			forOwn = require("mout/object/forOwn"),
@@ -131,7 +83,16 @@ module.exports = function (grunt) {
 				};
 			};
 		forOwn(page,eachPage(tasks,grunt));
-		tasks.push("test-views");
 		grunt.task.run(tasks);
+	});
+
+	grunt.task.registerTask('test-views', "run the task 'comp-js' to all targets", function () {
+		var task = require("./.grunt/tasks/task-run-tests");
+		task.run(grunt, this);
+	});
+
+	grunt.task.registerTask('run-tests', "Combines 'comp-js-all' with 'test-views'", function () {
+		init();
+		grunt.task.run(["comp-js-all","test-views"]);
 	});
 };

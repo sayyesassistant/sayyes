@@ -21,4 +21,4 @@
 
 4 - Check grunt tasks, hit
 
-	grunt -h
+	grunt -h (@see 'Available tasks')

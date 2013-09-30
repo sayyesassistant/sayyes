@@ -1,6 +1,6 @@
 exports.run = function (grunt, scope) {
 
-	var path     = grunt.config.get("path"),
+	var path     = grunt.config.get("paths"),
 		render   = require("../modules/mod-render").render,
 		tests    = grunt.config.get("tests"),
 		mustache = require("mustache"),

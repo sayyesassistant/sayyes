@@ -1,0 +1,17 @@
+{
+
+	"root"           : "static",
+	"store"          : "",
+
+	"templates"		: "{{{root}}}/templates",
+	"tests"			: "{{{root}}}/tests",
+	"test_index"	: "{{{root}}}/templates/test-index.mustache",
+
+	"js_sources"     : "{{{root}}}/js",
+	"dest_js_folder" : "{{{root}}}/js-min",
+
+	"sass_sources"   : "{{{root}}}/sass",
+	"dest_css_folder": "{{{root}}}/css-min",
+
+	"bower_path": "bower_components"
+}

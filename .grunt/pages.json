@@ -1,0 +1,6 @@
+{
+	"test-view":{
+		"src":"sayyes/main/test-view",
+		"dest":"{{{dest_js_folder}}}/test-view-min.js"
+	}
+}
