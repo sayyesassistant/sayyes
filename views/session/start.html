@@ -4,7 +4,7 @@
 <pre>{{session.instruction}}</pre>
 
 <script type="text/javascript">
-    var j = '{{session.instruction}}';
+    var j = "{{instruction}}";
     var obj = JSON.parse(j);
     var txt = "Attendant Name: " + obj.attendant.name;
     txt += "\nAttendant E-mail: " + obj.attendant.email;

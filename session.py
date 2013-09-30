@@ -14,7 +14,12 @@ class Start(AppHandler):
         
         key = ndb.Key(urlsafe=self.request.get('key'))
         session = key.get()
-        templateValues = {'session': session}
+
+        # faz escape por double quote apenas, pois eh o unico permitido oficialmente pelo json
+        instruction = session.instruction.replace('"', '\\"')
+
+        templateValues = {'session': session, 'instruction': instruction}
+        
 
         #instruction = json.loads(session.instruction)
 
