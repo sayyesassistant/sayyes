@@ -77,12 +77,12 @@ module.exports = function (grunt) {
 		var page = grunt.config.get("pages"),
 			forOwn = require("mout/object/forOwn"),
 			tasks = [];
-			eachPage = function(t,g){
+			eachPage = function(list){
 				return function(value,prop){
-					t.push("comp-js:"+prop);
+					list.push("comp-js:"+prop);
 				};
 			};
-		forOwn(page,eachPage(tasks,grunt));
+		forOwn(page,eachPage(tasks));
 		grunt.task.run(tasks);
 	});
 
