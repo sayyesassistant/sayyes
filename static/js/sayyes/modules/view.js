@@ -46,31 +46,49 @@ define([
 
 		render : function (data) {
 			try {
-				this.html = this.template_fn(data);
+				this.html = $(this.template_fn(data));
 			} catch (err) {
 				this.error = err;
-				this.events.trigger("view-render-fail",[this]);
+				this.events.trigger("render:fail",[this,err]);
 				return;
 			}
-			this.events.trigger("view-render-ok",[this]);
+			this.events.trigger("render:ok",[this]);
 		},
 
 		enable_ux : function () {
 			if (!!this.html) {
 				//
+				console.log("bind:",this.html);
 			}
 		},
 
 		disable_ux : function () {
+			if (!!this.html) {
+				//
+				console.log("unbind:",this.html);
+			}
 		},
 
-		show : function () {
+		open : function () {
+			if (!this.html){
+				this.events.trigger("open:fail");
+				return;
+			}
+			this.html.addClass("open");
+			this.events.trigger("open:ok");
 		},
 
-		hide : function () {
+		close : function () {
+			if (!this.html){
+				this.events.trigger("close:fail");
+				return;
+			}
+			this.html.addClass("close");
+			this.events.trigger("close:ok");
 		},
 
 		dispose : function () {
+			this.html = null;
 		}
 	};
 

@@ -5,43 +5,37 @@ require([
 	"sayyes/modules/log",
 	"sayyes/modules/core",
 	"lib/domReady",
-	"sayyes/modules/view"
+	"sayyes/modules/controller"
 ], function (
 	log,
 	core,
 	domReady,
-	view
+	controller
 ){
-	function add_view (event,view) {
-		log.info("add_view",view.html);
-		$("body").append(view.html);
-		view.enable_ux();
+	function log_ok (event,args) {
+		log.info(event.type);
 	}
 
-	function log_error (arg) {
-		if (typeof arg === "string"){
-			log.error(arg);
-		} else {
-			log.error(arg.type);
-		}
+	function log_error (event, args) {
+		log.error(event.type, args);
 	}
 
 	function init () {
-		var v;
-		try {
-			v = view({
-				template_name : "mock-test",
-				name:"view test"
-			});
-			log.info("view created");
-		} catch (err) {
-			console.log("error:",err);
-			log_error(err);
+		var c;
+		try{
+			c = controller(document.getElementById("sayyes-assistant"));
+		} catch (err){
+			log.error("error to create controller",err);
 			return;
 		}
-		v.events.one("view-render-ok",add_view);
-		v.events.one("view-render-fail",log_error);
-		v.render(window.mock_data);
+		c.events.on("create_view:fail",log_error);
+		c.events.on("create_view:ok",log_ok);
+		c.create_view({
+			"name":"test"
+			,"template_name":"mock-test"
+		});
+		c.render_view(window.mock_data);
+		c.open();
 	}
 	domReady(init);
 });
