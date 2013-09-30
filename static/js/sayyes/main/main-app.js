@@ -2,37 +2,38 @@
 @grunt -task=comp-js -page=app
 */
 require([
+	"sayyes/modules/log",
 	"sayyes/modules/core",
 	"lib/domReady",
 	"sayyes/modules/view"
 ], function (
+	log,
 	core,
 	domReady,
 	view
 ){
 	function add_view (event,view) {
-		console.info("add_view",view.html);
+		log.info("add_view",view.html);
 		$("body").append(view.html);
 		view.enable_ux();
 	}
 
 	function log_error (arg) {
 		if (typeof arg === "string"){
-			console.error(arg);
+			log.error(arg);
 		} else {
-			console.error(arg.type);
+			log.error(arg.type);
 		}
 	}
 
 	function init () {
-		console.info("init");
 		var v;
 		try {
 			v = view({
 				template_name : "mock-test",
 				name:"view test"
 			});
-			console.info("view created");
+			log.info("view created");
 		} catch (err) {
 			console.log("error:",err);
 			log_error(err);
