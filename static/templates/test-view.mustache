@@ -2,10 +2,11 @@
 <head>
 	<title>Foo</title>
 	<script type="text/javascript" charset="utf-8">
+		var mock_data = {{{mock_data}}};
 		(function (s, h) {
 			s.async = true;
 			s.type = 'text/javascript';
-			s.src = "/static/js-min/main-app-min.js";
+			s.src = "{{{js_src}}}";
 			h.appendChild(s);
 		}(document.createElement('script'), document.documentElement));
 	</script>
@@ -18,10 +19,10 @@
 	</style>
 </head>
 <body>
-	<h1>This is a template test.</h1>
+	<h1>--This is a template test.--</h1>
 	<hr/>
 <script id="mock-test" type="text/mustache-template" charset="utf-8">
-	{{{template_value}}}
+	{{{template}}}
 </script>
 </body>
 </html>

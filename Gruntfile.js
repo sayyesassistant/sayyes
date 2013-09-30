@@ -60,7 +60,9 @@ module.exports = function (grunt) {
 			"test1" : {
 				"dest" : "{{{tests}}}/test1.html",
 				"view" : "{{{templates}}}/test-view.mustache",
-				"template" : "{{{templates}}}/simple-template.mustache"
+				"template" : "{{{templates}}}/simple-template.mustache",
+				"js_src":"/{{{dest_js_folder}}}/main-app-min.js",
+				"mock_data" : '{"title":"Foo Bar", "description":"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. "}'
 			}
 		}
 	}, ready = false;

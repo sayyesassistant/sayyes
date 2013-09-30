@@ -1,13 +1,19 @@
 exports.run = function (grunt, scope) {
-	var path = grunt.config.get("path"),
-		render = require("../modules/mod-render").render,
-		tests = grunt.config.get("tests"),
+
+	var path     = grunt.config.get("path"),
+		render   = require("../modules/mod-render").render,
+		tests    = grunt.config.get("tests"),
 		mustache = require("mustache"),
-		forOwn = require("mout/object/forOwn"),
-		hasOwn = require("mout/object/hasOwn"),
-		file, blob, template, li;
+		forOwn   = require("mout/object/forOwn"),
+		hasOwn   = require("mout/object/hasOwn"),
+		file, blob, template, li, rendered;
+
 	path = render(path,path);
-	li = {links:[]};
+
+	li = {
+		links:[]
+	};
+
 	function create_file(value, name) {
 		value = render(value,path);
 		try{
@@ -17,13 +23,11 @@ exports.run = function (grunt, scope) {
 		}
 		try{
 			template = grunt.file.read(value.template);
+			value.template = template;
 		} catch (err) {
 			grunt.fail.fatal("coudn't open file: "+value.template);
 		}
-		blob = {
-			template_value : template
-		};
-		var rendered = mustache.render(file,blob);
+		rendered = mustache.render(file,value);
 		try{
 			grunt.file.write(value.dest, rendered);
 		} catch (err) {
