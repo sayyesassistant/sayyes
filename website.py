@@ -166,23 +166,38 @@ class CP(AppHandler):
                 'name': 'Alberto Das Couves',
                 'email': 'alberto@email.com'
             },
-            'output': {
-                'content': 'This switch does not happen at each animation step, but only when the ball reaches the edge of the window.',
-                'type': 'text'
-            },
-            'input': {
-                'type': 'button',
-                'options': {
-                    'value': 'Yes, please!',
-                    'action': 'endSession'
+            'step1': {
+                'output': {
+                    'content': 'Step 1!',
+                    'type': 'text'
+                },
+                'input': {
+                    'type': 'button',
+                    'options': {
+                        'value': 'Yes, please!',
+                        'action': 'step2'
+                    }
+                },
+                'input': {
+                    'type': 'button',
+                    'options': {
+                        'value': 'No, thanks.',
+                        'action': 'endSession'
+                    }
                 }
             },
-            'input': {
-                'type': 'button',
-                'options': {
-                    'value': 'No, thanks.',
-                    'action': 'endSession'
-                }
+            'step2': {
+                'output': {
+                    'content': "Oh my god, that's Step 2!",
+                    'type': 'text'
+                },
+                'input': {
+                    'type': 'button',
+                    'options': {
+                        'value': "That's the end baby!",
+                        'action': 'endSession'
+                    }
+                },
             }
         }
 
