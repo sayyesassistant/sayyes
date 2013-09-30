@@ -33,6 +33,9 @@ module.exports = function (grunt) {
 			"root"           : "static",
 			"store"          : "",
 
+			"templates"		: "{{{root}}}/templates",
+			"tests"		: "{{{root}}}/tests",
+
 			"js_sources"     : "{{{root}}}/js",
 			"dest_js_folder" : "{{{root}}}/js-min",
 
@@ -52,15 +55,12 @@ module.exports = function (grunt) {
 				"mustache": "{{{bower_path}}}/mustache/"
 			}
 		},
-		concat: {
-			tests: {
-				src: [
-					'static/tests/inc-header.html',
-					'static/templates/simple-template.mustache',
-					'static/tests/inc-footer.html'
-				],
-				dest: 'static/tests/test.html',
-			},
+		"tests" : {
+			"test1" : {
+				"dest" : "{{{tests}}}/test1-html",
+				"view" : "{{{templates}}}/test-view.mustache",
+				"template" : "{{{templates}}}/simple-template.mustache"
+			}
 		}
 	}, ready = false;
 
@@ -104,7 +104,9 @@ module.exports = function (grunt) {
 	});
 
 	grunt.task.registerTask('run-tests', "create tests for templates", function () {
-		grunt.task.run("concat:tests");
+		init();
+		var task = require("./.grunt/tasks/task-run-tests");
+		task.run(grunt, this);
 	});
 
 	grunt.task.registerTask('comp-js-all', "run the task 'comp-js' to all targets", function () {
