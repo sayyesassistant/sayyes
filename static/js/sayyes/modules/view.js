@@ -58,14 +58,14 @@ define([
 		enable_ux : function () {
 			if (!!this.html) {
 				//
-				console.log("bind:",this.html);
+				// console.log("bind:",this.html);
 			}
 		},
 
 		disable_ux : function () {
 			if (!!this.html) {
 				//
-				console.log("unbind:",this.html);
+				// console.log("unbind:",this.html);
 			}
 		},
 

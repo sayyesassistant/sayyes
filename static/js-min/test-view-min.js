@@ -4571,14 +4571,14 @@ define('sayyes/modules/view',[
 		enable_ux : function () {
 			if (!!this.html) {
 				//
-				console.log("bind:",this.html);
+				// console.log("bind:",this.html);
 			}
 		},
 
 		disable_ux : function () {
 			if (!!this.html) {
 				//
-				console.log("unbind:",this.html);
+				// console.log("unbind:",this.html);
 			}
 		},
 
@@ -4979,7 +4979,7 @@ define('sayyes/modules/vo',[
 	};
 });
 /*
-@grunt -task=comp-js -page=app
+@grunt -task=comp-js -page=test-view
 */
 define('sayyes/modules/controller',[
 	"sayyes/modules/log",
@@ -5018,7 +5018,6 @@ define('sayyes/modules/controller',[
 
 	Controller.prototype = {
 		define_pages : function (data) {
-			// console.log(vo.view());
 			// if (validate_model(data)) {
 			// 	this.events.trigger("define.ok");
 			// 	this.data = data;
@@ -5135,4 +5134,4 @@ require([
 	}
 	domReady(init);
 });
-define("sayyes/main/main-app", function(){});
+define("sayyes/main/test-view", function(){});

@@ -1,5 +1,5 @@
 /*
-@grunt -task=comp-js -page=app
+@grunt -task=comp-js -page=test-view
 */
 define([
 	"sayyes/modules/log",
@@ -38,7 +38,6 @@ define([
 
 	Controller.prototype = {
 		define_pages : function (data) {
-			// console.log(vo.view());
 			// if (validate_model(data)) {
 			// 	this.events.trigger("define.ok");
 			// 	this.data = data;

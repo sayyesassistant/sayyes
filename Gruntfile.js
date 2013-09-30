@@ -7,9 +7,9 @@ module.exports = function (grunt) {
 
 	var config   = {
 		"pages" : {
-			"app": {
-				"src"  : "sayyes/main/main-app",
-				"dest" : "{{{dest_js_folder}}}/main-app-min.js",
+			"test-view": {
+				"src"  : "sayyes/main/test-view",
+				"dest" : "{{{dest_js_folder}}}/test-view-min.js",
 			}
 		},
 		"arguments" : {
@@ -61,7 +61,7 @@ module.exports = function (grunt) {
 				"dest" : "{{{tests}}}/test1.html",
 				"view" : "{{{templates}}}/test-view.mustache",
 				"template" : "{{{templates}}}/simple-template.mustache",
-				"js_src":"/{{{dest_js_folder}}}/main-app-min.js",
+				"js_src":"/{{{dest_js_folder}}}/test-view-min.js",
 				"mock_data" : '{"title":"Foo Bar", "description":"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. "}'
 			}
 		}
@@ -100,19 +100,38 @@ module.exports = function (grunt) {
 		// require("./.grunt/tasks/task-sass-watch").run( grunt, this );
 	});
 
-	grunt.registerTask('comp-js', "Build AMD module.\n@usage grunt comp-js -page=foo -env=final|dev (dev is default)", function () {
+	grunt.registerTask('comp-js', "Build AMD module.\n@usage grunt comp-js -page=foo -env=final|dev (dev is default)", function (page) {
 		init();
+		if (!!page){
+			var args = grunt.config.get("arguments");
+				args.page = page;
+			grunt.config.set("arguments",args);
+		}
 		var task = require("./.grunt/tasks/task-comp-js");
-		task.run(grunt, this);
-	});
-
-	grunt.task.registerTask('run-tests', "create tests for templates", function () {
-		init();
-		var task = require("./.grunt/tasks/task-run-tests");
 		task.run(grunt, this);
 	});
 
 	grunt.task.registerTask('comp-js-all', "run the task 'comp-js' to all targets", function () {
 
+	});
+
+	grunt.task.registerTask('test-views', "run the task 'comp-js' to all targets", function () {
+		var task = require("./.grunt/tasks/task-run-tests");
+		task.run(grunt, this);
+	});
+
+	grunt.task.registerTask('run-tests', "create tests for templates", function () {
+		init();
+		var page = grunt.config.get("pages"),
+			forOwn = require("mout/object/forOwn"),
+			tasks = [];
+			eachPage = function(t,g){
+				return function(value,prop){
+					t.push("comp-js:"+prop);
+				};
+			};
+		forOwn(page,eachPage(tasks,grunt));
+		tasks.push("test-views");
+		grunt.task.run(tasks);
 	});
 };
