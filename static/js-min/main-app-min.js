@@ -4552,7 +4552,7 @@ require([
 		var v;
 		try {
 			v = view({
-				template_name : "t1",
+				template_name : "mock-test",
 				name:"view test"
 			});
 		} catch (err) {

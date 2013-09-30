@@ -5,9 +5,10 @@ exports.run = function (grunt, scope) {
 		mustache = require("mustache"),
 		forOwn = require("mout/object/forOwn"),
 		hasOwn = require("mout/object/hasOwn"),
-		file, blob, template;
+		file, blob, template, li;
 	path = render(path,path);
-	function create_file(value){
+	li = {links:[]};
+	function create_file(value, name) {
 		value = render(value,path);
 		try{
 			file = grunt.file.read(value.view);
@@ -29,15 +30,31 @@ exports.run = function (grunt, scope) {
 			grunt.fail.fatal("failed to create file: "+value.dest);
 			return;
 		}
+		li.links.push({name:name,url:value.dest});
 		grunt.log.ok("Creating test file at: "+value.dest);
 	}
 	function each_test(value, prop) {
 		if (value && hasOwn(value, "dest") && hasOwn(value,"view") && hasOwn(value, "template")){
 			grunt.log.subhead("Building test: "+prop);
-			create_file(value);
+			create_file(value,prop);
 		} else {
 			grunt.log.error(prop+" got invalid test object");
 		}
 	}
 	forOwn(tests,each_test);
+	var index;
+	try {
+		index = grunt.file.read(path.test_index);
+	} catch (err) {
+		grunt.fail.fatal("failed to create file: "+path.test_index);
+		return;
+	}
+	index = mustache.render(index,li);
+	try {
+		grunt.file.write(path.tests+"/index.html", index);
+	} catch (err) {
+		grunt.fail.fatal("failed to create file: "+path.tests+"/index.html");
+		return;
+	}
+	grunt.log.subhead("Tests index created at:",path.tests+"/index.html");
 };

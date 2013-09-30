@@ -34,7 +34,8 @@ module.exports = function (grunt) {
 			"store"          : "",
 
 			"templates"		: "{{{root}}}/templates",
-			"tests"		: "{{{root}}}/tests",
+			"tests"			: "{{{root}}}/tests",
+			"test_index"	: "{{{root}}}/templates/test-index.mustache",
 
 			"js_sources"     : "{{{root}}}/js",
 			"dest_js_folder" : "{{{root}}}/js-min",
@@ -57,7 +58,7 @@ module.exports = function (grunt) {
 		},
 		"tests" : {
 			"test1" : {
-				"dest" : "{{{tests}}}/test1-html",
+				"dest" : "{{{tests}}}/test1.html",
 				"view" : "{{{templates}}}/test-view.mustache",
 				"template" : "{{{templates}}}/simple-template.mustache"
 			}

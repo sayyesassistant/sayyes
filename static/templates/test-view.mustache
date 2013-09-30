@@ -1,0 +1,27 @@
+<html>
+<head>
+	<title>Foo</title>
+	<script type="text/javascript" charset="utf-8">
+		(function (s, h) {
+			s.async = true;
+			s.type = 'text/javascript';
+			s.src = "/static/js-min/main-app-min.js";
+			h.appendChild(s);
+		}(document.createElement('script'), document.documentElement));
+	</script>
+	<style type="text/css" media="screen">
+		div {
+			border: 1px solid red;
+			margin:0;
+			padding:0;
+		}
+	</style>
+</head>
+<body>
+	<h1>This is a template test.</h1>
+	<hr/>
+<script id="mock-test" type="text/mustache-template" charset="utf-8">
+	{{{template_value}}}
+</script>
+</body>
+</html>

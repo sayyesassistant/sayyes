@@ -21,7 +21,6 @@ require([
 	}
 
 	function log_error (arg) {
-		console.log("errrr");
 		if (typeof arg === "string"){
 			console.error(arg);
 		} else {
@@ -33,7 +32,7 @@ require([
 		var v;
 		try {
 			v = view({
-				template_name : "t1",
+				template_name : "mock-test",
 				name:"view test"
 			});
 		} catch (err) {

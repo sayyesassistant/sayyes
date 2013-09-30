@@ -57,7 +57,7 @@ define([
 
 		enable_ux : function () {
 			if (!!this.html) {
-				console.log(">cast elements");
+				//
 			}
 		},
 
