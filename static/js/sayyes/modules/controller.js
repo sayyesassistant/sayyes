@@ -11,14 +11,14 @@ define([
 	vo
 ) {
 
-	var Controller, _viewVO, _notifyRederFail;
+	var Controller, _viewVO, _notify;
 
 	_viewVO = new vo.view();
 
-	_notifyReder = function(scope,status) {
-		return function(event,args){
-			log.warn("controller _notifyReder:",event.type,args);
-			scope.events.trigger("render_view:"+status,[event.type]);
+	_notify = function(scope,status) {
+		return function(){
+			var a = Array.prototype.slice.call(arguments);
+			scope.events.trigger(status,a);
 		};
 	};
 
@@ -48,63 +48,82 @@ define([
 		start : function (index) {
 
 		},
-		create_view : function (data) {
-			if (_viewVO.implements(data)) {
+		create_view : function (config) {
+			if (_viewVO.implements(config)) {
 				try {
-					this.queued = view(data);
+					this.queued = view(config);
 				} catch (err) {
-					this.events.trigger("create_view:fail",[err]);
+					_notify(this,"create_view:fail")(err);
 					return;
 				}
-				this.events.trigger("create_view:ok");
-				return;
+				_notify(this,"create_view:ok")(this.queued.name);
+				this.render_view(config.data);
 			} else {
-				this.events.trigger("create_view:fail");
+				_notify(this,"create_view:fail")();
 			}
 		},
 		render_view : function (data) {
 			if (!this.queued || !data){
-				_notifyReder(this,"fail");
+				_notify(this,"render_view:fail")();
 				return;
 			}
-			this.queued.events.one("render:fail",_notifyReder(this,"fail"));
-			this.queued.events.one("render:ok",_notifyReder(this,"ok"));
-			this.queued.render(data);
+			this.queued.events.one("render:fail",_notify(this,"render_view:fail"));
+			this.queued.events.one("render:ok",_notify(this,"render_view:ok"));
+			try{
+				this.queued.render(data);
+			} catch (err) {
+				_notify(this,"render_view.fail")(err);
+				return;
+			}
+			this.close_current();
 		},
 		open : function () {
 			if (!this.queued){
-				this.events.trigger("open:fail",["no queued view found"]);
+				_notify(this,"open:fail")(["no view to open"]);
 				return;
 			}
 			this.scope.append(this.queued.html);
 			this.queued.events.one("open:ok",this._onOpen.bind(this));
-			this.queued.events.one("open:fail",this._onFail.bind(this));
+			this.queued.events.one("open:fail",this._on_fail.bind(this));
 			this.queued.open();
 		},
-		close : function () {
-			if (!this.current){
-				this.events.trigger("close:fail");
+		close_current: function () {
+			if (!this.current || !this.queued){
+				_notify(this,"close_current:warn")(!this.current ? "no view to close" : "no queued view to open");
+				this.open();
 				return;
 			}
-			this.queued.events.one("close:ok",this._onClose.bind(this));
-			this.queued.events.one("close:fail",this._onFail.bind(this));
+			this.queued.events.one("close:ok",this._on_close.bind(this));
+			this.queued.events.one("close:fail",this._on_fail.bind(this));
+			this.queued.disable_ux();
 			this.queued.close();
 		},
-		_onFail : function (event) {
-			log.warn("fail:",event);
+		_dispose_view : function(view) {
+			view.events.off("close:ok",this._on_close.bind(this));
+			view.events.off("close:fail",this._on_fail.bind(this));
+			view.events.off("open:ok",this._onOpen.bind(this));
+			view.events.off("open:fail",this._on_fail.bind(this));
+			view.dispose();
 		},
-		_onClose : function () {
-			this.previous = this.current;
-			this.previous.dispose();
+		_on_fail : function (event) {
+			log.error("[to-do] failed to ",event);
+		},
+		_on_close : function () {
+			if (this.current){
+				this._dispose_view(this.current);
+				_notify(this,"close_view:ok")(this.current.name);
+				this.previous = this.current;
+			}
 			this.current = null;
+			this.open();
 		},
 		_onOpen : function () {
 			this.current = this.queued;
 			this.queued = null;
 			this.current.enable_ux();
+			_notify(this,"open:ok")(this.current.name);
 		},
 	};
-
 	return function(scope){
 		if (!scope){
 			throw "undefined scope";

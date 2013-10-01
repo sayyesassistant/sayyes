@@ -13,11 +13,11 @@ require([
 	controller
 ){
 	function log_ok (event,args) {
-		log.info(event.type);
+		log.info(event.type,args);
 	}
 
 	function log_error (event, args) {
-		log.error(event.type, args);
+		log.warn(event.type, args);
 	}
 
 	function init () {
@@ -28,14 +28,22 @@ require([
 			log.error("error to create controller",err);
 			return;
 		}
+
 		c.events.on("create_view:fail",log_error);
 		c.events.on("create_view:ok",log_ok);
+
+		c.events.on("render_view:ok",log_ok);
+		c.events.on("render_view:fail",log_error);
+
+		c.events.on("close_current:warn",log_error);
+		c.events.on("open:fail",log_error);
+		c.events.on("open:ok",log_ok);
+
 		c.create_view({
-			"name":"test"
-			,"template_name":"mock-test"
+			"name":"test",
+			"template_name":"mock-test",
+			"data" : window.mock_data
 		});
-		c.render_view(window.mock_data);
-		c.open();
 	}
 	domReady(init);
 });
