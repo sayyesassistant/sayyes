@@ -1,11 +1,10 @@
 {
 
 	"root"           : "static",
-	"store"          : "",
 
 	"templates"		: "{{{root}}}/templates",
 	"tests"			: "{{{root}}}/tests",
-	"test_index"	: "{{{root}}}/templates/test-index.mustache",
+	"test_index"	: "{{{templates}}}/test-index.mustache",
 
 	"js_sources"     : "{{{root}}}/js",
 	"dest_js_folder" : "{{{root}}}/js-min",
