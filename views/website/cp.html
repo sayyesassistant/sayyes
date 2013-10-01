@@ -19,6 +19,17 @@
                         </td>
                     </tr>
                     <tr>
+                        <td><label>Layout:</label></td>
+                        <td>
+                            <select name="layout">
+                                <option value=""> --- </option>
+                                {% for layout in layouts %}
+                                <option  value="{{ layout.key.urlsafe() }}">{{layout.title}}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
                         <td><label>Json Instruction:</label></td>
                         <td>
                             <textarea name="instruction" required cols="40" rows="10">{{ json }}</textarea>
@@ -49,6 +60,50 @@
         </td>
     </tr>
 </table>
+
+<table>
+    <tr>
+        <td>
+            <h3>New Layout</h3>
+            <form action="/pref" method="post" enctype="multipart/form-data">
+                <table>
+                    <tr>
+                        <td><label>Title:</label></td>
+                        <td>
+                            <input type="text" name="title" required placeholder="Fill out the title of your layout">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label>Background Image:</label></td>
+                        <td><input type="file" name="img"/></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <div class=submit>
+                                <input type="submit" value="Submit">
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </td>
+        <td>
+            <h3>Last 10 layouts</h3>
+            <ul>
+                {% for layout in layouts %}
+                <li>
+                    {{ layout.title }}<br>
+                    {% if layout.bg %}
+                    <img src="/session/img.py?key={{ layout.key.urlsafe() }}" width="200">
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </td>
+    </tr>
+</table>
+
 <script type="text/javascript">
     $(function(){
         $('#sessionForm').submit(function(){

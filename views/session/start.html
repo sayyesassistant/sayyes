@@ -14,3 +14,5 @@
 </script>
 
 {% endblock %}
+<!-- put bg if exists -->
+{% block bodyStyle %}{% if layout.bg %}style="background: url(/session/img.py?key={{layout.key.urlsafe()}}) no-repeat scroll center top transparent"{% endif %}{% endblock %}
