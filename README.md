@@ -7,7 +7,7 @@
 
 ##Getting started
 
-1 - Installing bower (js package manager)
+1 - Installing (bower)[http://bower.io/]
 
 	sudo npm install bower -g
 
@@ -19,6 +19,10 @@
 
 	bower intall
 
-4 - Check grunt tasks, hit
+4 - Install [Gruntjs](http://gruntjs.com/) dependencies
+
+	sudo npm install grunt-cli -g
+
+5 - Check grunt tasks, hit
 
 	grunt -h (@see 'Available tasks')

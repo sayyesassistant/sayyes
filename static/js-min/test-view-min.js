@@ -5094,7 +5094,7 @@ define('sayyes/modules/controller',[
 	};
 });
 /*
-@grunt -task=comp-js -page=app
+@grunt -task=comp-js -page=test-view
 */
 require([
 	"sayyes/modules/log",
