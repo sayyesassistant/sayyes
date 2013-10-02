@@ -1,16 +1,18 @@
 {
 
-	"root"           : "static",
+	"root"           : ".",
 
-	"templates"		: "{{{root}}}/templates",
-	"tests"			: "{{{root}}}/tests",
+	"static"           : "static",
+
+	"templates"		: "{{{static}}}/templates",
+	"tests"			: "{{{static}}}/tests",
 	"test_index"	: "{{{templates}}}/test-index.mustache",
 
-	"js_sources"     : "{{{root}}}/js",
-	"dest_js_folder" : "{{{root}}}/js-min",
+	"js_sources"     : "{{{static}}}/js",
+	"dest_js_folder" : "{{{static}}}/js-min",
 
-	"sass_sources"   : "{{{root}}}/sass",
-	"dest_css_folder": "{{{root}}}/css-min",
+	"sass_sources"   : "{{{static}}}/sass",
+	"dest_css_folder": "{{{static}}}/css-min",
 
 	"bower_path": "bower_components"
 }

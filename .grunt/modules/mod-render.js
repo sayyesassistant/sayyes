@@ -10,6 +10,10 @@ function r(obj,src){
 		return;
 	}
 
+	if (obj.constructor.name === "String"){
+		return mustache.render(obj,src||obj);
+	}
+
 	var	rendered = deepMixIn(obj);
 	forOwn(obj,function(propValue, prop){
 		if (!!propValue) {

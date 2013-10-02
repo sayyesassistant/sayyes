@@ -4512,7 +4512,7 @@ define('mout/string/trim',['../lang/toString', './WHITE_SPACES', './ltrim', './r
 }())));
 
 /*
-@grunt -task=comp-js -page=app
+@grunt -task=comp-js -page=test-view
 */
 define('sayyes/modules/view',[
 	"mout/object/mixIn",
@@ -4553,6 +4553,7 @@ define('sayyes/modules/view',[
 			if (!this.template_raw || !this.template_raw.length) {
 				throw "template:'"+this.template_name+"' is empty.";
 			}
+			console.log("template is:",this.template_raw);
 			this.template_fn = mustache.compile(this.template_raw);
 			this.events = $(document.createElement("span"));
 		},
@@ -5037,6 +5038,7 @@ define('sayyes/modules/controller',[
 					return;
 				}
 				_notify(this,"create_view:ok")(this.queued.name);
+				console.log("render view with:",config.data);
 				this.render_view(config.data);
 			} else {
 				_notify(this,"create_view:fail")();
@@ -5153,11 +5155,7 @@ require([
 		c.events.on("open:fail",log_error);
 		c.events.on("open:ok",log_ok);
 
-		c.create_view({
-			"name":"test",
-			"template_name":"mock-test",
-			"data" : window.mock_data
-		});
+		c.create_view(window.mock_view);
 	}
 	domReady(init);
 });

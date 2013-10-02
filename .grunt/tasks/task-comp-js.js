@@ -24,7 +24,7 @@ exports.run = function (grunt, scope) {
 			});
 			bash(command, scope.async(), grunt);
 		} else {
-			grunt.fail.fatal("Couldn't find target main:'"+args.page+"'\n@Use grunt comp-js -main=<%=target%> next time.");
+			grunt.fail.fatal("Couldn't find target main:'"+args.page+"'\n@Use grunt comp-js -page=<%=target%> next time.");
 		}
 	} else {
 		grunt.log.warn("grunt -h to see how to use this task");

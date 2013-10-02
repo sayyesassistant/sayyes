@@ -10,6 +10,7 @@ module.exports = function (grunt) {
 			"__warn":"don't change! this object will be auto-filled",
 			"env" : "dev",
 		},
+		"concat":{},
 		"requirejs"      : {
 			"baseUrl": ".",
 			"paths": {
@@ -26,7 +27,7 @@ module.exports = function (grunt) {
 	config.tasks = grunt.file.readJSON("./.grunt/tasks.json");
 	config.pages = grunt.file.readJSON("./.grunt/pages.json");
 	config.paths = grunt.file.readJSON("./.grunt/paths.json");
-	config.tests = grunt.file.readJSON("./.grunt/tests.json");
+	config["test-views"] = grunt.file.readJSON("./.grunt/tests.json");
 
 	grunt.initConfig(config);
 
@@ -86,7 +87,39 @@ module.exports = function (grunt) {
 		grunt.task.run(tasks);
 	});
 
-	grunt.task.registerTask('test-views', "run the task 'comp-js' to all targets", function () {
+	grunt.task.registerTask('render-template', "render target template", function (test_name) {
+		var mock = grunt.config.get("blob-"+test_name),
+			mustache = require("mustache"),
+			file, file_name, rendered;
+
+		if (!mock){
+			grunt.fatal.fail("no data found to target",test_name)
+			return;
+		}
+
+		file_name = mock.dest;
+
+		//read target file
+		try {
+			file = grunt.file.read(file_name);
+		} catch (err) {
+			grunt.fail.fatal("coudn't open file: "+file_name);
+			return;
+		}
+
+		rendered = mustache.render(file,mock.data);
+
+		//override file with rendered template
+		try{
+			grunt.file.write(file_name, rendered);
+		} catch (err) {
+			grunt.fail.fatal("failed to create file: "+value.dest);
+			return;
+		}
+		grunt.log.ok(file_name+" rendered.");
+	});
+
+	grunt.registerMultiTask('test-views', "run the task 'comp-js' to all targets", function () {
 		var task = require("./.grunt/tasks/task-run-tests");
 		task.run(grunt, this);
 	});

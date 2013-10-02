@@ -1,5 +1,5 @@
 /*
-@grunt -task=comp-js -page=app
+@grunt -task=comp-js -page=test-view
 */
 define([
 	"mout/object/mixIn",

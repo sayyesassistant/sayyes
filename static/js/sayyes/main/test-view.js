@@ -39,11 +39,7 @@ require([
 		c.events.on("open:fail",log_error);
 		c.events.on("open:ok",log_ok);
 
-		c.create_view({
-			"name":"test",
-			"template_name":"mock-test",
-			"data" : window.mock_data
-		});
+		c.create_view(window.mock_view);
 	}
 	domReady(init);
 });
