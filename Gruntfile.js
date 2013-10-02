@@ -88,38 +88,13 @@ module.exports = function (grunt) {
 	});
 
 	grunt.task.registerTask('render-template', "render target template", function (test_name) {
-		var mock = grunt.config.get("blob-"+test_name),
-			mustache = require("mustache"),
-			file, file_name, rendered;
-
-		if (!mock){
-			grunt.fatal.fail("no data found to target",test_name)
-			return;
-		}
-
-		file_name = mock.dest;
-
-		//read target file
-		try {
-			file = grunt.file.read(file_name);
-		} catch (err) {
-			grunt.fail.fatal("coudn't open file: "+file_name);
-			return;
-		}
-
-		rendered = mustache.render(file,mock.data);
-
-		//override file with rendered template
-		try{
-			grunt.file.write(file_name, rendered);
-		} catch (err) {
-			grunt.fail.fatal("failed to create file: "+value.dest);
-			return;
-		}
-		grunt.log.ok(file_name+" rendered.");
+		init();
+		var task = require("./.grunt/tasks/task-render-file");
+		task.run(grunt, this);
 	});
 
 	grunt.registerMultiTask('test-views', "run the task 'comp-js' to all targets", function () {
+		init();
 		var task = require("./.grunt/tasks/task-run-tests");
 		task.run(grunt, this);
 	});

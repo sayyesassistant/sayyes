@@ -1,7 +1,10 @@
 {
 	"test1" : {
 		"dest" : "{{{tests}}}/test1.html",
-		"template" : ["{{{templates}}}/test-view-header.mustache","{{{templates}}}/template-simple.mustache","{{{templates}}}/test-view-footer.mustache"],
+		"views" : ["{{{templates}}}/test-view-header.mustache","{{{templates}}}/test-view-footer.mustache"],
+		"raw": {
+			"template": "{{{templates}}}/template-simple.mustache"
+		},
 		"data" : {
 			"js_src" : "/{{{dest_js_folder}}}/test-view-min.js",
 			"mock_view" : "{'name':'test', 'template_name':'mock-test', 'data' : {'title':'Title','description':'Description goes here'} }"

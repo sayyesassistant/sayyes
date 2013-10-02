@@ -3,6 +3,7 @@ exports.run = function (grunt, task) {
 	var render = require("../modules/mod-render").render,
 		diff = require("mout/array/difference"),
 		keys = require("mout/object/keys"),
+		map = require("mout/object/map"),
 		path = grunt.config.get("paths"),
 		blob, value;
 
@@ -12,17 +13,29 @@ exports.run = function (grunt, task) {
 		grunt.fail.fatal("Test failed.\nNo test found!'");
 		return;
 	}
-	var diff_result = diff(["dest", "template", "data"], keys(task.data));
+
+	var diff_result = diff(["dest", "views", "data"], keys(task.data));
 	if (!!diff_result.length) {
 		grunt.fail.fatal("Test failed.\nMissing properties: '"+diff_result.join("','")+"'.");
 		return;
 	}
+
 	value = render(task.data,path);
+	if(!!value.raw && value.raw.constructor.name === "Object"){
+		value.raw = map(value.raw,function(value){
+			if (grunt.file.exists(value)){
+				return grunt.file.read(value);
+			}
+			return value;
+		});
+	}
+
 	blob = grunt.config.get("concat");
 	blob[task.target] = {
-		src : task.data.template,
+		src : task.data.views,
 		dest :task.data.dest
 	};
+
 	grunt.config.set("concat",blob);
 	grunt.config.set("blob-"+task.target,value);
 	grunt.task.run(["concat:"+task.target,"render-template:"+task.target]);

@@ -4,9 +4,8 @@
 
 	"static"           : "static",
 
-	"templates"		: "{{{static}}}/templates",
+	"templates"		: "{{{root}}}/{{{static}}}/templates",
 	"tests"			: "{{{static}}}/tests",
-	"test_index"	: "{{{templates}}}/test-index.mustache",
 
 	"js_sources"     : "{{{static}}}/js",
 	"dest_js_folder" : "{{{static}}}/js-min",
