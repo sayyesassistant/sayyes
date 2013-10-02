@@ -27,7 +27,7 @@ module.exports = function (grunt) {
 	config.tasks = grunt.file.readJSON("./.grunt/tasks.json");
 	config.pages = grunt.file.readJSON("./.grunt/pages.json");
 	config.paths = grunt.file.readJSON("./.grunt/paths.json");
-	config["test-views"] = grunt.file.readJSON("./.grunt/tests.json");
+	config["test-views"] = grunt.file.readJSON("./.grunt/test-views.json");
 
 	grunt.initConfig(config);
 
@@ -95,7 +95,7 @@ module.exports = function (grunt) {
 
 	grunt.registerMultiTask('test-views', "run the task 'comp-js' to all targets", function () {
 		init();
-		var task = require("./.grunt/tasks/task-run-tests");
+		var task = require("./.grunt/tasks/task-test-view");
 		task.run(grunt, this);
 	});
 
