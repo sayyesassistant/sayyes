@@ -6,126 +6,134 @@ define([
 	"sayyes/modules/view",
 	"sayyes/modules/vo",
 	"sayyes/helpers/helper-nav",
-	"mout/object/mixIn"
+	"mout/object/mixIn",
+	"signals/signals"
 ], function (
 	log,
 	view,
 	vo,
 	helper_nav,
-	mix_in
+	mix_in,
+	signals
 ) {
 
-	var Controller, _viewVO, _notify;
+	var Controller, _viewVO, _notify, error, warn;
+
+	error = "error";
+	warn = "warn";
 
 	_viewVO = new vo.view();
 
-	_notify = function(scope,status) {
-		return function(){
-			var a = Array.prototype.slice.call(arguments);
-			scope.events.trigger(status,a);
+	_notify  = function (self, message, severity) {
+		return function (value) {
+			switch (severity) {
+				case warn :
+					log.warn(message);
+					self.on.warn.dispatch(message, value);
+				break;
+				case error :
+					log.error(message);
+					self.on.error.dispatch(message, value);
+				break;
+				default:
+					log.info(message);
+					self.on.info.dispatch(message, value);
+				break;
+			}
 		};
 	};
 
-	__init = function (instance) {
+	__init = function (instance, scope) {
 		instance.queued = null;
 		instance.current = null;
 		instance.previous = null;
 		instance.data = null;
-		instance.scope = null;
-		instance.events = $(document.createElement("span"));
+		instance.scope = $(scope);
+		instance.on = {
+			warn : new signals(),
+			info : new signals(),
+			error : new signals()
+		};
 	};
 
 	Controller = function(scope){
-		__init(this);
-		this.scope = $(scope);
+		__init(this, scope);
 	};
 
 	Controller.prototype = {
 		define_pages : function (data) {
-			// if (validate_model(data)) {
-			// 	this.events.trigger("define.ok");
-			// 	this.data = data;
-			// } else {
-			// 	this.events.trigger("define.fail");
-			// }
+
 		},
-		start : function (index) {
+		start : function (name) {
 
 		},
 		create_view : function (config) {
-			if (_viewVO.implements(config)) {
-				try {
-					this.queued = view(config);
-				} catch (err) {
-					_notify(this,"create_view:fail")(err);
-					return;
-				}
-				_notify(this,"create_view:ok")(this.queued.name);
-				this.render_view(mix_in(config.data,helper_nav));
-			} else {
-				_notify(this,"create_view:fail")();
+			if (!_viewVO.implements(config)) {
+				_notify(this,"controller => view '"+this.queued.name+"' malformed template",error)(config);
+				return;
 			}
+			try {
+				this.queued = view(config);
+			} catch (err) {
+				_notify(this,"controller => view '"+this.queued.name+"' failed to create.",error)(err);
+				return;
+			}
+			_notify(this,"controller => view '"+this.queued.name+"' created.")();
+			this.render_view(config.data);
 		},
 		render_view : function (data) {
-			if (!this.queued || !data){
-				_notify(this,"render_view:fail")();
+			if (!this.queued) {
+				_notify(this,"controller => no queued view to render",error)();
 				return;
 			}
-			this.queued.events.one("render:fail",_notify(this,"render_view:fail"));
-			this.queued.events.one("render:ok",_notify(this,"render_view:ok"));
-			try{
-				this.queued.render(data);
-			} catch (err) {
-				_notify(this,"render_view.fail")(err);
-				return;
-			}
-			this.close_current();
+			data = data || {};
+			this.queued.on.render.failed.addOnce(_notify(this,"controller => view '"+this.queued.name+"' failed to render.",error));
+			this.queued.on.render.passed.addOnce(this.close_current,this);
+			this.queued.render(mix_in(data,helper_nav));
 		},
 		open : function () {
-			if (!this.queued){
-				_notify(this,"open:fail")(["no view to open"]);
+			if (!this.queued) {
+				_notify(this,"controller => no queued view to open!",error)();
+				return;
+			}
+			if (!this.queued.html || !this.queued.html.length) {
+				_notify(this,"controller => queued view has no html.",error)();
 				return;
 			}
 			this.scope.append(this.queued.html);
-			this.queued.events.one("open:ok",this._onOpen.bind(this));
-			this.queued.events.one("open:fail",this._on_fail.bind(this));
+			this.queued.on.open.passed.addOnce(this._on_open,this);
+			this.queued.on.open.failed.addOnce(this._on_fail,this);
 			this.queued.open();
 		},
 		close_current: function () {
-			if (!this.current || !this.queued){
-				_notify(this,"close_current:warn")(!this.current ? "no view to close" : "no queued view to open");
+			if (!this.current) {
+				_notify(this,"controller => no current view to close, open queued.",warn)();
 				this.open();
 				return;
 			}
-			this.queued.events.one("close:ok",this._on_close.bind(this));
-			this.queued.events.one("close:fail",this._on_fail.bind(this));
+			this.queued.on.close.passed.addOnce(this._on_close,this);
+			this.queued.on.close.failed.addOnce(this._on_fail,this);
 			this.queued.disable_ux();
 			this.queued.close();
 		},
-		_dispose_view : function(view) {
-			view.events.off("close:ok",this._on_close.bind(this));
-			view.events.off("close:fail",this._on_fail.bind(this));
-			view.events.off("open:ok",this._onOpen.bind(this));
-			view.events.off("open:fail",this._on_fail.bind(this));
-			view.dispose();
-		},
-		_on_fail : function (event) {
-			log.error("[to-do] failed to ",event);
+		_on_fail : function (args) {
+			log.error("fatal erro, show alert box");
+			_notify(this,"controller fail =>",error)(args);
 		},
 		_on_close : function () {
 			if (this.current){
-				this._dispose_view(this.current);
-				_notify(this,"close_view:ok")(this.current.name);
+				this.current.dispose();
+				// _notify(this,"close_view:ok")(this.current.name);
 				this.previous = this.current;
 			}
 			this.current = null;
 			this.open();
 		},
-		_onOpen : function () {
+		_on_open : function () {
 			this.current = this.queued;
 			this.queued = null;
 			this.current.enable_ux();
-			_notify(this,"open:ok")(this.current.name);
+			_notify(this,"controller => view '"+this.current.name+"' opened.")();
 		},
 	};
 	return function(scope){

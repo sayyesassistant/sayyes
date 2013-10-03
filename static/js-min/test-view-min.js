@@ -3793,113 +3793,6 @@ define('mout/object/mixIn',['./forOwn'], function(forOwn){
     return mixIn;
 });
 
-define('mout/lang/toString',[],function () {
-
-    /**
-     * Typecast a value to a String, using an empty string value for null or
-     * undefined.
-     */
-    function toString(val){
-        return val == null ? '' : val.toString();
-    }
-
-    return toString;
-
-});
-
-define('mout/string/WHITE_SPACES',[],function() {
-    /**
-     * Contains all Unicode white-spaces. Taken from
-     * http://en.wikipedia.org/wiki/Whitespace_character.
-     */
-    return [
-        ' ', '\n', '\r', '\t', '\f', '\v', '\u00A0', '\u1680', '\u180E',
-        '\u2000', '\u2001', '\u2002', '\u2003', '\u2004', '\u2005', '\u2006',
-        '\u2007', '\u2008', '\u2009', '\u200A', '\u2028', '\u2029', '\u202F',
-        '\u205F', '\u3000'
-    ];
-});
-
-define('mout/string/ltrim',['../lang/toString', './WHITE_SPACES'], function(toString, WHITE_SPACES){
-    /**
-     * Remove chars from beginning of string.
-     */
-    function ltrim(str, chars) {
-        str = toString(str);
-        chars = chars || WHITE_SPACES;
-
-        var start = 0,
-            len = str.length,
-            charLen = chars.length,
-            found = true,
-            i, c;
-
-        while (found && start < len) {
-            found = false;
-            i = -1;
-            c = str.charAt(start);
-
-            while (++i < charLen) {
-                if (c === chars[i]) {
-                    found = true;
-                    start++;
-                    break;
-                }
-            }
-        }
-
-        return (start >= len) ? '' : str.substr(start, len);
-    }
-
-    return ltrim;
-});
-
-define('mout/string/rtrim',['../lang/toString', './WHITE_SPACES'], function(toString, WHITE_SPACES){
-    /**
-     * Remove chars from end of string.
-     */
-    function rtrim(str, chars) {
-        str = toString(str);
-        chars = chars || WHITE_SPACES;
-
-        var end = str.length - 1,
-            charLen = chars.length,
-            found = true,
-            i, c;
-
-        while (found && end >= 0) {
-            found = false;
-            i = -1;
-            c = str.charAt(end);
-
-            while (++i < charLen) {
-                if (c === chars[i]) {
-                    found = true;
-                    end--;
-                    break;
-                }
-            }
-        }
-
-        return (end >= 0) ? str.substring(0, end + 1) : '';
-    }
-
-    return rtrim;
-});
-
-define('mout/string/trim',['../lang/toString', './WHITE_SPACES', './ltrim', './rtrim'], function(toString, WHITE_SPACES, ltrim, rtrim){
-    /**
-     * Remove white-spaces from beginning and end of string.
-     */
-    function trim(str, chars) {
-        str = toString(str);
-        chars = chars || WHITE_SPACES;
-        return ltrim(rtrim(str, chars), chars);
-    }
-
-    return trim;
-});
-
 /*!
  * mustache.js - Logic-less {{mustache}} templates with JavaScript
  * http://github.com/janl/mustache.js
@@ -4511,19 +4404,468 @@ define('mout/string/trim',['../lang/toString', './WHITE_SPACES', './ltrim', './r
 
 }())));
 
+/*jslint onevar:true, undef:true, newcap:true, regexp:true, bitwise:true, maxerr:50, indent:4, white:false, nomen:false, plusplus:false */
+/*global define:false, require:false, exports:false, module:false, signals:false */
+
+/** @license
+ * JS Signals <http://millermedeiros.github.com/js-signals/>
+ * Released under the MIT license
+ * Author: Miller Medeiros
+ * Version: 1.0.0 - Build: 268 (2012/11/29 05:48 PM)
+ */
+
+(function(global){
+
+    // SignalBinding -------------------------------------------------
+    //================================================================
+
+    /**
+     * Object that represents a binding between a Signal and a listener function.
+     * <br />- <strong>This is an internal constructor and shouldn't be called by regular users.</strong>
+     * <br />- inspired by Joa Ebert AS3 SignalBinding and Robert Penner's Slot classes.
+     * @author Miller Medeiros
+     * @constructor
+     * @internal
+     * @name SignalBinding
+     * @param {Signal} signal Reference to Signal object that listener is currently bound to.
+     * @param {Function} listener Handler function bound to the signal.
+     * @param {boolean} isOnce If binding should be executed just once.
+     * @param {Object} [listenerContext] Context on which listener will be executed (object that should represent the `this` variable inside listener function).
+     * @param {Number} [priority] The priority level of the event listener. (default = 0).
+     */
+    function SignalBinding(signal, listener, isOnce, listenerContext, priority) {
+
+        /**
+         * Handler function bound to the signal.
+         * @type Function
+         * @private
+         */
+        this._listener = listener;
+
+        /**
+         * If binding should be executed just once.
+         * @type boolean
+         * @private
+         */
+        this._isOnce = isOnce;
+
+        /**
+         * Context on which listener will be executed (object that should represent the `this` variable inside listener function).
+         * @memberOf SignalBinding.prototype
+         * @name context
+         * @type Object|undefined|null
+         */
+        this.context = listenerContext;
+
+        /**
+         * Reference to Signal object that listener is currently bound to.
+         * @type Signal
+         * @private
+         */
+        this._signal = signal;
+
+        /**
+         * Listener priority
+         * @type Number
+         * @private
+         */
+        this._priority = priority || 0;
+    }
+
+    SignalBinding.prototype = {
+
+        /**
+         * If binding is active and should be executed.
+         * @type boolean
+         */
+        active : true,
+
+        /**
+         * Default parameters passed to listener during `Signal.dispatch` and `SignalBinding.execute`. (curried parameters)
+         * @type Array|null
+         */
+        params : null,
+
+        /**
+         * Call listener passing arbitrary parameters.
+         * <p>If binding was added using `Signal.addOnce()` it will be automatically removed from signal dispatch queue, this method is used internally for the signal dispatch.</p>
+         * @param {Array} [paramsArr] Array of parameters that should be passed to the listener
+         * @return {*} Value returned by the listener.
+         */
+        execute : function (paramsArr) {
+            var handlerReturn, params;
+            if (this.active && !!this._listener) {
+                params = this.params? this.params.concat(paramsArr) : paramsArr;
+                handlerReturn = this._listener.apply(this.context, params);
+                if (this._isOnce) {
+                    this.detach();
+                }
+            }
+            return handlerReturn;
+        },
+
+        /**
+         * Detach binding from signal.
+         * - alias to: mySignal.remove(myBinding.getListener());
+         * @return {Function|null} Handler function bound to the signal or `null` if binding was previously detached.
+         */
+        detach : function () {
+            return this.isBound()? this._signal.remove(this._listener, this.context) : null;
+        },
+
+        /**
+         * @return {Boolean} `true` if binding is still bound to the signal and have a listener.
+         */
+        isBound : function () {
+            return (!!this._signal && !!this._listener);
+        },
+
+        /**
+         * @return {boolean} If SignalBinding will only be executed once.
+         */
+        isOnce : function () {
+            return this._isOnce;
+        },
+
+        /**
+         * @return {Function} Handler function bound to the signal.
+         */
+        getListener : function () {
+            return this._listener;
+        },
+
+        /**
+         * @return {Signal} Signal that listener is currently bound to.
+         */
+        getSignal : function () {
+            return this._signal;
+        },
+
+        /**
+         * Delete instance properties
+         * @private
+         */
+        _destroy : function () {
+            delete this._signal;
+            delete this._listener;
+            delete this.context;
+        },
+
+        /**
+         * @return {string} String representation of the object.
+         */
+        toString : function () {
+            return '[SignalBinding isOnce:' + this._isOnce +', isBound:'+ this.isBound() +', active:' + this.active + ']';
+        }
+
+    };
+
+
+/*global SignalBinding:false*/
+
+    // Signal --------------------------------------------------------
+    //================================================================
+
+    function validateListener(listener, fnName) {
+        if (typeof listener !== 'function') {
+            throw new Error( 'listener is a required param of {fn}() and should be a Function.'.replace('{fn}', fnName) );
+        }
+    }
+
+    /**
+     * Custom event broadcaster
+     * <br />- inspired by Robert Penner's AS3 Signals.
+     * @name Signal
+     * @author Miller Medeiros
+     * @constructor
+     */
+    function Signal() {
+        /**
+         * @type Array.<SignalBinding>
+         * @private
+         */
+        this._bindings = [];
+        this._prevParams = null;
+
+        // enforce dispatch to aways work on same context (#47)
+        var self = this;
+        this.dispatch = function(){
+            Signal.prototype.dispatch.apply(self, arguments);
+        };
+    }
+
+    Signal.prototype = {
+
+        /**
+         * Signals Version Number
+         * @type String
+         * @const
+         */
+        VERSION : '1.0.0',
+
+        /**
+         * If Signal should keep record of previously dispatched parameters and
+         * automatically execute listener during `add()`/`addOnce()` if Signal was
+         * already dispatched before.
+         * @type boolean
+         */
+        memorize : false,
+
+        /**
+         * @type boolean
+         * @private
+         */
+        _shouldPropagate : true,
+
+        /**
+         * If Signal is active and should broadcast events.
+         * <p><strong>IMPORTANT:</strong> Setting this property during a dispatch will only affect the next dispatch, if you want to stop the propagation of a signal use `halt()` instead.</p>
+         * @type boolean
+         */
+        active : true,
+
+        /**
+         * @param {Function} listener
+         * @param {boolean} isOnce
+         * @param {Object} [listenerContext]
+         * @param {Number} [priority]
+         * @return {SignalBinding}
+         * @private
+         */
+        _registerListener : function (listener, isOnce, listenerContext, priority) {
+
+            var prevIndex = this._indexOfListener(listener, listenerContext),
+                binding;
+
+            if (prevIndex !== -1) {
+                binding = this._bindings[prevIndex];
+                if (binding.isOnce() !== isOnce) {
+                    throw new Error('You cannot add'+ (isOnce? '' : 'Once') +'() then add'+ (!isOnce? '' : 'Once') +'() the same listener without removing the relationship first.');
+                }
+            } else {
+                binding = new SignalBinding(this, listener, isOnce, listenerContext, priority);
+                this._addBinding(binding);
+            }
+
+            if(this.memorize && this._prevParams){
+                binding.execute(this._prevParams);
+            }
+
+            return binding;
+        },
+
+        /**
+         * @param {SignalBinding} binding
+         * @private
+         */
+        _addBinding : function (binding) {
+            //simplified insertion sort
+            var n = this._bindings.length;
+            do { --n; } while (this._bindings[n] && binding._priority <= this._bindings[n]._priority);
+            this._bindings.splice(n + 1, 0, binding);
+        },
+
+        /**
+         * @param {Function} listener
+         * @return {number}
+         * @private
+         */
+        _indexOfListener : function (listener, context) {
+            var n = this._bindings.length,
+                cur;
+            while (n--) {
+                cur = this._bindings[n];
+                if (cur._listener === listener && cur.context === context) {
+                    return n;
+                }
+            }
+            return -1;
+        },
+
+        /**
+         * Check if listener was attached to Signal.
+         * @param {Function} listener
+         * @param {Object} [context]
+         * @return {boolean} if Signal has the specified listener.
+         */
+        has : function (listener, context) {
+            return this._indexOfListener(listener, context) !== -1;
+        },
+
+        /**
+         * Add a listener to the signal.
+         * @param {Function} listener Signal handler function.
+         * @param {Object} [listenerContext] Context on which listener will be executed (object that should represent the `this` variable inside listener function).
+         * @param {Number} [priority] The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added. (default = 0)
+         * @return {SignalBinding} An Object representing the binding between the Signal and listener.
+         */
+        add : function (listener, listenerContext, priority) {
+            validateListener(listener, 'add');
+            return this._registerListener(listener, false, listenerContext, priority);
+        },
+
+        /**
+         * Add listener to the signal that should be removed after first execution (will be executed only once).
+         * @param {Function} listener Signal handler function.
+         * @param {Object} [listenerContext] Context on which listener will be executed (object that should represent the `this` variable inside listener function).
+         * @param {Number} [priority] The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added. (default = 0)
+         * @return {SignalBinding} An Object representing the binding between the Signal and listener.
+         */
+        addOnce : function (listener, listenerContext, priority) {
+            validateListener(listener, 'addOnce');
+            return this._registerListener(listener, true, listenerContext, priority);
+        },
+
+        /**
+         * Remove a single listener from the dispatch queue.
+         * @param {Function} listener Handler function that should be removed.
+         * @param {Object} [context] Execution context (since you can add the same handler multiple times if executing in a different context).
+         * @return {Function} Listener handler function.
+         */
+        remove : function (listener, context) {
+            validateListener(listener, 'remove');
+
+            var i = this._indexOfListener(listener, context);
+            if (i !== -1) {
+                this._bindings[i]._destroy(); //no reason to a SignalBinding exist if it isn't attached to a signal
+                this._bindings.splice(i, 1);
+            }
+            return listener;
+        },
+
+        /**
+         * Remove all listeners from the Signal.
+         */
+        removeAll : function () {
+            var n = this._bindings.length;
+            while (n--) {
+                this._bindings[n]._destroy();
+            }
+            this._bindings.length = 0;
+        },
+
+        /**
+         * @return {number} Number of listeners attached to the Signal.
+         */
+        getNumListeners : function () {
+            return this._bindings.length;
+        },
+
+        /**
+         * Stop propagation of the event, blocking the dispatch to next listeners on the queue.
+         * <p><strong>IMPORTANT:</strong> should be called only during signal dispatch, calling it before/after dispatch won't affect signal broadcast.</p>
+         * @see Signal.prototype.disable
+         */
+        halt : function () {
+            this._shouldPropagate = false;
+        },
+
+        /**
+         * Dispatch/Broadcast Signal to all listeners added to the queue.
+         * @param {...*} [params] Parameters that should be passed to each handler.
+         */
+        dispatch : function (params) {
+            if (! this.active) {
+                return;
+            }
+
+            var paramsArr = Array.prototype.slice.call(arguments),
+                n = this._bindings.length,
+                bindings;
+
+            if (this.memorize) {
+                this._prevParams = paramsArr;
+            }
+
+            if (! n) {
+                //should come after memorize
+                return;
+            }
+
+            bindings = this._bindings.slice(); //clone array in case add/remove items during dispatch
+            this._shouldPropagate = true; //in case `halt` was called before dispatch or during the previous dispatch.
+
+            //execute all callbacks until end of the list or until a callback returns `false` or stops propagation
+            //reverse loop since listeners with higher priority will be added at the end of the list
+            do { n--; } while (bindings[n] && this._shouldPropagate && bindings[n].execute(paramsArr) !== false);
+        },
+
+        /**
+         * Forget memorized arguments.
+         * @see Signal.memorize
+         */
+        forget : function(){
+            this._prevParams = null;
+        },
+
+        /**
+         * Remove all bindings from signal and destroy any reference to external objects (destroy Signal object).
+         * <p><strong>IMPORTANT:</strong> calling any method on the signal instance after calling dispose will throw errors.</p>
+         */
+        dispose : function () {
+            this.removeAll();
+            delete this._bindings;
+            delete this._prevParams;
+        },
+
+        /**
+         * @return {string} String representation of the object.
+         */
+        toString : function () {
+            return '[Signal active:'+ this.active +' numListeners:'+ this.getNumListeners() +']';
+        }
+
+    };
+
+
+    // Namespace -----------------------------------------------------
+    //================================================================
+
+    /**
+     * Signals namespace
+     * @namespace
+     * @name signals
+     */
+    var signals = Signal;
+
+    /**
+     * Custom event broadcaster
+     * @see Signal
+     */
+    // alias for backwards compatibility (see #gh-44)
+    signals.Signal = Signal;
+
+
+
+    //exports to multiple environments
+    if(typeof define === 'function' && define.amd){ //AMD
+        define('signals/signals',[],function () { return signals; });
+    } else if (typeof module !== 'undefined' && module.exports){ //node
+        module.exports = signals;
+    } else { //browser
+        //use string because of Google closure compiler ADVANCED_MODE
+        /*jslint sub:true */
+        global['signals'] = signals;
+    }
+
+}(this));
+
 /*
 @grunt -task=comp-js -page=test-view
 */
 define('sayyes/modules/view',[
 	"mout/object/mixIn",
-	"mout/string/trim",
-	"mustache/mustache"
+	"mustache/mustache",
+	"signals/signals"
 ], function (
 	mixIn,
-	trim,
-	mustache
+	mustache,
+	signal
 ) {
-	var View, _config, _count;
+	var View, _config, _count, class_open, class_close;
+
+	class_open = "open";
+	class_close = "close";
 
 	_count = 0;
 
@@ -4534,7 +4876,20 @@ define('sayyes/modules/view',[
 		template_name: null,
 		template_raw: null,
 		template_fn: null,
-		events : null
+		on : {
+			render : {
+				failed : new signal(),
+				passed : new signal()
+			},
+			open : {
+				failed : new signal(),
+				passed : new signal()
+			},
+			close : {
+				failed : new signal(),
+				passed : new signal()
+			}
+		}
 	};
 
 	View = function(config){
@@ -4547,25 +4902,23 @@ define('sayyes/modules/view',[
 			mixIn(this,_config,value);
 			var element = document.getElementById(this.template_name);
 			if (!element) {
-				throw "template:'"+this.template_name+"' not found.";
+				throw "template:'"+this.template_name+"' not found!";
 			}
-			this.template_raw = trim(element.text);
+			this.template_raw = element.text.trim();
 			if (!this.template_raw || !this.template_raw.length) {
-				throw "template:'"+this.template_name+"' is empty.";
+				throw "template:'"+this.template_name+"' is empty!";
 			}
 			this.template_fn = mustache.compile(this.template_raw);
-			this.events = $(document.createElement("span"));
 		},
 
 		render : function (data) {
 			try {
 				this.html = $(this.template_fn(data));
 			} catch (err) {
-				this.error = err;
-				this.events.trigger("render:fail",[this,err]);
+				this.on.render.failed.dispatch(this,err);
 				return;
 			}
-			this.events.trigger("render:ok",[this]);
+			this.on.render.passed.dispatch(this);
 		},
 
 		enable_ux : function () {
@@ -4584,24 +4937,34 @@ define('sayyes/modules/view',[
 
 		open : function () {
 			if (!this.html){
-				this.events.trigger("open:fail");
+				this.on.open.failed.dispatch(this);
 				return;
 			}
-			this.html.addClass("open");
-			this.events.trigger("open:ok");
+			this.html.addClass(class_open);
+			this.on.open.passed.dispatch(this);
 		},
 
 		close : function () {
 			if (!this.html){
-				this.events.trigger("close:fail");
+				this.on.close.failed.dispatch(this);
 				return;
 			}
-			this.html.addClass("close");
-			this.events.trigger("close:ok");
+			this.html.removeClass(class_open).addClass(class_close);
+			this.on.close.passed.dispatch(this);
 		},
 
 		dispose : function () {
+			this.html.removeClass(class_close);
 			this.html = null;
+
+			this.on.render.passed.removeAll();
+			this.on.render.failed.removeAll();
+
+			this.on.close.passed.removeAll();
+			this.on.close.failed.removeAll();
+
+			this.on.open.passed.removeAll();
+			this.on.open.failed.removeAll();
 		}
 	};
 
@@ -4993,126 +5356,134 @@ define('sayyes/modules/controller',[
 	"sayyes/modules/view",
 	"sayyes/modules/vo",
 	"sayyes/helpers/helper-nav",
-	"mout/object/mixIn"
+	"mout/object/mixIn",
+	"signals/signals"
 ], function (
 	log,
 	view,
 	vo,
 	helper_nav,
-	mix_in
+	mix_in,
+	signals
 ) {
 
-	var Controller, _viewVO, _notify;
+	var Controller, _viewVO, _notify, error, warn;
+
+	error = "error";
+	warn = "warn";
 
 	_viewVO = new vo.view();
 
-	_notify = function(scope,status) {
-		return function(){
-			var a = Array.prototype.slice.call(arguments);
-			scope.events.trigger(status,a);
+	_notify  = function (self, message, severity) {
+		return function (value) {
+			switch (severity) {
+				case warn :
+					log.warn(message);
+					self.on.warn.dispatch(message, value);
+				break;
+				case error :
+					log.error(message);
+					self.on.error.dispatch(message, value);
+				break;
+				default:
+					log.info(message);
+					self.on.info.dispatch(message, value);
+				break;
+			}
 		};
 	};
 
-	__init = function (instance) {
+	__init = function (instance, scope) {
 		instance.queued = null;
 		instance.current = null;
 		instance.previous = null;
 		instance.data = null;
-		instance.scope = null;
-		instance.events = $(document.createElement("span"));
+		instance.scope = $(scope);
+		instance.on = {
+			warn : new signals(),
+			info : new signals(),
+			error : new signals()
+		};
 	};
 
 	Controller = function(scope){
-		__init(this);
-		this.scope = $(scope);
+		__init(this, scope);
 	};
 
 	Controller.prototype = {
 		define_pages : function (data) {
-			// if (validate_model(data)) {
-			// 	this.events.trigger("define.ok");
-			// 	this.data = data;
-			// } else {
-			// 	this.events.trigger("define.fail");
-			// }
+
 		},
-		start : function (index) {
+		start : function (name) {
 
 		},
 		create_view : function (config) {
-			if (_viewVO.implements(config)) {
-				try {
-					this.queued = view(config);
-				} catch (err) {
-					_notify(this,"create_view:fail")(err);
-					return;
-				}
-				_notify(this,"create_view:ok")(this.queued.name);
-				this.render_view(mix_in(config.data,helper_nav));
-			} else {
-				_notify(this,"create_view:fail")();
+			if (!_viewVO.implements(config)) {
+				_notify(this,"controller => view '"+this.queued.name+"' malformed template",error)(config);
+				return;
 			}
+			try {
+				this.queued = view(config);
+			} catch (err) {
+				_notify(this,"controller => view '"+this.queued.name+"' failed to create.",error)(err);
+				return;
+			}
+			_notify(this,"controller => view '"+this.queued.name+"' created.")();
+			this.render_view(config.data);
 		},
 		render_view : function (data) {
-			if (!this.queued || !data){
-				_notify(this,"render_view:fail")();
+			if (!this.queued) {
+				_notify(this,"controller => no queued view to render",error)();
 				return;
 			}
-			this.queued.events.one("render:fail",_notify(this,"render_view:fail"));
-			this.queued.events.one("render:ok",_notify(this,"render_view:ok"));
-			try{
-				this.queued.render(data);
-			} catch (err) {
-				_notify(this,"render_view.fail")(err);
-				return;
-			}
-			this.close_current();
+			data = data || {};
+			this.queued.on.render.failed.addOnce(_notify(this,"controller => view '"+this.queued.name+"' failed to render.",error));
+			this.queued.on.render.passed.addOnce(this.close_current,this);
+			this.queued.render(mix_in(data,helper_nav));
 		},
 		open : function () {
-			if (!this.queued){
-				_notify(this,"open:fail")(["no view to open"]);
+			if (!this.queued) {
+				_notify(this,"controller => no queued view to open!",error)();
+				return;
+			}
+			if (!this.queued.html || !this.queued.html.length) {
+				_notify(this,"controller => queued view has no html.",error)();
 				return;
 			}
 			this.scope.append(this.queued.html);
-			this.queued.events.one("open:ok",this._onOpen.bind(this));
-			this.queued.events.one("open:fail",this._on_fail.bind(this));
+			this.queued.on.open.passed.addOnce(this._on_open,this);
+			this.queued.on.open.failed.addOnce(this._on_fail,this);
 			this.queued.open();
 		},
 		close_current: function () {
-			if (!this.current || !this.queued){
-				_notify(this,"close_current:warn")(!this.current ? "no view to close" : "no queued view to open");
+			if (!this.current) {
+				_notify(this,"controller => no current view to close, open queued.",warn)();
 				this.open();
 				return;
 			}
-			this.queued.events.one("close:ok",this._on_close.bind(this));
-			this.queued.events.one("close:fail",this._on_fail.bind(this));
+			this.queued.on.close.passed.addOnce(this._on_close,this);
+			this.queued.on.close.failed.addOnce(this._on_fail,this);
 			this.queued.disable_ux();
 			this.queued.close();
 		},
-		_dispose_view : function(view) {
-			view.events.off("close:ok",this._on_close.bind(this));
-			view.events.off("close:fail",this._on_fail.bind(this));
-			view.events.off("open:ok",this._onOpen.bind(this));
-			view.events.off("open:fail",this._on_fail.bind(this));
-			view.dispose();
-		},
-		_on_fail : function (event) {
-			log.error("[to-do] failed to ",event);
+		_on_fail : function (args) {
+			log.error("fatal erro, show alert box");
+			_notify(this,"controller fail =>",error)(args);
 		},
 		_on_close : function () {
 			if (this.current){
-				this._dispose_view(this.current);
-				_notify(this,"close_view:ok")(this.current.name);
+				this.current.dispose();
+				// _notify(this,"close_view:ok")(this.current.name);
 				this.previous = this.current;
 			}
 			this.current = null;
 			this.open();
 		},
-		_onOpen : function () {
+		_on_open : function () {
 			this.current = this.queued;
 			this.queued = null;
 			this.current.enable_ux();
-			_notify(this,"open:ok")(this.current.name);
+			_notify(this,"controller => view '"+this.current.name+"' opened.")();
 		},
 	};
 	return function(scope){
@@ -5137,14 +5508,6 @@ require([
 	domReady,
 	controller
 ){
-	function log_ok (event,args) {
-		log.info(event.type,args);
-	}
-
-	function log_error (event, args) {
-		log.warn(event.type, args);
-	}
-
 	function init () {
 		var c;
 		try{
@@ -5153,17 +5516,12 @@ require([
 			log.error("error to create controller",err);
 			return;
 		}
-
-		c.events.on("create_view:fail",log_error);
-		c.events.on("create_view:ok",log_ok);
-
-		c.events.on("render_view:ok",log_ok);
-		c.events.on("render_view:fail",log_error);
-
-		c.events.on("close_current:warn",log_error);
-		c.events.on("open:fail",log_error);
-		c.events.on("open:ok",log_ok);
-
+		c.on.warn.add(function(){
+			// console.warn("ops! controller yeld a warning", arguments);
+		});
+		c.on.error.add(function(){
+			// console.log("ops! controller found an error", arguments);
+		});
 		c.create_view(window.mock_view);
 	}
 	domReady(init);

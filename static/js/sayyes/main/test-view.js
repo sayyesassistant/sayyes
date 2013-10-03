@@ -12,14 +12,6 @@ require([
 	domReady,
 	controller
 ){
-	function log_ok (event,args) {
-		log.info(event.type,args);
-	}
-
-	function log_error (event, args) {
-		log.warn(event.type, args);
-	}
-
 	function init () {
 		var c;
 		try{
@@ -28,17 +20,12 @@ require([
 			log.error("error to create controller",err);
 			return;
 		}
-
-		c.events.on("create_view:fail",log_error);
-		c.events.on("create_view:ok",log_ok);
-
-		c.events.on("render_view:ok",log_ok);
-		c.events.on("render_view:fail",log_error);
-
-		c.events.on("close_current:warn",log_error);
-		c.events.on("open:fail",log_error);
-		c.events.on("open:ok",log_ok);
-
+		c.on.warn.add(function(){
+			// console.warn("ops! controller yeld a warning", arguments);
+		});
+		c.on.error.add(function(){
+			// console.log("ops! controller found an error", arguments);
+		});
 		c.create_view(window.mock_view);
 	}
 	domReady(init);
