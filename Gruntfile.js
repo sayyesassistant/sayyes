@@ -4,13 +4,30 @@ global module: true, process:true
 module.exports = function (grunt) {
 
 	grunt.loadNpmTasks('grunt-contrib-concat');
+	grunt.loadNpmTasks('grunt-contrib-jshint');
 
 	var config   = {
-		"arguments" : {
+		arguments : {
 			"__warn":"don't change! this object will be auto-filled",
 			"env" : "dev",
 		},
-		"concat":{},
+		concat:{},
+		jshint: {
+			options: {
+				curly: true,
+				eqeqeq: true,
+				eqnull: true,
+				browser: true,
+				globals: {
+					jQuery: true,
+					require:true,
+					define:true
+				}
+			},
+			all: {
+				src: ['static/js/sayyes/**/*.js']
+			}
+		}
 	},	ready = false;
 
 	config.requirejs = grunt.file.readJSON("./.grunt/requirejs-config.json");
@@ -67,7 +84,7 @@ module.exports = function (grunt) {
 		init();
 		var page = grunt.config.get("pages"),
 			forOwn = require("mout/object/forOwn"),
-			tasks = [];
+			tasks = ["jshint"];
 			eachPage = function(list){
 				return function(value,prop){
 					list.push("comp-js:"+prop);

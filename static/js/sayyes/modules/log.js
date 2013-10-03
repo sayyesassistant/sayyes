@@ -16,7 +16,9 @@ define([], function () {
 	_reg = /[\d]{2}:[\d]{2}:[\d]{2}/g;
 
 	__init = function (){
-		if (!!instance)return;
+		if (!!instance){
+			return;
+		}
 		instance = new Logger();
 		instance.history = [];
 		instance.verbose = true;

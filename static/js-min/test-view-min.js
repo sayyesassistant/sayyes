@@ -2073,7 +2073,9 @@ define('sayyes/modules/log',[], function () {
 	_reg = /[\d]{2}:[\d]{2}:[\d]{2}/g;
 
 	__init = function (){
-		if (!!instance)return;
+		if (!!instance){
+			return;
+		}
 		instance = new Logger();
 		instance.history = [];
 		instance.verbose = true;
@@ -5294,11 +5296,11 @@ define('mout/object/keys',['./forOwn'], function (forOwn) {
 define('sayyes/modules/vo',[
 	"mout/array/map",
 	"mout/array/difference",
-	"mout/object/keys",
+	"mout/object/keys"
 ], function (
-	map
-	,difference
-	,keys
+	map,
+	difference,
+	keys
 ) {
 
 	var VO, ViewVO, ListVO, __cast;
@@ -5485,7 +5487,7 @@ define('sayyes/modules/controller',[
 			this.queued = null;
 			this.current.enable_ux();
 			_notify(this,"controller => view '"+this.current.name+"' opened.")();
-		},
+		}
 	};
 	return function(scope){
 		if (!scope){

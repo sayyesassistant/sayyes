@@ -135,7 +135,7 @@ define([
 			this.queued = null;
 			this.current.enable_ux();
 			_notify(this,"controller => view '"+this.current.name+"' opened.")();
-		},
+		}
 	};
 	return function(scope){
 		if (!scope){

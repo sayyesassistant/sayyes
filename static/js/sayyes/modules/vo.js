@@ -4,11 +4,11 @@
 define([
 	"mout/array/map",
 	"mout/array/difference",
-	"mout/object/keys",
+	"mout/object/keys"
 ], function (
-	map
-	,difference
-	,keys
+	map,
+	difference,
+	keys
 ) {
 
 	var VO, ViewVO, ListVO, __cast;
