@@ -1,0 +1,22 @@
+{
+	"name":"nav-test",
+	"template_name":"mock-test",
+	"data":{
+		"title":"Title",
+		"description":"Description goes here",
+		"nav":[
+			{
+				"label":"foo",
+				"url":"#?nav=b"
+			},
+			{
+				"label":"bar",
+				"url":"#?nav=c"
+			},
+			{
+				"label":"loren",
+				"url":"#?nav=a"
+			}
+		]
+	}
+}

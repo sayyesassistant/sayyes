@@ -5423,6 +5423,7 @@ define('sayyes/modules/controller',[
 				return;
 			}
 			try {
+				console.dir(config);
 				this.queued = view(config);
 			} catch (err) {
 				_notify(this,"controller => view '"+this.queued.name+"' failed to create.",error)(err);
@@ -5473,7 +5474,7 @@ define('sayyes/modules/controller',[
 		_on_close : function () {
 			if (this.current){
 				this.current.dispose();
-				// _notify(this,"close_view:ok")(this.current.name);
+				_notify(this,"controller view '"+this.current.name+"' closed.");
 				this.previous = this.current;
 			}
 			this.current = null;

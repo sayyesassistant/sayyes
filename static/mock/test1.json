@@ -1,0 +1,8 @@
+{
+	"name":"simple-test",
+	"template_name":"mock-test",
+	"data":{
+		"title":"Title",
+		"description":"Description goes here"
+	}
+}

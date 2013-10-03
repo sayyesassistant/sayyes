@@ -1,24 +1,24 @@
 {
 	"test1" : {
 		"dest" : "{{{tests}}}/test1.html",
-		"views" : ["{{{templates}}}/test-view.mustache"],
+		"files" : ["{{{templates}}}/test-view.mustache"],
 		"raw": {
-			"template": "{{{templates}}}/template-simple.mustache"
+			"template": "{{{templates}}}/template-simple.mustache",
+			"mock_view": "{{{static}}}/mock/test1.json"
 		},
 		"data" : {
-			"js_src" : "/{{{dest_js_folder}}}/test-view-min.js",
-			"mock_view" : "{'name':'test', 'template_name':'mock-test', 'data' : {'title':'Title','description':'Description goes here'} }"
+			"js_src" : "/{{{dest_js_folder}}}/test-view-min.js"
 		}
 	},
 	"test2" : {
 		"dest" : "{{{tests}}}/test2.html",
-		"views" : ["{{{templates}}}/test-view.mustache"],
+		"files" : ["{{{templates}}}/test-view.mustache"],
 		"raw": {
-			"template": "{{{templates}}}/template-simple.mustache"
+			"template": "{{{templates}}}/template-simple.mustache",
+			"mock_view": "{{{static}}}/mock/test2.json"
 		},
 		"data" : {
-			"js_src" : "/{{{dest_js_folder}}}/test-view-min.js",
-			"mock_view" : "{'name':'test', 'template_name':'mock-test', 'data' : {'title':'Title','description':'Description goes here','nav':[{label:'foo',url:'#?nav=b'},{label:'bar',url:'#?nav=c'},{label:'loren',url:'#?nav=a'}]} }"
+			"js_src" : "/{{{dest_js_folder}}}/test-view-min.js"
 		}
 	}
 }

@@ -31,11 +31,8 @@ exports.run = function (grunt, task) {
 		return;
 	}
 
-	// merge raw data
-	blob = mixIn(mock.data,{raw:mock.raw});
-
 	//render file
-	rendered = mustache.render(file,blob);
+	rendered = mustache.render(file,mock);
 
 	//save rendeted file
 	try{

@@ -14,7 +14,7 @@ exports.run = function (grunt, task) {
 		return;
 	}
 
-	var diff_result = diff(["dest", "views", "data"], keys(task.data));
+	var diff_result = diff(["dest", "files", "data", "raw"], keys(task.data));
 	if (!!diff_result.length) {
 		grunt.fail.fatal("Test failed.\nMissing properties: '"+diff_result.join("','")+"'.");
 		return;
@@ -32,7 +32,7 @@ exports.run = function (grunt, task) {
 
 	blob = grunt.config.get("concat");
 	blob[task.target] = {
-		src : task.data.views,
+		src : task.data.files,
 		dest :task.data.dest
 	};
 
