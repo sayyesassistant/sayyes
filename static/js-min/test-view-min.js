@@ -4553,7 +4553,6 @@ define('sayyes/modules/view',[
 			if (!this.template_raw || !this.template_raw.length) {
 				throw "template:'"+this.template_name+"' is empty.";
 			}
-			console.log("template is:",this.template_raw);
 			this.template_fn = mustache.compile(this.template_raw);
 			this.events = $(document.createElement("span"));
 		},
@@ -4979,17 +4978,28 @@ define('sayyes/modules/vo',[
 		list : ListVO
 	};
 });
+define('sayyes/helpers/helper-nav',[],function(){
+	return {
+		has_nav : function (){
+			return !!this.nav && !!this.nav.length;
+		}
+	};
+});
 /*
 @grunt -task=comp-js -page=test-view
 */
 define('sayyes/modules/controller',[
 	"sayyes/modules/log",
 	"sayyes/modules/view",
-	"sayyes/modules/vo"
+	"sayyes/modules/vo",
+	"sayyes/helpers/helper-nav",
+	"mout/object/mixIn"
 ], function (
 	log,
 	view,
-	vo
+	vo,
+	helper_nav,
+	mix_in
 ) {
 
 	var Controller, _viewVO, _notify;
@@ -5038,8 +5048,7 @@ define('sayyes/modules/controller',[
 					return;
 				}
 				_notify(this,"create_view:ok")(this.queued.name);
-				console.log("render view with:",config.data);
-				this.render_view(config.data);
+				this.render_view(mix_in(config.data,helper_nav));
 			} else {
 				_notify(this,"create_view:fail")();
 			}

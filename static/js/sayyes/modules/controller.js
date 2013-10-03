@@ -4,11 +4,15 @@
 define([
 	"sayyes/modules/log",
 	"sayyes/modules/view",
-	"sayyes/modules/vo"
+	"sayyes/modules/vo",
+	"sayyes/helpers/helper-nav",
+	"mout/object/mixIn"
 ], function (
 	log,
 	view,
-	vo
+	vo,
+	helper_nav,
+	mix_in
 ) {
 
 	var Controller, _viewVO, _notify;
@@ -57,7 +61,7 @@ define([
 					return;
 				}
 				_notify(this,"create_view:ok")(this.queued.name);
-				this.render_view(config.data);
+				this.render_view(mix_in(config.data,helper_nav));
 			} else {
 				_notify(this,"create_view:fail")();
 			}

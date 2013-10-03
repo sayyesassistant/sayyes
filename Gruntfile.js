@@ -11,19 +11,9 @@ module.exports = function (grunt) {
 			"env" : "dev",
 		},
 		"concat":{},
-		"requirejs"      : {
-			"baseUrl": ".",
-			"paths": {
-				"lib": "{{{js_sources}}}/libs",
-				"sayyes": "{{{js_sources}}}/sayyes",
-				"mout": "{{{bower_path}}}/mout/src",
-				"zepto": "{{{bower_path}}}/zeptojs/src",
-				"req": "{{{bower_path}}}/requirejs",
-				"mustache": "{{{bower_path}}}/mustache/"
-			}
-		}
 	},	ready = false;
 
+	config.requirejs = grunt.file.readJSON("./.grunt/requirejs-config.json");
 	config.tasks = grunt.file.readJSON("./.grunt/tasks.json");
 	config.pages = grunt.file.readJSON("./.grunt/pages.json");
 	config.paths = grunt.file.readJSON("./.grunt/paths.json");

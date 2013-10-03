@@ -26,6 +26,11 @@ exports.run = function (grunt, task) {
 		return;
 	}
 
+	if (!file || !file.length){
+		grunt.fatal.warn(file_name+" seems to be empty");
+		return;
+	}
+
 	// merge raw data
 	blob = mixIn(mock.data,{raw:mock.raw});
 

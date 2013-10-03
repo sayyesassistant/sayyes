@@ -1,13 +1,24 @@
 {
 	"test1" : {
 		"dest" : "{{{tests}}}/test1.html",
-		"views" : ["{{{templates}}}/test-view-header.mustache","{{{templates}}}/test-view-footer.mustache"],
+		"views" : ["{{{templates}}}/test-view.mustache"],
 		"raw": {
 			"template": "{{{templates}}}/template-simple.mustache"
 		},
 		"data" : {
 			"js_src" : "/{{{dest_js_folder}}}/test-view-min.js",
 			"mock_view" : "{'name':'test', 'template_name':'mock-test', 'data' : {'title':'Title','description':'Description goes here'} }"
+		}
+	},
+	"test2" : {
+		"dest" : "{{{tests}}}/test2.html",
+		"views" : ["{{{templates}}}/test-view.mustache"],
+		"raw": {
+			"template": "{{{templates}}}/template-simple.mustache"
+		},
+		"data" : {
+			"js_src" : "/{{{dest_js_folder}}}/test-view-min.js",
+			"mock_view" : "{'name':'test', 'template_name':'mock-test', 'data' : {'title':'Title','description':'Description goes here','nav':[{label:'foo',url:'#?nav=b'},{label:'bar',url:'#?nav=c'},{label:'loren',url:'#?nav=a'}]} }"
 		}
 	}
 }

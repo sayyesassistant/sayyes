@@ -1,4 +1,15 @@
 <div class="view">
-	<h1>{{{title}}}</h1>
-	<h2>{{{description}}}</h2>
+	{{#title}}
+		<h1>{{{title}}}</h1>
+	{{/title}}
+	{{#description}}
+		<h2>{{{description}}}</h2>
+	{{/description}}
+	{{#has_nav}}
+		<ul>
+		{{#nav}}
+			<li><a href="{{{url}}}" data-role="nav">{{{label}}}</a></li>
+		{{/nav}}
+		</ul>
+	{{/has_nav}}
 </div>

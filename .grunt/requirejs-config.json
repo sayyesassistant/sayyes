@@ -1,0 +1,12 @@
+{
+	"baseUrl": ".",
+	"paths": {
+		"lib": "{{{js_sources}}}/libs",
+		"sayyes": "{{{js_sources}}}/sayyes",
+		"mout": "{{{bower_path}}}/mout/src",
+		"jssignals": "{{{bower_path}}}/js-signals/dist",
+		"zepto": "{{{bower_path}}}/zeptojs/src",
+		"req": "{{{bower_path}}}/requirejs",
+		"mustache": "{{{bower_path}}}/mustache/"
+	}
+}
