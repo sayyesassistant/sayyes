@@ -1,6 +1,6 @@
 {
 	"test1" : {
-		"dest" : "{{{tests}}}/test1.html",
+		"dest" : "{{{tests}}}/view-test1.html",
 		"files" : ["{{{templates}}}/test-view.mustache"],
 		"raw": {
 			"template": "{{{templates}}}/template-simple.mustache",
@@ -11,7 +11,7 @@
 		}
 	},
 	"test2" : {
-		"dest" : "{{{tests}}}/test2.html",
+		"dest" : "{{{tests}}}/view-test2.html",
 		"files" : ["{{{templates}}}/test-view.mustache"],
 		"raw": {
 			"template": "{{{templates}}}/template-simple.mustache",
@@ -19,6 +19,17 @@
 		},
 		"data" : {
 			"js_src" : "/{{{dest_js_folder}}}/test-view-min.js"
+		}
+	},
+	"test3" : {
+		"dest" : "{{{tests}}}/controller-test1.html",
+		"files" : ["{{{templates}}}/test-view.mustache"],
+		"raw": {
+			"template": "{{{templates}}}/template-simple.mustache",
+			"mock_view": "{{{static}}}/mock/test3.json"
+		},
+		"data" : {
+			"js_src" : "/{{{dest_js_folder}}}/test-controller-min.js"
 		}
 	}
 }

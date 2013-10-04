@@ -1,0 +1,38 @@
+{
+	"start_with":"a",
+	"views" : [{
+		"name":"a",
+		"template_name":"mock-test",
+		"data": {
+				"title":"view: a",
+				"description":"Description goes here",
+				"nav":[{
+						"label":"nav => b",
+						"url":"#?nav=b"
+					}, {
+						"label":"nav => c",
+						"url":"#?nav=c"
+					}, {
+						"label":"nav => a",
+						"url":"#?nav=a"
+					} ]
+				}
+		} , {
+		"name":"b",
+		"template_name":"mock-test",
+		"data":{
+			"title":"view: b",
+			"description":"Description goes here",
+			"nav":[{
+					"label":"nav => a",
+					"url":"#?nav=a"
+				}, {
+					"label":"nav => c",
+					"url":"#?nav=c"
+				}, {
+					"label":"nav => b",
+					"url":"#?nav=b"
+				}]
+			}
+		}]
+}

@@ -6,10 +6,12 @@
 		<h2>{{{description}}}</h2>
 	{{/description}}
 	{{#has_nav}}
-		<ul>
-		{{#nav}}
-			<li><a href="{{{url}}}" data-role="nav">{{{label}}}</a></li>
-		{{/nav}}
-		</ul>
+		<nav>
+			<ul>
+			{{#nav}}
+				<li><a href="{{{url}}}" data-role="nav">{{{label}}}</a></li>
+			{{/nav}}
+			</ul>
+		</nav>
 	{{/has_nav}}
 </div>

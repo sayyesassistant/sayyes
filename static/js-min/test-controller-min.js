@@ -4892,7 +4892,7 @@ define('mout/array/forEach',[],function () {
 }(this));
 
 /*
-@grunt -task=comp-js -page=test-view
+@grunt -task=comp-js -page=test-controller
 */
 define('sayyes/plugins/plugin-nav',[
 	"sayyes/modules/log",
@@ -4930,8 +4930,7 @@ define('sayyes/plugins/plugin-nav',[
 			this.node.on(click_event,this.click_handle.bind(this));
 		},
 		dispose : function(){
-			console.log("dispose", this.node);
-			// this.node.off(click_event,this.click_handle.bind(this));
+			this.node.off(click_event,this.click_handle.bind(this));
 			this.node = null;
 		}
 	};
@@ -4940,7 +4939,6 @@ define('sayyes/plugins/plugin-nav',[
 
 		function each_link (index,node) {
 			if (!!node){
-				console.log("create link to>",node);
 				blob = new ClosureNav(node);
 				blob.trigger.add(view.on.nav.dispatch);
 				view.plugin_closures.push(blob);
@@ -4970,22 +4968,29 @@ define('sayyes/modules/view',[
 	signal,
 	plugin_nav
 ) {
-	var View, _config, _count, class_open, class_close;
+	var View, _count,
+		class_open, class_close;
 
 	class_open = "open";
 	class_close = "close";
 
 	_count = 0;
 
-	_config = {
-		__id : ++_count,
-		name : null,
-		html : null,
-		template_name: null,
-		template_raw: null,
-		template_fn: null,
-		plugin_closures: [],
-		on : {
+	function __init (instance,value) {
+		//define view properties
+		instance.__id = ++_count;
+		instance.name = null;
+		instance.html = null;
+		instance.template_name = null;
+		instance.template_raw = null;
+		instance.template_fn = null;
+		instance.plugin_closures = null;
+
+		//apply values from object
+		mixIn(instance,value);
+
+		//define signals
+		instance.on = {
 			render : {
 				failed : new signal(),
 				passed : new signal()
@@ -4999,28 +5004,24 @@ define('sayyes/modules/view',[
 				passed : new signal()
 			},
 			nav : new signal()
+		};
+
+		var element = document.getElementById(instance.template_name);
+		if (!element) {
+			throw "template:'"+instance.template_name+"' not found!";
 		}
-	};
+		instance.template_raw = element.text.trim();
+		if (!instance.template_raw || !instance.template_raw.length) {
+			throw "template:'"+instance.template_name+"' is empty!";
+		}
+		instance.template_fn = mustache.compile(instance.template_raw);
+	}
 
 	View = function(config){
-		this._init(config);
+		__init(this,config);
 	};
 
 	View.prototype = {
-
-		_init : function (value) {
-			mixIn(this,_config,value);
-			var element = document.getElementById(this.template_name);
-			if (!element) {
-				throw "template:'"+this.template_name+"' not found!";
-			}
-			this.template_raw = element.text.trim();
-			if (!this.template_raw || !this.template_raw.length) {
-				throw "template:'"+this.template_name+"' is empty!";
-			}
-			this.template_fn = mustache.compile(this.template_raw);
-		},
-
 		render : function (data) {
 			try {
 				this.html = $(this.template_fn(data));
@@ -5032,21 +5033,20 @@ define('sayyes/modules/view',[
 		},
 
 		enable_ux : function () {
-			console.log("enable_ux",this.name)
+			this.plugin_closures = [];
 			if (!!this.html) {
 				plugin_nav(this);
 			}
 		},
 
 		disable_ux : function () {
-			console.log("disable_ux",this.name)
 			function dispose_closure(c) {
-				c.dispose();
-				c = null;
+				c.dispose(); c = null;
 			}
 			if (!!this.html) {
 				forEach(this.plugin_closures,dispose_closure);
 			}
+			this.plugin_closures = null;
 		},
 
 		open : function () {
@@ -5059,7 +5059,6 @@ define('sayyes/modules/view',[
 		},
 
 		close : function () {
-			console.log("close",this.name);
 			if (!this.html){
 				this.on.close.failed.dispatch(this);
 				return;
@@ -5069,7 +5068,6 @@ define('sayyes/modules/view',[
 		},
 
 		dispose : function () {
-			console.log("dispose",this.name);
 			this.html.removeClass(class_close);
 			this.html = null;
 
@@ -5597,7 +5595,7 @@ define('sayyes/modules/controller',[
 		},
 		create_view : function (config) {
 			if (!_viewVO.implements(config)) {
-				_notify(this,"controller => view '"+this.queued.name+"' malformed template",error)(config);
+				_notify(this,"controller => malformed view template",error)(config);
 				return;
 			}
 			this.queued = this.pooling[config.name];
@@ -5605,7 +5603,7 @@ define('sayyes/modules/controller',[
 				try {
 					this.queued = view(config);
 				} catch (err) {
-					_notify(this,"controller => view '"+this.queued.name+"' failed to create.",error)(err);
+					_notify(this,"controller => view '"+config.name+"' failed to create.",error)(err);
 					return;
 				}
 			}
@@ -5655,7 +5653,7 @@ define('sayyes/modules/controller',[
 			if (this.current){
 				this.current.html.remove();
 				this.current.dispose();
-				_notify(this,"controller view '"+this.current.name+"' closed.");
+				_notify(this,"controller view '"+this.current.name+"' disposed.")();
 				this.previous = this.current;
 			}
 			this.current = null;
@@ -5669,6 +5667,10 @@ define('sayyes/modules/controller',[
 			_notify(this,"controller => view '"+this.current.name+"' opened.")();
 		},
 		_on_nav : function (name) {
+			if (this.current && this.current.name === name){
+				_notify(this,"controller => view '"+name+"' already opened opened.",warn)();
+				return;
+			}
 			var view_data = __get_view(name,this.data.views);
 			if (!!view_data) {
 				this.create_view(view_data);
@@ -5686,7 +5688,7 @@ define('sayyes/modules/controller',[
 	};
 });
 /*
-@grunt -task=comp-js -page=test-view
+@grunt -task=comp-js -page=test-controller
 */
 require([
 	"sayyes/modules/log",
@@ -5713,8 +5715,8 @@ require([
 		c.on.error.add(function(){
 			// console.log("ops! controller found an error", arguments);
 		});
-		c.create_view(window.mock);
+		c.define(window.mock);
 	}
 	domReady(init);
 });
-define("sayyes/main/test-view", function(){});
+define("sayyes/main/test-controller", function(){});

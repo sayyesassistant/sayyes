@@ -1,5 +1,5 @@
 /*
-@grunt -task=comp-js -page=test-view
+@grunt -task=comp-js -page=test-controller
 */
 require([
 	"sayyes/modules/log",
@@ -26,7 +26,7 @@ require([
 		c.on.error.add(function(){
 			// console.log("ops! controller found an error", arguments);
 		});
-		c.create_view(window.mock);
+		c.define(window.mock);
 	}
 	domReady(init);
 });

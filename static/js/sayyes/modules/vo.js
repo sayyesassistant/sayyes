@@ -42,7 +42,7 @@ define([
 	ViewVO.prototype = new VO();
 	ViewVO.prototype.constructor = VO;
 
-	ListVO = function() {};
+	ListVO = function() { VO.call(this,"start_with","views"); };
 	ListVO.prototype = new VO();
 	ListVO.prototype.constructor = VO;
 
