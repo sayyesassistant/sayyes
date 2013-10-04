@@ -49,6 +49,7 @@ define([
 		instance.previous = null;
 		instance.data = null;
 		instance.scope = $(scope);
+		instance.pooling = {};
 		instance.on = {
 			warn : new signals(),
 			info : new signals(),
@@ -72,12 +73,14 @@ define([
 				_notify(this,"controller => view '"+this.queued.name+"' malformed template",error)(config);
 				return;
 			}
-			try {
-				console.dir(config);
-				this.queued = view(config);
-			} catch (err) {
-				_notify(this,"controller => view '"+this.queued.name+"' failed to create.",error)(err);
-				return;
+			this.queued = this.pooling[config.name];
+			if(!this.queued){
+				try {
+					this.queued = view(config);
+				} catch (err) {
+					_notify(this,"controller => view '"+this.queued.name+"' failed to create.",error)(err);
+					return;
+				}
 			}
 			_notify(this,"controller => view '"+this.queued.name+"' created.")();
 			this.render_view(config.data);

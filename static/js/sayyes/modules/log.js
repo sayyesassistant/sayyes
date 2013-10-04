@@ -21,14 +21,22 @@ define([], function () {
 		}
 		instance = new Logger();
 		instance.history = [];
+		instance.keep_history = false;
+		instance.max_history = 100;
 		instance.verbose = true;
 		instance.verbose_type = T_MESSAGE;
 	};
 
 	__log = function (level,args) {
-		instance.history.push(new Log(level,args));
+		var blob = new Log(level,args);
+		if (!!instance.keep_history){
+			instance.history.push(blob);
+			if (instance.history.length === instance.max_history) {
+				instance.max_history.shift();
+			}
+		}
 		if (!!instance.verbose){
-			__yeld(instance.history[instance.history.length-1]);
+			__yeld(blob);
 		}
 	};
 
@@ -72,6 +80,13 @@ define([], function () {
 		},
 		error : function (args) {
 			__log(ERR,Array.prototype.slice.call(arguments));
+		},
+		dump : function (){
+			var c,t;
+			t = this.keep_history.length;
+			for (c=0;c<t;t++) {
+				__yeld(this.keep_history[c]);
+			}
 		}
 	};
 	__init();
