@@ -25,6 +25,18 @@ class User(ndb.Model):
     def login(self, email, pwd):
         pwd = self.hash(pwd)
         return self.query(User.email == email.strip(), User.pwd == pwd).get()
+
+class Layout(ndb.Model):
+
+    title = ndb.StringProperty(required=True)
+    user = ndb.KeyProperty(kind=User)
+    bg = ndb.BlobProperty(compressed=True)
+    created = ndb.DateTimeProperty(auto_now_add=True)
+    modified = ndb.DateTimeProperty(auto_now_add=True)
+
+    @classmethod
+    def queryUser(cls, ancestorKey):
+        return cls.query(cls.user == ancestorKey).order(-cls.created)
     
 class Session(ndb.Model):
     
@@ -32,9 +44,12 @@ class Session(ndb.Model):
     instruction = ndb.JsonProperty(required=True, compressed=True)
     userData = ndb.JsonProperty(compressed=True)
     user = ndb.KeyProperty(kind=User)
+    layout = ndb.KeyProperty(kind=Layout)
     created = ndb.DateTimeProperty(auto_now_add=True)
     modified = ndb.DateTimeProperty(auto_now_add=True)
 
     @classmethod
     def queryUser(cls, ancestorKey):
         return cls.query(cls.user == ancestorKey).order(-cls.created)
+
+    

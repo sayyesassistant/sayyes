@@ -6,6 +6,6 @@
     <link type="text/css" rel="stylesheet" href="/css/main.css" />
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
   </head>
-  <body>{% block body %}{% endblock %}</body>
+  <body {% block bodyStyle %}{% endblock %}>{% block body %}{% endblock %}</body>
 </html>
 {% endautoescape %}

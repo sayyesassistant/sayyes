@@ -8,3 +8,8 @@ indexes:
   - name: user
   - name: created
     direction: desc
+- kind: Layout
+  properties:
+  - name: user
+  - name: created
+    direction: desc

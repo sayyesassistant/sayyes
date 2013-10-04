@@ -150,11 +150,14 @@ class CP(AppHandler):
         templateValues['auth'] = self.auth
 
         key = ndb.Key(User, self.auth['key'])
+        
         query = Session.queryUser(key)
-        
-        logging.info(query.fetch(10))
-        
         templateValues['sessions'] = query.fetch(10)
+
+        query2 = Layout.queryUser(key)
+        templateValues['layouts'] = query2.fetch(10)
+        #logging.info(templateValues['layouts'])
+
         # um exemplo do json p/ testes
         j = {
             'attendant': {
@@ -166,29 +169,69 @@ class CP(AppHandler):
                 'name': 'Alberto Das Couves',
                 'email': 'alberto@email.com'
             },
-            'output': {
-                'content': 'This switch does not happen at each animation step, but only when the ball reaches the edge of the window.',
-                'type': 'text'
-            },
-            'input': {
-                'type': 'button',
-                'options': {
-                    'value': 'Yes, please!',
-                    'action': 'endSession'
+            'step1': {
+                'output': {
+                    'content': 'Step 1!',
+                    'type': 'text'
+                },
+                'input': {
+                    'type': 'button',
+                    'options': {
+                        'value': 'Yes, please!',
+                        'action': 'step2'
+                    }
+                },
+                'input': {
+                    'type': 'button',
+                    'options': {
+                        'value': 'No, thanks.',
+                        'action': 'endSession'
+                    }
                 }
             },
-            'input': {
-                'type': 'button',
-                'options': {
-                    'value': 'No, thanks.',
-                    'action': 'endSession'
-                }
+            'step2': {
+                'output': {
+                    'content': "Oh my god, that's Step 2!",
+                    'type': 'text'
+                },
+                'input': {
+                    'type': 'button',
+                    'options': {
+                        'value': "That's the end baby!",
+                        'action': 'endSession'
+                    }
+                },
             }
         }
 
         templateValues['json'] = json.dumps(j)
         
         self.render(Const.WEBSITE + 'cp.html', templateValues)
+
+class Pref(AppHandler):
+    def post(self):
+
+        self.logged()
+        if self.auth is None:
+            self.redirect('/login')
+
+        user = User.get_by_id(self.auth['key'])
+        #logging.info(user)
+
+        if user is None:
+            self.redirect('/login')
+
+        layout = Layout()
+
+        layout.title = self.util.stripTags(self.request.get('title'))
+        layout.user = user.key
+        
+        if self.request.get('img'):
+            layout.bg = self.request.get('img')
+
+        layout.put()
+        self.redirect('/cp')
+
 
 config = {}
 config['webapp2_extras.sessions'] = {
@@ -200,6 +243,7 @@ application = webapp2.WSGIApplication([
     ('/logout', LogOut),
     ('/login', LogIn),
     ('/signup', SignUp),
+    ('/pref', Pref),
     ('/forgot_password', ForgotPassword),
     ('/cp', CP)
 ], debug=True, config=config)
