@@ -6,17 +6,19 @@ exports.bash = function (command, onComplete, grunt) {
 		child;
 
 	grunt.log.ok("Running command:");
-	grunt.log.writeln(c);
+	console.log(c);
 
 	child = exec(c, function (error, stdout, stderr) {
 		if(stdout){
 			grunt.log.writeln("\n[outupt]");
-			grunt.log.writeln(stdout);
+			console.log(stdout);
 		}
 		if(stderr){
 			grunt.log.writeln("\n[outupt err]");
-			grunt.log.writeln(stderr);
+			console.log(stderr);
 		}
-		onComplete(error||stderr||stdout);
+		if(!!onComplete){
+			onComplete(error||stderr||stdout);
+		}
 	});
 };

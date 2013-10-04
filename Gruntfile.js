@@ -108,6 +108,17 @@ module.exports = function (grunt) {
 
 	grunt.task.registerTask('run-tests', "Combines 'comp-js-all' with 'test-views'", function () {
 		init();
+		var args = grunt.config.get("arguments");
+		if (!!args && args.reset === "true"){
+			var bash = require("./.grunt/modules/mod-run").bash,
+				command = grunt.config.get("tasks")["clear-tests"],
+				render = require("./.grunt/modules/mod-render").render,
+				paths = grunt.config.get("paths");
+			paths = render(paths);
+			command = render(command,paths);
+			grunt.log.warn("Cleaning all tests before ...");
+			bash(command,null,grunt);
+		}
 		grunt.task.run(["comp-js-all","test-views"]);
 	});
 };
