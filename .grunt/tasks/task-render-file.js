@@ -32,6 +32,11 @@ exports.run = function (grunt, task) {
 	}
 
 	//render file
+	mock.get_raw = function(){
+		return function(text,render){
+			return render("{{{raw."+render(text)+"}}}");
+		};
+	};
 	rendered = mustache.render(file,mock);
 
 	//save rendeted file

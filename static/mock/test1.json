@@ -1,6 +1,6 @@
 {
 	"name":"simple-test",
-	"template_name":"mock-test",
+	"template_name":"template_simple",
 	"data":{
 		"title":"Title",
 		"description":"Description goes here"

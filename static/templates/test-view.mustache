@@ -24,8 +24,10 @@
 <h1>-- testing view ---</h1>
 <hr/>
 <div id="sayyes-assistant"></div>
-<script id="mock-test" type="text/mustache-template" charset="utf-8">
-{{{raw.template}}}
+{{#data.templates}}
+<script id="{{.}}" type="text/mustache-template" charset="utf-8">
+	{{#get_raw}}{{.}}{{/get_raw}}
 </script>
+{{/data.templates}}
 </body>
 </html>
