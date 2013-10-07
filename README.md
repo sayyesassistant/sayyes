@@ -5,6 +5,7 @@
 - [nodejs](http://nodejs.org/download/);
 - [grunt-cli](http://gruntjs.com/getting-started/);
 - [sass 3.2.12](http://sass-lang.com/);
+- [compass](http://sass-lang.com/);
 
 ##Getting started
 
