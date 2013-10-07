@@ -1,0 +1,32 @@
+<html>
+<head>
+	<title>Sayyes elements guideline</title>
+</head>
+<body>
+	<h1>Sayyes assistant - Elements guideline.</h1>
+	<hr/>
+	{{#data.title}}
+		<h1>{{{data.title}}}</h1>
+	{{/data.title}}
+	<hr/>
+	{{#data.description}}
+		<h2>{{{data.description}}}</h2>
+	{{/data.description}}
+	<hr/>
+	{{#data.text}}
+		<p>{{{data.text}}}</p>
+	{{/data.text}}
+	<hr/>
+	{{#data.picture}}
+		<img src="{{{url}}}" alt="{{{description}}}" />
+	{{/data.picture}}
+	<hr/>
+	<nav>
+		<ul>
+		{{#data.nav}}
+			<li><a href="#?nav={{{url}}}" data-role="nav">{{{label}}}</a></li>
+		{{/data.nav}}
+		</ul>
+	</nav>
+</body>
+</html>

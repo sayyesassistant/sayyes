@@ -1,20 +1,27 @@
-#Sayeys data model
+#Sayeys data modeling
+
+---
+
+Following all available data models.
+
+The main object that handles all models is the [controller](#controller)
+
 
 ##<a id="controller"></a>controller
 
--`start_with` *String* (view name), *Number* (array index)
+-`start_with` **String** (view name) or **Number** (view's array index)
 
--`id` *String* any hash
+-`id` [!] **String**
 
--`views` *Array* of [view](#view)
+-`views` **Array** of [view](#view)
 
 ##<a id="view"></a>view
 
--`name` **String** must macth */[\w-]+/*
+-`name` **String** must match `/[\w-]+/`
 
--`template_name` **String** must macth */[\w-]+/*
+-`template_name` **String** must match `/[\w-]+/`
 
--`data` instance of [view_data](#view_data)
+-`data` [view_data](#view_data)
 
 ##<a id="view_data"></a>view_data
 
@@ -24,7 +31,13 @@
 
 -`text`	**String**
 
--`picture` intance of `picture`
+-`picture` intance of [picture_data](#picture_data)
+
+##<a id="picture_data"></a>picture_data
+
+-`url` **String**
+
+-`caption` **String**
 
 
 ##button
