@@ -1,22 +1,16 @@
 {
+	"guideline" : {
+		"dest" : "{{{static}}}/guideline.html",
+		"files" : ["{{{templates}}}/guideline.mustache"],
+		"raw": null,
+		"data" : "{{{static}}}/mock/guideline.json"
+	},
 	"test1" : {
 		"dest" : "{{{tests}}}/view-test1.html",
 		"files" : ["{{{templates}}}/test-view.mustache"],
 		"raw": {
 			"template_simple": "{{{templates}}}/template-simple.mustache",
 			"mock_view": "{{{static}}}/mock/test1.json"
-		},
-		"data" : {
-			"js_src" : "/{{{dest_js_folder}}}/test-view-min.js",
-			"templates" : ["template_simple"]
-		}
-	},
-	"test2" : {
-		"dest" : "{{{tests}}}/view-test2.html",
-		"files" : ["{{{templates}}}/test-view.mustache"],
-		"raw": {
-			"template_simple": "{{{templates}}}/template-simple.mustache",
-			"mock_view": "{{{static}}}/mock/test2.json"
 		},
 		"data" : {
 			"js_src" : "/{{{dest_js_folder}}}/test-view-min.js",

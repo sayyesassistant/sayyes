@@ -21,6 +21,13 @@ exports.run = function (grunt, task) {
 	}
 
 	value = render(task.data,path);
+
+	if (!!value.data && value.data.constructor.name === "String") {
+		if (grunt.file.exists(value.data)){
+			value.data = grunt.file.readJSON(value.data);
+		}
+	}
+
 	if(!!value.raw && value.raw.constructor.name === "Object"){
 		value.raw = map(value.raw,function(value){
 			if (grunt.file.exists(value)){

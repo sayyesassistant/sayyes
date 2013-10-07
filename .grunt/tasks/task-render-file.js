@@ -6,7 +6,7 @@ exports.run = function (grunt, task) {
 
 	name = task.args[0];
 	if (!name){
-		grunt.fatal.warn("No page to render.");
+		grunt.fail.warn("No page to render.");
 		return;
 	}
 
@@ -27,7 +27,7 @@ exports.run = function (grunt, task) {
 	}
 
 	if (!file || !file.length){
-		grunt.fatal.warn(file_name+" seems to be empty");
+		grunt.fail.warn(file_name+" seems to be empty");
 		return;
 	}
 
