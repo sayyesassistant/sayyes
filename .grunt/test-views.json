@@ -1,7 +1,7 @@
 {
 	"guideline" : {
 		"dest" : "{{{static}}}/guideline.html",
-		"files" : ["{{{templates}}}/guideline.mustache"],
+		"files" : ["{{{templates}}}/inc/header.mustache","{{{templates}}}/inc/guide-core.mustache","{{{templates}}}/inc/footer.mustache"],
 		"raw": null,
 		"data" : "{{{static}}}/mock/guideline.json"
 	},
