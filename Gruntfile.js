@@ -5,6 +5,7 @@ module.exports = function (grunt) {
 
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
+	grunt.loadNpmTasks('grunt-contrib-sass');
 
 	var config   = {
 		arguments : {
@@ -34,6 +35,7 @@ module.exports = function (grunt) {
 	config.tasks = grunt.file.readJSON("./.grunt/tasks.json");
 	config.pages = grunt.file.readJSON("./.grunt/pages.json");
 	config.paths = grunt.file.readJSON("./.grunt/paths.json");
+	config.sass = grunt.file.readJSON("./.grunt/sass.json");
 	config["test-views"] = grunt.file.readJSON("./.grunt/test-views.json");
 
 	grunt.initConfig(config);
@@ -52,16 +54,16 @@ module.exports = function (grunt) {
 		ready = true;
 	}
 
-	grunt.registerTask( "default" , "use the given target file to figure out what to do.", function (value) {
+	grunt.registerTask( "default" , "Uses the given target file to figure out what to do.", function (value) {
 		if (!!value) {
 			init(value);
 			grunt.task.run(grunt.config.get("arguments").task);
 		}
 	});
 
-	grunt.registerTask( "build-sass" , "Runs sass compiler", function () {
+	grunt.registerTask( "comp-sass" , "Runs sass compiler.\nUse -env={ENV} to define the sort of compresstion and output.", function () {
 		init();
-		// require("./.grunt/tasks/task-comp-sass").run(grunt, this);
+		require("./.grunt/tasks/task-comp-sass").run(grunt, this);
 	});
 
 	grunt.registerTask('sass-watch', "Starts the sass -watch command", function () {

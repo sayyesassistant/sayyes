@@ -6,11 +6,14 @@
 		},
 		"final" : {
 			"cmd"  : "node",
-			"args" : ["bower_components/r.js/dist/r.js","-o","baseUrl={{{baseUrl}}}","optimize=uglify2","skipModuleInsertion=false","generateSourceMaps=false","preserveLicenseComments=false","name={{{src}}}","out={{{dest}}}"]
+			"args" : ["bower_components/r.js/dist/r.js","-o","baseUrl={{{baseUrl}}}","optimize=uglify2","skipModuleInsertion=false","generateSourceMaps=true","preserveLicenseComments=false","name={{{src}}}","out={{{dest}}}"]
 		}
 	},
 	"clear-tests" : {
 		"cmd" : "rm",
 		"args" : ["{{{tests}}}/*.html"]
+	},
+	"sass-watch" : {
+
 	}
 }

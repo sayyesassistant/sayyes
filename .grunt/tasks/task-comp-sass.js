@@ -1,41 +1,27 @@
 exports.run = function(grunt, scope) {
 
-	var env = null,
-		storeConfig = require("../modules/mod-utils").getStoreConfig( grunt),
-		conf = require("../modules/mod-utils").getStoreConfig(grunt) || grunt.config.get("constants"),
-		command = null,
-		done = null,
-		blob = null ;
+	var args = grunt.config.get("arguments"),
+		path = grunt.config.get("paths"),
+		render = require("../modules/mod-render").render,
+		bash = require("../modules/mod-run").bash,
+		sass = grunt.config.get("sass"),
+		command;
 
-	command = require("../modules/mod-utils").getCommandByEnv("comp-sass", grunt);
-
-	if (!command){
-		grunt.fail.warn("Command not found comp-sass command to env:"+grunt.config.get("constants").env);
+	if (!sass){
+		grunt.fail.fatal("No sass config found!");
 		return;
 	}
 
-	require("../modules/mod-utils").render(command.args, grunt.config.get("constants"), grunt);
+	command = sass[args.env];
 
-	if(!!storeConfig && !!storeConfig.sass_sources && !!storeConfig.dest_css_folder){
-		command.args.push(storeConfig.sass_sources+":"+storeConfig.dest_css_folder);
+	if (!command){
+		grunt.fail.fatal("Couldn't find sass target for:'"+args.env+"'");
+		return;
 	}
 
-	done =  scope.async();
-
-	function compSASS(){
-		grunt.log.errorlns("hold on, it takes a while to finish....");
-		require("../modules/mod-run").bash( command, done, grunt );
-	}
-
-	if(grunt.config.get("arguments").reset==="true"){
-		grunt.log.ok("Refreshing all sass cached files...");
-		require("../modules/mod-run").bash( {
-			cmd : "find . -name *.scss; touch `find . -name *.scss`"
-		}, compSASS, grunt );
-	} else {
-		grunt.log.ok("Refreshing sass cache...");
-		require("../modules/mod-run").bash( {
-			cmd : "svn st | grep [MA]*.scss; touch `svn st | grep [MA]*.scss | awk '{print$NF}'`"
-		}, compSASS, grunt );
-	}
+	path = render(path);
+	command = render(command,path);
+	sass[args.env] = command;
+	grunt.config.set("sass",sass);
+	grunt.task.run("sass:"+args.env);
 };

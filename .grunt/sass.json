@@ -1,0 +1,30 @@
+{
+	"dev": {
+		"options" : {
+			"style": "expanded",
+			"trace":true,
+			"quiet" : false
+		},
+		"files": [{
+			"expand": true,
+			"cwd": "{{{sass_sources}}}",
+			"src": ["*.scss"],
+			"dest": "{{{dest_css_folder}}}",
+			"ext": "-min.css"
+		}]
+	},
+	"final": {
+		"options" : {
+			"style": "compressed",
+			"trace":true,
+			"quiet" : false
+		},
+		"files": [{
+			"expand": true,
+			"cwd": "{{{sass_sources}}}",
+			"src": ["*.scss"],
+			"dest": "{{{dest_css_folder}}}",
+			"ext": "-min.css"
+		}]
+	}
+}
