@@ -1,32 +1,55 @@
-<html>
-<head>
-	<title>Sayyes elements guideline</title>
-</head>
-<body>
-	<h1>Sayyes assistant - Elements guideline.</h1>
-	<hr/>
-	{{#data.title}}
-		<h1>{{{data.title}}}</h1>
-	{{/data.title}}
-	<hr/>
-	{{#data.description}}
-		<h2>{{{data.description}}}</h2>
-	{{/data.description}}
-	<hr/>
-	{{#data.text}}
-		<p>{{{data.text}}}</p>
-	{{/data.text}}
-	<hr/>
+<!--
+@grunt -task=test-views
+-->
+<div class="gl-example">
+	<h2>Headings</h2>
+	<h1>&lt;h1&gt;{{{data.title}}}</h1>
+	<h2>&lt;h2&gt;{{{data.description}}}</h2>
+	<h3>&lt;h3&gt;{{{data.title}}}</h3>
+	<h4>&lt;h4&gt;{{{data.title}}}</h4>
+	<h5>&lt;h5&gt;{{{data.title}}}</h5>
+	<h6>&lt;h6&gt;{{{data.title}}}</h6>
+</div>
+<div class="gl-example">
+	<h2>Paragraph</h2>
+	<p>{{{data.text}}}</p>
+</div>
+<div class="gl-example">
+	<h2>Images</h2>
 	{{#data.picture}}
 		<img src="{{{url}}}" alt="{{{description}}}" />
 	{{/data.picture}}
-	<hr/>
+</div>
+<div class="gl-example">
+	<h2>Links</h2>
+	<a href="#">link</a>
+</div>
+
+<div class="gl-example">
+	<h2>Unordered List</h2>
+	<ul>
+		<li>level 1</li>
+		<li>
+			level 1
+			<ul>
+				<li>level 2</li>
+				<li>
+					level 2
+					<ul>
+						<li>level 3</li>
+						<li>level 3</li>
+					</ul>
+				</li>
+			</ul>
+		</li>
+	</ul>
+</div>
+
+<div class="gl-example">
+	<h2>Navigation list</h2>
 	<nav>
-		<ul>
-		{{#data.nav}}
-			<li><a href="#?nav={{{url}}}" data-role="nav">{{{label}}}</a></li>
-		{{/data.nav}}
-		</ul>
+	{{#data.nav}}
+		<a href="#?nav={{{url}}}" data-role="nav">{{{label}}}</a>
+	{{/data.nav}}
 	</nav>
-</body>
-</html>
+</div>
