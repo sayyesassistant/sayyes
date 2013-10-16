@@ -1,74 +1,76 @@
 <!--
 @grunt -task=test-views
 -->
-<div class="gl-example">
-	<h2>Headings</h2>
-	<h1>&lt;h1&gt;{{{data.title}}}</h1>
-	<h2>&lt;h2&gt;{{{data.description}}}</h2>
-	<h3>&lt;h3&gt;{{{data.title}}}</h3>
-	<h4>&lt;h4&gt;{{{data.title}}}</h4>
-	<h5>&lt;h5&gt;{{{data.title}}}</h5>
-	<h6>&lt;h6&gt;{{{data.title}}}</h6>
-</div>
-<div class="gl-example">
-	<h2>Paragraph</h2>
-	<p>{{{data.text}}}</p>
-</div>
-<div class="gl-example">
-	<h2>Images</h2>
-	{{#data.picture}}
-		<img src="{{{url}}}" alt="{{{description}}}" />
-	{{/data.picture}}
-</div>
-<div class="gl-example">
-	<h2>Links</h2>
-	<a href="#">link</a>
-</div>
+<body>
+	<div class="gl-example">
+		<h2>Headings</h2>
+		<h1>&lt;h1&gt;{{{data.title}}}</h1>
+		<h2>&lt;h2&gt;{{{data.description}}}</h2>
+		<h3>&lt;h3&gt;{{{data.title}}}</h3>
+		<h4>&lt;h4&gt;{{{data.title}}}</h4>
+		<h5>&lt;h5&gt;{{{data.title}}}</h5>
+		<h6>&lt;h6&gt;{{{data.title}}}</h6>
+	</div>
+	<div class="gl-example">
+		<h2>Paragraph</h2>
+		<p>{{{data.text}}}</p>
+	</div>
+	<div class="gl-example">
+		<h2>Images</h2>
+		{{#data.picture}}
+			<img src="{{{url}}}" alt="{{{description}}}" />
+		{{/data.picture}}
+	</div>
+	<div class="gl-example">
+		<h2>Links</h2>
+		<a href="#">link</a>
+	</div>
 
-<div class="gl-example">
-	<h2>Unordered List</h2>
-	<ul>
-		<li>level 1</li>
-		<li>
-			level 1
-			<ul>
-				<li>level 2</li>
-				<li>
-					level 2
-					<ul>
-						<li>level 3</li>
-						<li>level 3</li>
-					</ul>
-				</li>
-			</ul>
-		</li>
-	</ul>
-</div>
+	<div class="gl-example">
+		<h2>Unordered List</h2>
+		<ul>
+			<li>level 1</li>
+			<li>
+				level 1
+				<ul>
+					<li>level 2</li>
+					<li>
+						level 2
+						<ul>
+							<li>level 3</li>
+							<li>level 3</li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+		</ul>
+	</div>
 
-<div class="gl-example">
-	<h2>Navigation list</h2>
-	<nav>
-	{{#data.nav}}
-		<a href="#?nav={{{url}}}" data-role="nav">{{{label}}}</a>
-	{{/data.nav}}
-	</nav>
-</div>
-
-<div class="gl-example">
-	{{#data.form}}
-	<h1>Form example:</h1>
-	<form id="{{{data.form.id}}}" action="{{{data.form.action}}}" method="{{{data.form.method}}}" data-on-sumbit="{{{data.form.on_submit}}}" >
-		{{#data.form.hiddens}}
-			<input type="hidden" name="{{{name}}}" value="{{{value}}}" />
-		{{/data.form.hiddens}}
-		{{#data.form.inputs}}
-			<input type="{{{type}}}" name="{{{name}}}" placeholder="{{{placeholder}}}" {{{required}}} />
-		{{/data.form.inputs}}
+	<div class="gl-example">
+		<h2>Navigation list</h2>
 		<nav>
-		{{#data.form.buttons}}
-			<button value="{{{value}}}">{{{label}}}</button>
-		{{/data.form.buttons}}
+		{{#data.nav}}
+			<a href="#?nav={{{url}}}" data-role="nav">{{{label}}}</a>
+		{{/data.nav}}
 		</nav>
-	</form>
-	{{/data.form}}
-</div>
+	</div>
+
+	<div class="gl-example">
+		{{#data.form}}
+		<h1>Form example:</h1>
+		<form id="{{{data.form.id}}}" action="{{{data.form.action}}}" method="{{{data.form.method}}}" data-on-sumbit="{{{data.form.on_submit}}}" >
+			{{#data.form.hiddens}}
+				<input type="hidden" name="{{{name}}}" value="{{{value}}}" />
+			{{/data.form.hiddens}}
+			{{#data.form.inputs}}
+				<input type="{{{type}}}" name="{{{name}}}" placeholder="{{{placeholder}}}" {{{required}}} />
+			{{/data.form.inputs}}
+			<nav>
+			{{#data.form.buttons}}
+				<button value="{{{value}}}">{{{label}}}</button>
+			{{/data.form.buttons}}
+			</nav>
+		</form>
+		{{/data.form}}
+	</div>
+</body>

@@ -46,8 +46,13 @@ define([
 	ListVO.prototype = new VO();
 	ListVO.prototype.constructor = VO;
 
+	ResultVO = function() { VO.call(this,"success","exeption", "message", "value"); };
+	ResultVO.prototype = new VO();
+	ResultVO.prototype.constructor = VO;
+
 	return {
 		view : ViewVO,
-		list : ListVO
+		list : ListVO,
+		result : ResultVO
 	};
 });

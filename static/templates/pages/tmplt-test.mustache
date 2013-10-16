@@ -1,33 +1,10 @@
-<html>
-<head>
-	<title>Sayyes view test</title>
-	<script type="text/javascript" charset="utf-8">
-		var mock = {{{raw.mock_view}}};
-		(function (s, h) {
-			s.async = true;
-			s.type = 'text/javascript';
-			s.src = "{{{data.js_src}}}";
-			h.appendChild(s);
-		}(document.createElement('script'), document.documentElement));
-	</script>
-	<style type="text/css" media="screen">
-		div {
-			margin:0;
-			padding:0;
-		}
-		div.view {
-			border: 1px solid red;
-		}
-	</style>
-</head>
 <body>
-<h1>-- testing view ---</h1>
-<hr/>
-<div id="sayyes-assistant"></div>
-{{#data.templates}}
-<script id="{{.}}" type="text/mustache-template" charset="utf-8">
-	{{#get_raw}}{{.}}{{/get_raw}}
-</script>
-{{/data.templates}}
+	<h1>-- {{{data.test_title}}} ---</h1>
+	<hr/>
+	<div id="sayyes-assistant"></div>
+	{{#data.templates}}
+	<script id="{{.}}" type="text/mustache-template" charset="utf-8">
+		{{#get_raw}}{{.}}{{/get_raw}}
+	</script>
+	{{/data.templates}}
 </body>
-</html>

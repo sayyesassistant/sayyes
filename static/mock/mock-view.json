@@ -1,8 +1,40 @@
 {
-	"name":"simple-test",
-	"template_name":"template_simple",
+	"name":"simple-view",
+	"template_name":"mock_template",
 	"data":{
-		"title":"Title",
-		"description":"Description goes here"
+		"title":"Mock View example",
+		"description":"Some description goes here",
+		"nav":[{
+			"label":"nav to <view>",
+			"url":"#?nav=<view>"
+		}],
+		"form" : {
+			"action" : "/static/mock/services/form-result.json",
+			"method" : "POST",
+			"id" : "sayyes",
+			"on_submit" : "nav=a",
+			"hiddens" : [{
+				"name":"foo",
+				"value":"bar"
+			},{
+				"name":"hello",
+				"value":"world"
+			}],
+			"buttons" : [{
+				"label":"send",
+				"value":"foo"
+			}],
+			"inputs" : [{
+				"name":"name",
+				"type":"text",
+				"placeholder":"Type your name",
+				"required" : "required"
+			},{
+				"name":"email",
+				"type":"email",
+				"placeholder":"Type your email",
+				"required":"required"
+			}]
+		}
 	}
 }

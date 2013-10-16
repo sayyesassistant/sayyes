@@ -1,5 +1,5 @@
 /*
-@grunt -task=comp-js -page=test-controller
+@grunt -task=comp-js-all
 */
 define([
 	"sayyes/modules/log",
@@ -23,11 +23,8 @@ define([
 
 	ClosureNav.prototype = {
 		click_handle : function (event){
-			if (!!event){
-				event.preventDefault();
-			}
 			var nav_to = event.target.href.match(reg_trailing);
-			if (nav_to.length>=2){
+			if (nav_to && nav_to.length>=2){
 				this.trigger.dispatch(nav_to[2]);
 			} else {
 				log.info("plugin-nav couldn't find nav value on:",event.target.href);
@@ -57,5 +54,6 @@ define([
 			return false;
 		}
 		view.html.find("[data-role='nav']").each(each_link);
+		return true;
 	};
 });

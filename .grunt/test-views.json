@@ -1,44 +1,34 @@
 {
 	"guideline" : {
-		"dest" : "{{{static}}}/guideline.html",
-		"files" : ["{{{templates}}}/inc/header.mustache","{{{templates}}}/guideline-content.mustache","{{{templates}}}/inc/footer.mustache"],
+		"dest" : "{{{static}}}/index.html",
+		"files" : ["{{{templates}}}/inc/header.mustache","{{{templates}}}/pages/tmplt-guideline.mustache","{{{templates}}}/inc/footer.mustache"],
 		"raw": null,
 		"data" : "{{{static}}}/mock/mock-guideline.json"
 	},
 	"simple-view" : {
 		"dest" : "{{{tests}}}/simple-view.html",
-		"files" : ["{{{templates}}}/test-view.mustache"],
+		"files" : ["{{{templates}}}/inc/header.mustache","{{{templates}}}/pages/tmplt-test.mustache","{{{templates}}}/inc/footer.mustache"],
 		"raw": {
-			"template_simple": "{{{templates}}}/views/view-mock.mustache",
+			"mock_template": "{{{templates}}}/views/view-mock.mustache",
 			"mock_view": "{{{static}}}/mock/mock-view.json"
 		},
 		"data" : {
 			"js_src" : "/{{{dest_js_folder}}}/test-view-min.js",
-			"templates" : ["template_simple"]
-		}
-	},
-	"form-view" : {
-		"dest" : "{{{tests}}}/form-view.html",
-		"files" : ["{{{templates}}}/test-view.mustache"],
-		"raw": {
-			"template_simple": "{{{templates}}}/views/view-mock.mustache",
-			"mock_view": "{{{static}}}/mock/mock-view.json"
-		},
-		"data" : {
-			"js_src" : "/{{{dest_js_folder}}}/test-view-min.js",
-			"templates" : ["template_simple"]
+			"templates" : ["mock_template"],
+			"test_title" : "Simple View test"
 		}
 	},
 	"controller" : {
 		"dest" : "{{{tests}}}/controller-test1.html",
-		"files" : ["{{{templates}}}/test-view.mustache"],
+		"files" : ["{{{templates}}}/inc/header.mustache","{{{templates}}}/pages/tmplt-test.mustache","{{{templates}}}/inc/footer.mustache"],
 		"raw": {
-			"template_simple": "{{{templates}}}/views/view-mock.mustache",
+			"mock_template": "{{{templates}}}/views/view-mock.mustache",
 			"mock_view": "{{{static}}}/mock/mock-controller.json"
 		},
 		"data" : {
 			"js_src" : "/{{{dest_js_folder}}}/test-controller-min.js",
-			"templates" : ["template_simple"]
+			"templates" : ["mock_template"],
+			"test_title" : "Controller test"
 		}
 	}
 }

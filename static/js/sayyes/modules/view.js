@@ -4,18 +4,24 @@
 define([
 	"mout/object/mixIn",
 	"mout/array/forEach",
+	"mout/array/every",
 	"mustache/mustache",
 	"signals/signals",
-	"sayyes/plugins/plugin-nav"
+	"sayyes/plugins/plugin-nav",
+	"sayyes/plugins/plugin-form"
 ], function (
 	mixIn,
 	forEach,
+	every,
 	mustache,
 	signal,
-	plugin_nav
+	plugin_nav,
+	plugin_form
 ) {
-	var View, _count,
+	var View, _count, plugin_list,
 		class_open, class_close;
+
+	plugin_list = [plugin_nav, plugin_form];
 
 	class_open = "open";
 	class_close = "close";
@@ -81,7 +87,11 @@ define([
 		enable_ux : function () {
 			this.plugin_closures = [];
 			if (!!this.html) {
-				plugin_nav(this);
+				var passed = every(plugin_list,function(self){
+					return function(val){
+						return val(self);
+					};
+				}(this));
 			}
 		},
 

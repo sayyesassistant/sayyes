@@ -4,9 +4,18 @@
 <!--[if gte IE 9]><!--><html class="no-js"><!--<![endif]-->
 <head>
 	<meta charset="utf-8">
-	<title>Sayyes elements guideline</title>
+	<title>Sayyes :: </title>
 	<script type="text/javascript">
-	(function(d){ d.className = d.className.replace('no-js', 'js'); })(document.documentElement);
+		(function(d){ d.className = d.className.replace('no-js', 'js'); })(document.documentElement);
+	</script>
+	<script type="text/javascript" charset="utf-8">
+		var mock = ;
+		(function (s, h) {
+			s.async = true;
+			s.type = 'text/javascript';
+			s.src = "";
+			h.appendChild(s);
+		}(document.createElement('script'), document.documentElement));
 	</script>
 	<style type="text/css" href="/static/css-min/reset.css" ></style>
 	<style type="text/css">
@@ -38,73 +47,73 @@
 	</style>
 </head>
 
-<body>
 <!--
 @grunt -task=test-views
 -->
-<div class="gl-example">
-	<h2>Headings</h2>
-	<h1>&lt;h1&gt;Lorem ipsum dolor sit amet</h1>
-	<h2>&lt;h2&gt;Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</h2>
-	<h3>&lt;h3&gt;Lorem ipsum dolor sit amet</h3>
-	<h4>&lt;h4&gt;Lorem ipsum dolor sit amet</h4>
-	<h5>&lt;h5&gt;Lorem ipsum dolor sit amet</h5>
-	<h6>&lt;h6&gt;Lorem ipsum dolor sit amet</h6>
-</div>
-<div class="gl-example">
-	<h2>Paragraph</h2>
-	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
-</div>
-<div class="gl-example">
-	<h2>Images</h2>
-		<img src="//placekitten.com/250" alt="Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat" />
-</div>
-<div class="gl-example">
-	<h2>Links</h2>
-	<a href="#">link</a>
-</div>
+<body>
+	<div class="gl-example">
+		<h2>Headings</h2>
+		<h1>&lt;h1&gt;Lorem ipsum dolor sit amet</h1>
+		<h2>&lt;h2&gt;Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</h2>
+		<h3>&lt;h3&gt;Lorem ipsum dolor sit amet</h3>
+		<h4>&lt;h4&gt;Lorem ipsum dolor sit amet</h4>
+		<h5>&lt;h5&gt;Lorem ipsum dolor sit amet</h5>
+		<h6>&lt;h6&gt;Lorem ipsum dolor sit amet</h6>
+	</div>
+	<div class="gl-example">
+		<h2>Paragraph</h2>
+		<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+	</div>
+	<div class="gl-example">
+		<h2>Images</h2>
+			<img src="//placekitten.com/250" alt="Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat" />
+	</div>
+	<div class="gl-example">
+		<h2>Links</h2>
+		<a href="#">link</a>
+	</div>
 
-<div class="gl-example">
-	<h2>Unordered List</h2>
-	<ul>
-		<li>level 1</li>
-		<li>
-			level 1
-			<ul>
-				<li>level 2</li>
-				<li>
-					level 2
-					<ul>
-						<li>level 3</li>
-						<li>level 3</li>
-					</ul>
-				</li>
-			</ul>
-		</li>
-	</ul>
-</div>
+	<div class="gl-example">
+		<h2>Unordered List</h2>
+		<ul>
+			<li>level 1</li>
+			<li>
+				level 1
+				<ul>
+					<li>level 2</li>
+					<li>
+						level 2
+						<ul>
+							<li>level 3</li>
+							<li>level 3</li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+		</ul>
+	</div>
 
-<div class="gl-example">
-	<h2>Navigation list</h2>
-	<nav>
-		<a href="#?nav=" data-role="nav">nav link a</a>
-		<a href="#?nav=" data-role="nav">nav link b</a>
-		<a href="#?nav=" data-role="nav">nav link c</a>
-	</nav>
-</div>
-
-<div class="gl-example">
-	<h1>Form example:</h1>
-	<form id="sayyes" action="/static/mock/response.json" method="POST" data-on-sumbit="nav=home" >
-			<input type="hidden" name="foo" value="bar" />
-			<input type="hidden" name="hello" value="world" />
-			<input type="text" name="name" placeholder="Type your name"  />
-			<input type="email" name="email" placeholder="Type your email" required />
+	<div class="gl-example">
+		<h2>Navigation list</h2>
 		<nav>
-			<button value="foo">button a</button>
-			<button value="bar">button b</button>
+			<a href="#?nav=" data-role="nav">nav link a</a>
+			<a href="#?nav=" data-role="nav">nav link b</a>
+			<a href="#?nav=" data-role="nav">nav link c</a>
 		</nav>
-	</form>
-</div>
+	</div>
+
+	<div class="gl-example">
+		<h1>Form example:</h1>
+		<form id="sayyes" action="/static/mock/response.json" method="POST" data-on-sumbit="nav=home" >
+				<input type="hidden" name="foo" value="bar" />
+				<input type="hidden" name="hello" value="world" />
+				<input type="text" name="name" placeholder="Type your name"  />
+				<input type="email" name="email" placeholder="Type your email" required />
+			<nav>
+				<button value="foo">button a</button>
+				<button value="bar">button b</button>
+			</nav>
+		</form>
+	</div>
 </body>
 </html>

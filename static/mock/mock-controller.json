@@ -2,7 +2,7 @@
 	"start_with":"a",
 	"views" : [{
 		"name":"a",
-		"template_name":"template_simple",
+		"template_name":"mock_template",
 		"data": {
 				"title":"view: a",
 				"description":"Description goes here",
@@ -13,14 +13,41 @@
 				}
 		} , {
 		"name":"b",
-		"template_name":"template_simple",
+		"template_name":"mock_template",
 		"data":{
 			"title":"view: b",
 			"description":"Description goes here",
 			"nav":[{
-					"label":"nav => a",
-					"url":"#?nav=a"
+				"label":"nav => a",
+				"url":"#?nav=a"
+			}],
+			"form" : {
+				"action" : "/static/mock/response.json",
+				"method" : "POST",
+				"id" : "sayyes",
+				"on_submit" : "nav=a",
+				"hiddens" : [{
+					"name":"foo",
+					"value":"bar"
+				},{
+					"name":"hello",
+					"value":"world"
+				}],
+				"buttons" : [{
+					"label":"send",
+					"value":"foo"
+				}],
+				"inputs" : [{
+					"name":"name",
+					"type":"text",
+					"placeholder":"Type your name"
+				},{
+					"name":"email",
+					"type":"email",
+					"placeholder":"Type your email",
+					"required":"required"
 				}]
 			}
-		}]
+		}
+	}]
 }

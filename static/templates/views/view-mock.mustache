@@ -14,4 +14,19 @@
 			</ul>
 		</nav>
 	{{/has_nav}}
+	{{#form}}
+		<form id="{{{form.id}}}" action="{{{form.action}}}" method="{{{form.method}}}" data-on-sumbit="{{{form.on_submit}}}" >
+			{{#form.hiddens}}
+				<input type="hidden" name="{{{name}}}" value="{{{value}}}" />
+			{{/form.hiddens}}
+			{{#form.inputs}}
+				<input type="{{{type}}}" name="{{{name}}}" placeholder="{{{placeholder}}}" {{{required}}} />
+			{{/form.inputs}}
+			<nav>
+			{{#form.buttons}}
+				<button value="{{{value}}}">{{{label}}}</button>
+			{{/form.buttons}}
+			</nav>
+		</form>
+	{{/form}}
 </div>
