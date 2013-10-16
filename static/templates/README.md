@@ -9,11 +9,33 @@ The main object that handles all models is the [controller](#controller)
 
 ##<a id="controller"></a>controller
 
+-`id` **String**
+
+-`attendant` intance of [attendant_data](#attendant_data)
+
+-`client` intance of [client_data](#client_data)
+
 -`start_with` **String** (view name) or **Number** (view's array index)
 
--`id` [!] **String**
-
 -`views` **Array** of [view](#view)
+
+##<a id="attendant_data"></a>attendant_data
+
+-`id` **String**
+
+-`name` **String**
+
+-`email` **String**
+
+-`phone` **String**
+
+##<a id="client_data"></a>client_data
+
+-`id` **String**
+
+-`name` **String**
+
+-`email` **String**
 
 ##<a id="view"></a>view
 
@@ -21,7 +43,7 @@ The main object that handles all models is the [controller](#controller)
 
 -`template_name` **String** must match `/[\w-]+/`
 
--`data` [view_data](#view_data)
+-`data` intance of [view_data](#view_data)
 
 ##<a id="view_data"></a>view_data
 
@@ -49,7 +71,7 @@ The main object that handles all models is the [controller](#controller)
 
 -`method` **String**
 
--`on_submit` **String** (action to be taken after service response)
+-`on_submit` **String** (action to be taken after service's response)
 
 -`hiddens` **Array** of [hidden_data](#hidden_data)
 
@@ -73,13 +95,8 @@ The main object that handles all models is the [controller](#controller)
 
 -`name` **String**
 
--`type` **String** (@see [full list](http://www.w3schools.com/html/html5_form_input_types.asp))
+-`type` **String** ([full list](http://www.w3schools.com/html/html5_form_input_types.asp). take care with browser legacy)
 
 -`placeholder` **String**
 
--`required` **String** (value must be "required" or null)
-
-
-##input_data
-	- type : text / select/ file
-	- mask : number/ email/ date
+-`required` **String** (value must be "required" or `null`)
