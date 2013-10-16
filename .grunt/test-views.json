@@ -5,24 +5,36 @@
 		"raw": null,
 		"data" : "{{{static}}}/mock/guideline.json"
 	},
-	"test1" : {
-		"dest" : "{{{tests}}}/view-test1.html",
+	"simple-view" : {
+		"dest" : "{{{tests}}}/simple-view.html",
 		"files" : ["{{{templates}}}/test-view.mustache"],
 		"raw": {
 			"template_simple": "{{{templates}}}/template-simple.mustache",
-			"mock_view": "{{{static}}}/mock/test1.json"
+			"mock_view": "{{{static}}}/mock/test-view.json"
 		},
 		"data" : {
 			"js_src" : "/{{{dest_js_folder}}}/test-view-min.js",
 			"templates" : ["template_simple"]
 		}
 	},
-	"test3" : {
+	"form-view" : {
+		"dest" : "{{{tests}}}/form-view.html",
+		"files" : ["{{{templates}}}/test-view.mustache"],
+		"raw": {
+			"template_simple": "{{{templates}}}/template-simple.mustache",
+			"mock_view": "{{{static}}}/mock/test-view.json"
+		},
+		"data" : {
+			"js_src" : "/{{{dest_js_folder}}}/test-view-min.js",
+			"templates" : ["template_simple"]
+		}
+	},
+	"controller" : {
 		"dest" : "{{{tests}}}/controller-test1.html",
 		"files" : ["{{{templates}}}/test-view.mustache"],
 		"raw": {
 			"template_simple": "{{{templates}}}/template-simple.mustache",
-			"mock_view": "{{{static}}}/mock/test3.json"
+			"mock_view": "{{{static}}}/mock/test-controller.json"
 		},
 		"data" : {
 			"js_src" : "/{{{dest_js_folder}}}/test-controller-min.js",
