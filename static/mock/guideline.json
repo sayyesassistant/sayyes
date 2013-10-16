@@ -15,5 +15,35 @@
 	},{
 		"label":"nav link c",
 		"view":"viewname"
-	}]
+	}],
+	"form" : {
+		"action" : "/static/mock/response.json",
+		"method" : "POST",
+		"id" : "sayyes",
+		"on_submit" : "nav=home",
+		"hiddens" : [{
+			"name":"foo",
+			"value":"bar"
+		},{
+			"name":"hello",
+			"value":"world"
+		}],
+		"buttons" : [{
+			"label":"button a",
+			"value":"foo"
+		},{
+			"label":"button b",
+			"value":"bar"
+		}],
+		"inputs" : [{
+			"name":"name",
+			"type":"text",
+			"placeholder":"Type your name"
+		},{
+			"name":"email",
+			"type":"email",
+			"placeholder":"Type your email",
+			"required":"required"
+		}]
+	}
 }

@@ -32,6 +32,9 @@
 		display: block;
 		background-color: lightblue;
 	}
+	input[type=text]{
+		display: block;
+	}
 	</style>
 </head>
 
@@ -88,6 +91,20 @@
 		<a href="#?nav=" data-role="nav">nav link b</a>
 		<a href="#?nav=" data-role="nav">nav link c</a>
 	</nav>
+</div>
+
+<div class="gl-example">
+	<h1>Form example:</h1>
+	<form id="sayyes" action="/static/mock/response.json" method="POST" data-on-sumbit="nav=home" >
+			<input type="hidden" name="foo" value="bar" />
+			<input type="hidden" name="hello" value="world" />
+			<input type="text" name="name" placeholder="Type your name"  />
+			<input type="email" name="email" placeholder="Type your email" required />
+		<nav>
+			<button value="foo">button a</button>
+			<button value="bar">button b</button>
+		</nav>
+	</form>
 </div>
 </body>
 </html>

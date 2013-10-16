@@ -33,34 +33,53 @@ The main object that handles all models is the [controller](#controller)
 
 -`picture` intance of [picture_data](#picture_data)
 
+-`form` intance of [form_data](#form_data)
+
 ##<a id="picture_data"></a>picture_data
 
 -`url` **String**
 
 -`caption` **String**
 
+##<a id="form_data"></a>form_data
 
-##button
-	- type nav|submit|link
-	- label
-	- value (next screen id ?)
-	- hidden_fieds [] input_item
+-`id` **String**
+
+-`action` **String**
+
+-`method` **String**
+
+-`on_submit` **String** (action to be taken after service response)
+
+-`hiddens` **Array** of [hidden_data](#hidden_data)
+
+-`buttons` **Array** of [form_button](#form_button)
+
+-`inputs` **Array** of [form_input](#form_input)
+
+##<a id="hidden_data"></a>hidden_data
+
+-`name` **String**
+
+-`value` **String**
+
+##<a id="form_button"></a>form_button
+
+-`value` **String**
+
+-`label` **String**
+
+##<a id="form_input"></a>form_input
+
+-`name` **String**
+
+-`type` **String** (@see [full list](http://www.w3schools.com/html/html5_form_input_types.asp))
+
+-`placeholder` **String**
+
+-`required` **String** (value must be "required" or null)
+
 
 ##input_data
 	- type : text / select/ file
 	- mask : number/ email/ date
-
-##input_item
-	- label : String
-	- value : String
-
-	form
-	button
-		value
-		label
-	hidden
-		name
-		value
-	input
-		name
-		mask
