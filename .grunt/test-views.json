@@ -3,14 +3,14 @@
 		"dest" : "{{{static}}}/guideline.html",
 		"files" : ["{{{templates}}}/inc/header.mustache","{{{templates}}}/guideline-content.mustache","{{{templates}}}/inc/footer.mustache"],
 		"raw": null,
-		"data" : "{{{static}}}/mock/guideline.json"
+		"data" : "{{{static}}}/mock/mock-guideline.json"
 	},
 	"simple-view" : {
 		"dest" : "{{{tests}}}/simple-view.html",
 		"files" : ["{{{templates}}}/test-view.mustache"],
 		"raw": {
-			"template_simple": "{{{templates}}}/template-simple.mustache",
-			"mock_view": "{{{static}}}/mock/test-view.json"
+			"template_simple": "{{{templates}}}/views/view-mock.mustache",
+			"mock_view": "{{{static}}}/mock/mock-view.json"
 		},
 		"data" : {
 			"js_src" : "/{{{dest_js_folder}}}/test-view-min.js",
@@ -21,8 +21,8 @@
 		"dest" : "{{{tests}}}/form-view.html",
 		"files" : ["{{{templates}}}/test-view.mustache"],
 		"raw": {
-			"template_simple": "{{{templates}}}/template-simple.mustache",
-			"mock_view": "{{{static}}}/mock/test-view.json"
+			"template_simple": "{{{templates}}}/views/view-mock.mustache",
+			"mock_view": "{{{static}}}/mock/mock-view.json"
 		},
 		"data" : {
 			"js_src" : "/{{{dest_js_folder}}}/test-view-min.js",
@@ -33,8 +33,8 @@
 		"dest" : "{{{tests}}}/controller-test1.html",
 		"files" : ["{{{templates}}}/test-view.mustache"],
 		"raw": {
-			"template_simple": "{{{templates}}}/template-simple.mustache",
-			"mock_view": "{{{static}}}/mock/test-controller.json"
+			"template_simple": "{{{templates}}}/views/view-mock.mustache",
+			"mock_view": "{{{static}}}/mock/mock-controller.json"
 		},
 		"data" : {
 			"js_src" : "/{{{dest_js_folder}}}/test-controller-min.js",
