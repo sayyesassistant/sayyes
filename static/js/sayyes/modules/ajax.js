@@ -4,22 +4,53 @@
 define([
 	"sayyes/modules/log",
 	"sayyes/modules/vo",
-	"signals/signals"
+	"signals/signals",
+	"mout/lang/kindOf",
+	"mout/array/every",
+	"mout/object/hasOwn"
 ],function(
 	log,
 	vo,
-	signals
+	signals,
+	kindOf,
+	every,
+	hasOwn
 ){
 
+	function validate (xhr) {
+
+		var result, passed, prop, val, prop_fail;
+		if (kindOf(xhr) === "Object"){
+			passed = every(this._xpect,function(value){
+				prop = value[0]; val = value[1];
+				return hasOwn(xhr,prop) && xhr[prop] === val;
+			});
+			if (!passed){
+				result = new vo.result();
+				result.exception = -101;
+				result.message = "result doesn't match expected values";
+				return result;
+			}
+			return xhr;
+		} else {
+			result = new vo.result();
+			result.exception = -100;
+			result.message = "result isn't a valid json";
+			return result;
+		}
+	}
+
 	function on_success(xhr){
-		console.log("ajax success");
-		console.dir(event);
-		console.dir(this);
+		if (!!this._xpect){
+			xhr = validate.bind(this)(xhr);
+		}
+		this.result = xhr;
+		this.trigger.success.dispatch(this.result);
 	}
 
 	function on_error(xhr){
 		this.result = new vo.result();
-		this.result.status = xhr.status;
+		this.result.expection = xhr.status;
 		this.result.message = xhr.responseText;
 		this.trigger.error.dispatch(this.result);
 	}
@@ -55,8 +86,11 @@ define([
 			return this;
 		},
 
-		expect : function (fn) {
-			this._xpect = fn;
+		expect : function (prop,to_be) {
+			if (!this._xpect){
+				this._xpect = [];
+			}
+			this._xpect.push([prop,to_be]);
 			return this;
 		},
 

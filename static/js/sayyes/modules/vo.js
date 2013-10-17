@@ -26,16 +26,24 @@ define([
 			map(props,__cast(this));
 		}
 	};
-	VO.prototype.fromJSON = function (data){
-		console.log(data);
-	};
-	VO.prototype.implements = function (value) {
-		if (!value){
-			return false;
+	VO.prototype = {
+
+		fromJSON : function (data){
+			console.log(data);
+		},
+
+		implements : function (value) {
+			if (!value){
+				return false;
+			}
+			var props = keys(value),
+				diff = difference(this.__dna,props);
+			return diff.length===0;
+		},
+
+		set : function (prop,value) {
+
 		}
-		var props = keys(value),
-			diff = difference(this.__dna,props);
-		return diff.length===0;
 	};
 
 	ViewVO = function() { VO.call(this,"name","template_name"); };
@@ -46,7 +54,7 @@ define([
 	ListVO.prototype = new VO();
 	ListVO.prototype.constructor = VO;
 
-	ResultVO = function() { VO.call(this,"success","exeption", "message", "value"); };
+	ResultVO = function() { VO.call(this,"success","exception", "message", "value"); };
 	ResultVO.prototype = new VO();
 	ResultVO.prototype.constructor = VO;
 

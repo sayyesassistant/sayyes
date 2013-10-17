@@ -5316,44 +5316,106 @@ define('mout/array/every',['../function/makeIterator_'], function (makeIterator)
 
 }(this));
 
+define('mout/string/typecast',[],function () {
+
+    var UNDEF;
+
+    /**
+     * Parses string and convert it into a native value.
+     */
+    function typecast(val) {
+        var r;
+        if ( val === null || val === 'null' ) {
+            r = null;
+        } else if ( val === 'true' ) {
+            r = true;
+        } else if ( val === 'false' ) {
+            r = false;
+        } else if ( val === UNDEF || val === 'undefined' ) {
+            r = UNDEF;
+        } else if ( val === '' || isNaN(val) ) {
+            //isNaN('') returns false
+            r = val;
+        } else {
+            //parseFloat(null || '') returns NaN
+            r = parseFloat(val);
+        }
+        return r;
+    }
+
+    return typecast;
+});
+
+define('mout/queryString/getQuery',[],function () {
+
+    /**
+     * Gets full query as string with all special chars decoded.
+     */
+    function getQuery(url) {
+        url = url.replace(/#.*/, ''); //removes hash (to avoid getting hash query)
+        var queryString = /\?[a-zA-Z0-9\=\&\%\$\-\_\.\+\!\*\'\(\)\,]+/.exec(url); //valid chars according to: http://www.ietf.org/rfc/rfc1738.txt
+        return (queryString)? decodeURIComponent(queryString[0]) : '';
+    }
+
+    return getQuery;
+});
+
+define('mout/queryString/getParam',['../string/typecast', './getQuery'], function (typecast, getQuery) {
+
+    /**
+     * Get query parameter value.
+     */
+    function getParam(url, param, shouldTypecast){
+        var regexp = new RegExp('(\\?|&)'+ param + '=([^&]*)'), //matches `?param=value` or `&param=value`, value = $2
+            result = regexp.exec( getQuery(url) ),
+            val = (result && result[2])? result[2] : null;
+        return shouldTypecast === false? val : typecast(val);
+    }
+
+    return getParam;
+});
+
 /*
 @grunt -task=comp-js-all
 */
 define('sayyes/plugins/plugin-nav',[
 	"sayyes/modules/log",
-	"signals/signals"
+	"mout/queryString/getParam"
 ],function(
 	log,
-	signals
+	getParam
 ){
 
-	var ClosureNav, blob, click_event, reg_trailing;
+	var ClosureNav, blob, click_event;
 
 	click_event = "click";
 
-	reg_trailing = /(nav=)([\w-_]+)/;
-
-	ClosureNav = function(node){
+	ClosureNav = function (node,view) {
 		this.node = $(node);
-		this.trigger = new signals();
+		this.view = view;
 		this.enable_ux();
 	};
 
 	ClosureNav.prototype = {
+
 		click_handle : function (event){
-			var nav_to = event.target.href.match(reg_trailing);
-			if (nav_to && nav_to.length>=2){
-				this.trigger.dispatch(nav_to[2]);
+			event.preventDefault();
+			var nav_to = getParam(event.target.href,"nav");
+			if (!!nav_to && nav_to.constructor.name === "String"){
+				this.view.on.nav.dispatch(nav_to);
 			} else {
 				log.info("plugin-nav couldn't find nav value on:",event.target.href);
 			}
 		},
+
 		enable_ux : function (){
 			this.node.on(click_event,this.click_handle.bind(this));
 		},
+
 		dispose : function(){
 			this.node.off(click_event,this.click_handle.bind(this));
 			this.node = null;
+			this.view = null;
 		}
 	};
 
@@ -5361,8 +5423,7 @@ define('sayyes/plugins/plugin-nav',[
 
 		function each_link (index,node) {
 			if (!!node){
-				blob = new ClosureNav(node);
-				blob.trigger.add(view.on.nav.dispatch);
+				blob = new ClosureNav(node, view);
 				view.plugin_closures.push(blob);
 			}
 		}
@@ -5371,8 +5432,10 @@ define('sayyes/plugins/plugin-nav',[
 			log.error("plugin-nav got no view!");
 			return false;
 		}
+
 		view.html.find("[data-role='nav']").each(each_link);
 		return true;
+
 	};
 });
 define('mout/array/map',['../function/makeIterator_'], function (makeIterator) {
@@ -5575,16 +5638,24 @@ define('sayyes/modules/vo',[
 			map(props,__cast(this));
 		}
 	};
-	VO.prototype.fromJSON = function (data){
-		console.log(data);
-	};
-	VO.prototype.implements = function (value) {
-		if (!value){
-			return false;
+	VO.prototype = {
+
+		fromJSON : function (data){
+			console.log(data);
+		},
+
+		implements : function (value) {
+			if (!value){
+				return false;
+			}
+			var props = keys(value),
+				diff = difference(this.__dna,props);
+			return diff.length===0;
+		},
+
+		set : function (prop,value) {
+
 		}
-		var props = keys(value),
-			diff = difference(this.__dna,props);
-		return diff.length===0;
 	};
 
 	ViewVO = function() { VO.call(this,"name","template_name"); };
@@ -5595,7 +5666,7 @@ define('sayyes/modules/vo',[
 	ListVO.prototype = new VO();
 	ListVO.prototype.constructor = VO;
 
-	ResultVO = function() { VO.call(this,"success","exeption", "message", "value"); };
+	ResultVO = function() { VO.call(this,"success","exception", "message", "value"); };
 	ResultVO.prototype = new VO();
 	ResultVO.prototype.constructor = VO;
 
@@ -5607,26 +5678,60 @@ define('sayyes/modules/vo',[
 });
 /*
 @grunt -task=comp-js-all
+//TODO testar mais o expect
 */
 define('sayyes/modules/ajax',[
 	"sayyes/modules/log",
 	"sayyes/modules/vo",
-	"signals/signals"
+	"signals/signals",
+	"mout/lang/kindOf",
+	"mout/array/every",
+	"mout/object/hasOwn"
 ],function(
 	log,
 	vo,
-	signals
+	signals,
+	kindOf,
+	every,
+	hasOwn
 ){
 
+	function validate (xhr) {
+
+		var result, passed, prop, val, prop_fail;
+console.log(kindOf(null));
+console.log(kindOf(false));
+		if (kindOf(xhr) === "Object"){
+			passed = every(this._xpect,function(value){
+				prop = value[0]; val = value[1];
+				return hasOwn(xhr,prop) && xhr[prop] === val;
+			});
+			if (!passed){
+				result = new vo.result();
+				result.exception = -101;
+				result.message = "result doesn't match expected values";
+				return result;
+			}
+			return xhr;
+		} else {
+			result = new vo.result();
+			result.exception = -100;
+			result.message = "result isn't a valid json";
+			return result;
+		}
+	}
+
 	function on_success(xhr){
-		console.log("ajax success");
-		console.dir(event);
-		console.dir(this);
+		if (!!this._xpect){
+			xhr = validate.bind(this)(xhr);
+		}
+		this.result = xhr;
+		this.trigger.success.dispatch(this.result);
 	}
 
 	function on_error(xhr){
 		this.result = new vo.result();
-		this.result.status = xhr.status;
+		this.result.expection = xhr.status;
 		this.result.message = xhr.responseText;
 		this.trigger.error.dispatch(this.result);
 	}
@@ -5662,8 +5767,11 @@ define('sayyes/modules/ajax',[
 			return this;
 		},
 
-		expect : function (fn) {
-			this._xpect = fn;
+		expect : function (prop,to_be) {
+			if (!this._xpect){
+				this._xpect = [];
+			}
+			this._xpect.push([prop,to_be]);
 			return this;
 		},
 
@@ -5718,6 +5826,7 @@ define('sayyes/plugins/plugin-form',[
 				this.service.trigger.error.add(function(vo){
 					console.log("plugin-form error notified",vo);
 				});
+				this.service.expect("success",true).expect("value",String);
 			}
 			this.service
 				.method(this.form.attr("method"))
@@ -5759,6 +5868,7 @@ define('sayyes/modules/view',[
 	"mout/array/every",
 	"mustache/mustache",
 	"signals/signals",
+	"sayyes/modules/log",
 	"sayyes/plugins/plugin-nav",
 	"sayyes/plugins/plugin-form"
 ], function (
@@ -5767,6 +5877,7 @@ define('sayyes/modules/view',[
 	every,
 	mustache,
 	signal,
+	log,
 	plugin_nav,
 	plugin_form
 ) {
@@ -5807,8 +5918,14 @@ define('sayyes/modules/view',[
 				failed : new signal(),
 				passed : new signal()
 			},
-			nav : new signal()
+			nav : new signal(),
+			alert : new signal()
 		};
+
+		instance.signals_list = [instance.on.render.failed, instance.on.render.passed,
+								instance.on.open.failed, instance.on.open.passed,
+								instance.on.close.failed, instance.on.close.passed,
+								instance.on.nav, instance.on.alert];
 
 		var element = document.getElementById(instance.template_name);
 		if (!element) {
@@ -5878,15 +5995,16 @@ define('sayyes/modules/view',[
 		dispose : function () {
 			this.html.removeClass(class_close);
 			this.html = null;
-
-			this.on.render.passed.removeAll();
-			this.on.render.failed.removeAll();
-
-			this.on.close.passed.removeAll();
-			this.on.close.failed.removeAll();
-
-			this.on.open.passed.removeAll();
-			this.on.open.failed.removeAll();
+			var passed = every(this.signals_list,function(val,index){
+				if (!!val && !!val.removeAll){
+					val.removeAll();
+					return true;
+				}
+				return false;
+			});
+			if (!passed){
+				log.warn("view.dispose => problems dispose all signals.");
+			}
 		}
 	};
 

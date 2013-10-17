@@ -7,6 +7,7 @@ define([
 	"mout/array/every",
 	"mustache/mustache",
 	"signals/signals",
+	"sayyes/modules/log",
 	"sayyes/plugins/plugin-nav",
 	"sayyes/plugins/plugin-form"
 ], function (
@@ -15,6 +16,7 @@ define([
 	every,
 	mustache,
 	signal,
+	log,
 	plugin_nav,
 	plugin_form
 ) {
@@ -55,8 +57,14 @@ define([
 				failed : new signal(),
 				passed : new signal()
 			},
-			nav : new signal()
+			nav : new signal(),
+			alert : new signal()
 		};
+
+		instance.signals_list = [instance.on.render.failed, instance.on.render.passed,
+								instance.on.open.failed, instance.on.open.passed,
+								instance.on.close.failed, instance.on.close.passed,
+								instance.on.nav, instance.on.alert];
 
 		var element = document.getElementById(instance.template_name);
 		if (!element) {
@@ -126,15 +134,16 @@ define([
 		dispose : function () {
 			this.html.removeClass(class_close);
 			this.html = null;
-
-			this.on.render.passed.removeAll();
-			this.on.render.failed.removeAll();
-
-			this.on.close.passed.removeAll();
-			this.on.close.failed.removeAll();
-
-			this.on.open.passed.removeAll();
-			this.on.open.failed.removeAll();
+			var passed = every(this.signals_list,function(val,index){
+				if (!!val && !!val.removeAll){
+					val.removeAll();
+					return true;
+				}
+				return false;
+			});
+			if (!passed){
+				log.warn("view.dispose => problems dispose all signals.");
+			}
 		}
 	};
 

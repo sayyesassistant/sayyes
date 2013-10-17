@@ -33,6 +33,7 @@ define([
 				this.service.trigger.error.add(function(vo){
 					console.log("plugin-form error notified",vo);
 				});
+				this.service.expect("success",true).expect("value",String);
 			}
 			this.service
 				.method(this.form.attr("method"))

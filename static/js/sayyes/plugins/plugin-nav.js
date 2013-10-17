@@ -3,39 +3,42 @@
 */
 define([
 	"sayyes/modules/log",
-	"signals/signals"
+	"mout/queryString/getParam"
 ],function(
 	log,
-	signals
+	getParam
 ){
 
-	var ClosureNav, blob, click_event, reg_trailing;
+	var ClosureNav, blob, click_event;
 
 	click_event = "click";
 
-	reg_trailing = /(nav=)([\w-_]+)/;
-
-	ClosureNav = function(node){
+	ClosureNav = function (node,view) {
 		this.node = $(node);
-		this.trigger = new signals();
+		this.view = view;
 		this.enable_ux();
 	};
 
 	ClosureNav.prototype = {
+
 		click_handle : function (event){
-			var nav_to = event.target.href.match(reg_trailing);
-			if (nav_to && nav_to.length>=2){
-				this.trigger.dispatch(nav_to[2]);
+			event.preventDefault();
+			var nav_to = getParam(event.target.href,"nav");
+			if (!!nav_to && nav_to.constructor.name === "String"){
+				this.view.on.nav.dispatch(nav_to);
 			} else {
 				log.info("plugin-nav couldn't find nav value on:",event.target.href);
 			}
 		},
+
 		enable_ux : function (){
 			this.node.on(click_event,this.click_handle.bind(this));
 		},
+
 		dispose : function(){
 			this.node.off(click_event,this.click_handle.bind(this));
 			this.node = null;
+			this.view = null;
 		}
 	};
 
@@ -43,8 +46,7 @@ define([
 
 		function each_link (index,node) {
 			if (!!node){
-				blob = new ClosureNav(node);
-				blob.trigger.add(view.on.nav.dispatch);
+				blob = new ClosureNav(node, view);
 				view.plugin_closures.push(blob);
 			}
 		}
@@ -53,7 +55,9 @@ define([
 			log.error("plugin-nav got no view!");
 			return false;
 		}
+
 		view.html.find("[data-role='nav']").each(each_link);
 		return true;
+
 	};
 });
