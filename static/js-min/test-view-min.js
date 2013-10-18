@@ -5678,7 +5678,6 @@ define('sayyes/modules/vo',[
 });
 /*
 @grunt -task=comp-js-all
-//TODO testar mais o expect
 */
 define('sayyes/modules/ajax',[
 	"sayyes/modules/log",
@@ -5699,22 +5698,27 @@ define('sayyes/modules/ajax',[
 	function validate (xhr) {
 
 		var result, passed, prop, val, prop_fail;
-console.log(kindOf(null));
-console.log(kindOf(false));
 		if (kindOf(xhr) === "Object"){
 			passed = every(this._xpect,function(value){
 				prop = value[0]; val = value[1];
-				return hasOwn(xhr,prop) && xhr[prop] === val;
+				switch(kindOf(val)){
+					case "Function":
+						return hasOwn(xhr,prop) && val.call(null,xhr[prop]);
+					default:
+						return hasOwn(xhr,prop) && xhr[prop] === val;
+				}
 			});
-			if (!passed){
+			if (passed===false){
 				result = new vo.result();
+				result.success = false;
 				result.exception = -101;
-				result.message = "result doesn't match expected values";
+				result.message = "'"+prop+"' doesn't match expected value";
 				return result;
 			}
 			return xhr;
 		} else {
 			result = new vo.result();
+			result.success = false;
 			result.exception = -100;
 			result.message = "result isn't a valid json";
 			return result;
@@ -5726,7 +5730,11 @@ console.log(kindOf(false));
 			xhr = validate.bind(this)(xhr);
 		}
 		this.result = xhr;
-		this.trigger.success.dispatch(this.result);
+		if (this.result.success===true){
+			this.trigger.success.dispatch(this.result);
+			return;
+		}
+		this.trigger.error.dispatch(this.result);
 	}
 
 	function on_error(xhr){
@@ -5767,6 +5775,11 @@ console.log(kindOf(false));
 			return this;
 		},
 
+		type : function () {
+			this.options.dataType = value || this.options.dataType;
+			return this;
+		},
+
 		expect : function (prop,to_be) {
 			if (!this._xpect){
 				this._xpect = [];
@@ -5795,22 +5808,35 @@ console.log(kindOf(false));
 @grunt -task=comp-js-all
 */
 define('sayyes/plugins/plugin-form',[
+	"mout/object/mixIn",
 	"sayyes/modules/log",
 	"signals/signals",
 	"sayyes/modules/ajax"
 ],function(
+	mixIn,
 	log,
 	signals,
 	ajax
 ){
 
-	var ClosureFormBind, blob, submit_event;
+	var ClosureFormBind, blob, submit_event,
+		__parseError, __parseSuccess;
 
 	submit_event = "submit";
 
-	ClosureFormBind = function(node){
-		this.form = $(node);
-		this.trigger = new signals();
+	__parseError = function (result){
+		console.log(" deu certo:",this.on_error);
+		// this.view.show_alert(result,0);
+	};
+
+	__parseSuccess = function (result){
+		console.log(" deu certo:",this.on_success);
+		// this.view.show_alert(result,0);
+	};
+
+	ClosureFormBind = function(config){
+		mixIn(this,config);
+		this.form = $(this.node);
 		this.enable_ux();
 		this.service = null;
 	};
@@ -5820,13 +5846,9 @@ define('sayyes/plugins/plugin-form',[
 			event.preventDefault();
 			if (!this.service){
 				this.service = new ajax();
-				this.service.trigger.success.add(function(vo){
-					console.log("plugin-form success notified",vo);
-				});
-				this.service.trigger.error.add(function(vo){
-					console.log("plugin-form error notified",vo);
-				});
-				this.service.expect("success",true).expect("value",String);
+				this.service.trigger.success.add(__parseSuccess.bind(this));
+				this.service.trigger.error.add(__parseError.bind(this));
+				this.service.expect("success",true);
 			}
 			this.service
 				.method(this.form.attr("method"))
@@ -5845,9 +5867,19 @@ define('sayyes/plugins/plugin-form',[
 
 		function each_form (index,node) {
 			if (!!node){
-				blob = new ClosureFormBind(node);
-				blob.trigger.add(view.on.nav.dispatch);
-				view.plugin_closures.push(blob);
+				var on_success = node.getAttribute("data-on-success"),
+					on_error = node.getAttribute("data-on-error");
+				if (!!on_success && !!on_error){
+					blob = new ClosureFormBind({
+						"node":node,
+						"view":view,
+						"on_success":on_success,
+						"on_error":on_error
+					});
+					view.plugin_closures.push(blob);
+				} else {
+					log.error("plugin-form :: failed to init form, missing base attribute");
+				}
 			}
 		}
 
@@ -5860,7 +5892,7 @@ define('sayyes/plugins/plugin-form',[
 	};
 });
 /*
-@grunt -task=comp-js -page=test-controller
+@grunt -task=comp-js-all
 */
 define('sayyes/modules/view',[
 	"mout/object/mixIn",
@@ -5918,14 +5950,13 @@ define('sayyes/modules/view',[
 				failed : new signal(),
 				passed : new signal()
 			},
-			nav : new signal(),
-			alert : new signal()
+			nav : new signal()
 		};
 
 		instance.signals_list = [instance.on.render.failed, instance.on.render.passed,
 								instance.on.open.failed, instance.on.open.passed,
 								instance.on.close.failed, instance.on.close.passed,
-								instance.on.nav, instance.on.alert];
+								instance.on.nav];
 
 		var element = document.getElementById(instance.template_name);
 		if (!element) {
@@ -5990,6 +6021,14 @@ define('sayyes/modules/view',[
 			}
 			this.html.removeClass(class_open).addClass(class_close);
 			this.on.close.passed.dispatch(this);
+		},
+
+		show_alert : function (value){
+
+		},
+
+		close_alert : function (){
+
 		},
 
 		dispose : function () {

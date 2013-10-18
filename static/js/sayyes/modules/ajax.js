@@ -23,17 +23,24 @@ define([
 		if (kindOf(xhr) === "Object"){
 			passed = every(this._xpect,function(value){
 				prop = value[0]; val = value[1];
-				return hasOwn(xhr,prop) && xhr[prop] === val;
+				switch(kindOf(val)){
+					case "Function":
+						return hasOwn(xhr,prop) && val.call(null,xhr[prop]);
+					default:
+						return hasOwn(xhr,prop) && xhr[prop] === val;
+				}
 			});
-			if (!passed){
+			if (passed===false){
 				result = new vo.result();
+				result.success = false;
 				result.exception = -101;
-				result.message = "result doesn't match expected values";
+				result.message = "'"+prop+"' doesn't match expected value";
 				return result;
 			}
 			return xhr;
 		} else {
 			result = new vo.result();
+			result.success = false;
 			result.exception = -100;
 			result.message = "result isn't a valid json";
 			return result;
@@ -45,7 +52,11 @@ define([
 			xhr = validate.bind(this)(xhr);
 		}
 		this.result = xhr;
-		this.trigger.success.dispatch(this.result);
+		if (this.result.success===true){
+			this.trigger.success.dispatch(this.result);
+			return;
+		}
+		this.trigger.error.dispatch(this.result);
 	}
 
 	function on_error(xhr){
@@ -83,6 +94,11 @@ define([
 
 		method : function (value) {
 			this.options.type = value || this.options.type;
+			return this;
+		},
+
+		type : function () {
+			this.options.dataType = value || this.options.dataType;
 			return this;
 		},
 

@@ -1,5 +1,5 @@
 /*
-@grunt -task=comp-js -page=test-controller
+@grunt -task=comp-js-all
 */
 define([
 	"mout/object/mixIn",
@@ -57,14 +57,13 @@ define([
 				failed : new signal(),
 				passed : new signal()
 			},
-			nav : new signal(),
-			alert : new signal()
+			nav : new signal()
 		};
 
 		instance.signals_list = [instance.on.render.failed, instance.on.render.passed,
 								instance.on.open.failed, instance.on.open.passed,
 								instance.on.close.failed, instance.on.close.passed,
-								instance.on.nav, instance.on.alert];
+								instance.on.nav];
 
 		var element = document.getElementById(instance.template_name);
 		if (!element) {
@@ -129,6 +128,14 @@ define([
 			}
 			this.html.removeClass(class_open).addClass(class_close);
 			this.on.close.passed.dispatch(this);
+		},
+
+		show_alert : function (value){
+
+		},
+
+		close_alert : function (){
+
 		},
 
 		dispose : function () {

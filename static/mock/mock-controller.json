@@ -25,7 +25,8 @@
 				"action" : "/static/mock/response.json",
 				"method" : "POST",
 				"id" : "sayyes",
-				"on_submit" : "nav=a",
+				"on_success" : "nav=a",
+				"on_error" : "alert",
 				"hiddens" : [{
 					"name":"foo",
 					"value":"bar"

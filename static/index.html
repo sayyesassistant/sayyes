@@ -44,6 +44,12 @@
 	input[type=text]{
 		display: block;
 	}
+	div.alert{
+		display: none;
+	}
+	div.show {
+		display: block;
+	}
 	</style>
 </head>
 
@@ -104,7 +110,7 @@
 
 	<div class="gl-example">
 		<h1>Form example:</h1>
-		<form id="sayyes" action="/static/mock/response.json" method="POST" data-on-sumbit="nav=home" >
+		<form id="sayyes" action="/static/mock/response.json" method="POST" data-on-sumbit="" >
 				<input type="hidden" name="foo" value="bar" />
 				<input type="hidden" name="hello" value="world" />
 				<input type="text" name="name" placeholder="Type your name"  />

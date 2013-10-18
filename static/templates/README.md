@@ -71,7 +71,8 @@ The main object that handles all models is the [controller](#controller)
 
 -`method` **String**
 
--`on_submit` **String** (action to be taken after service's response)
+-`on_success` **String** (action to be taken after service's response. ie: nav=foo or alert)
+-`on_error` **String** (action to be taken after service's response. ie: nav=foo or alert)
 
 -`hiddens` **Array** of [hidden_data](#hidden_data)
 
