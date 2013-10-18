@@ -8,7 +8,7 @@
 				"description":"Description goes here",
 				"nav":[{
 						"label":"nav => b",
-						"url":"?nav=b"
+						"view":"b"
 					}]
 				}
 		} , {
@@ -18,8 +18,8 @@
 			"title":"view: b",
 			"description":"Description goes here",
 			"nav":[{
-				"label":"nav => a",
-				"url":"?nav=a"
+				"label":"<= back",
+				"view":"a"
 			}],
 			"form" : {
 				"action" : "/static/mock/response.json",

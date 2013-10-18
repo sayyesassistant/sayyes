@@ -1,13 +1,14 @@
-#Sayeys data modeling
+#Say Yes! Templates
 
 ---
 
-Following all available data models.
+##Following all available data models.
 
-The main object that handles all models is the [controller](#controller)
-
+###The kickoff is the [controller](#controller) model
 
 ##<a id="controller"></a>controller
+
+Designed for wrapping all controller's information
 
 -`id` **String**
 
@@ -21,6 +22,8 @@ The main object that handles all models is the [controller](#controller)
 
 ##<a id="attendant_data"></a>attendant_data
 
+Designed for wrapping attendant's information
+
 -`id` **String**
 
 -`name` **String**
@@ -31,6 +34,8 @@ The main object that handles all models is the [controller](#controller)
 
 ##<a id="client_data"></a>client_data
 
+Designed for wrapping client's information
+
 -`id` **String**
 
 -`name` **String**
@@ -38,6 +43,8 @@ The main object that handles all models is the [controller](#controller)
 -`email` **String**
 
 ##<a id="view"></a>view
+
+Designed for wrapping views
 
 -`name` **String** must match `/[\w-]+/`
 
@@ -47,23 +54,39 @@ The main object that handles all models is the [controller](#controller)
 
 ##<a id="view_data"></a>view_data
 
+Designed for wrapping all possible data that can be **rendered by the template**.
+
 -`title` **String**
 
 -`description` **String**
 
 -`text`	**String**
 
+-`nav` **Array** of [nav_data](#nav_data)
+
 -`picture` intance of [picture_data](#picture_data)
 
 -`form` intance of [form_data](#form_data)
 
+##<a id="nav_data"></a>nav_data
+
+Designed for navigation buttons
+
+-`view` **String** must match `/[\w-]+/`
+
+-`label` **String**
+
 ##<a id="picture_data"></a>picture_data
+
+Designed for showing pictures.
 
 -`url` **String**
 
 -`caption` **String**
 
 ##<a id="form_data"></a>form_data
+
+Designed for creating forms.
 
 -`id` **String**
 
@@ -72,6 +95,7 @@ The main object that handles all models is the [controller](#controller)
 -`method` **String**
 
 -`on_success` **String** (action to be taken after service's response. ie: nav=foo or alert)
+
 -`on_error` **String** (action to be taken after service's response. ie: nav=foo or alert)
 
 -`hiddens` **Array** of [hidden_data](#hidden_data)
@@ -82,17 +106,23 @@ The main object that handles all models is the [controller](#controller)
 
 ##<a id="hidden_data"></a>hidden_data
 
+Designed for rendering hidden informations
+
 -`name` **String**
 
 -`value` **String**
 
 ##<a id="form_button"></a>form_button
 
+Designed for rendering form buttons
+
 -`value` **String**
 
 -`label` **String**
 
 ##<a id="form_input"></a>form_input
+
+Designed for rendering **input text**
 
 -`name` **String**
 

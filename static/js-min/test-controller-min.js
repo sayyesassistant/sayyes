@@ -5316,79 +5316,20 @@ define('mout/array/every',['../function/makeIterator_'], function (makeIterator)
 
 }(this));
 
-define('mout/string/typecast',[],function () {
-
-    var UNDEF;
-
-    /**
-     * Parses string and convert it into a native value.
-     */
-    function typecast(val) {
-        var r;
-        if ( val === null || val === 'null' ) {
-            r = null;
-        } else if ( val === 'true' ) {
-            r = true;
-        } else if ( val === 'false' ) {
-            r = false;
-        } else if ( val === UNDEF || val === 'undefined' ) {
-            r = UNDEF;
-        } else if ( val === '' || isNaN(val) ) {
-            //isNaN('') returns false
-            r = val;
-        } else {
-            //parseFloat(null || '') returns NaN
-            r = parseFloat(val);
-        }
-        return r;
-    }
-
-    return typecast;
-});
-
-define('mout/queryString/getQuery',[],function () {
-
-    /**
-     * Gets full query as string with all special chars decoded.
-     */
-    function getQuery(url) {
-        url = url.replace(/#.*/, ''); //removes hash (to avoid getting hash query)
-        var queryString = /\?[a-zA-Z0-9\=\&\%\$\-\_\.\+\!\*\'\(\)\,]+/.exec(url); //valid chars according to: http://www.ietf.org/rfc/rfc1738.txt
-        return (queryString)? decodeURIComponent(queryString[0]) : '';
-    }
-
-    return getQuery;
-});
-
-define('mout/queryString/getParam',['../string/typecast', './getQuery'], function (typecast, getQuery) {
-
-    /**
-     * Get query parameter value.
-     */
-    function getParam(url, param, shouldTypecast){
-        var regexp = new RegExp('(\\?|&)'+ param + '=([^&]*)'), //matches `?param=value` or `&param=value`, value = $2
-            result = regexp.exec( getQuery(url) ),
-            val = (result && result[2])? result[2] : null;
-        return shouldTypecast === false? val : typecast(val);
-    }
-
-    return getParam;
-});
-
 /*
 @grunt -task=comp-js-all
 */
 define('sayyes/plugins/plugin-nav',[
-	"sayyes/modules/log",
-	"mout/queryString/getParam"
+	"sayyes/modules/log"
 ],function(
-	log,
-	getParam
+	log
 ){
 
-	var ClosureNav, blob, click_event;
+	var ClosureNav, blob, click_event, reg;
 
 	click_event = "click";
+
+	reg = /([\w-]+)$/;
 
 	ClosureNav = function (node,view) {
 		this.node = $(node);
@@ -5400,9 +5341,10 @@ define('sayyes/plugins/plugin-nav',[
 
 		click_handle : function (event){
 			event.preventDefault();
-			var nav_to = getParam(event.target.href,"nav");
-			if (!!nav_to && nav_to.constructor.name === "String"){
-				this.view.on.nav.dispatch(nav_to);
+			console.log(event.target.href);
+			var nav_to = event.target.href.match(reg);
+			if (!!nav_to && !!nav_to[1]){
+				this.view.on.nav.dispatch(nav_to[1]);
 			} else {
 				log.info("plugin-nav couldn't find nav value on:",event.target.href);
 			}
@@ -6287,7 +6229,7 @@ define('sayyes/modules/controller',[
 	};
 });
 /*
-@grunt -task=comp-js -page=test-controller
+@grunt -task=comp-js-all
 */
 require([
 	"sayyes/modules/log",
@@ -6309,10 +6251,10 @@ require([
 			return;
 		}
 		c.on.warn.add(function(){
-			// console.warn("ops! controller yeld a warning", arguments);
+			log.warn("ops! controller yeld a warning", arguments);
 		});
 		c.on.error.add(function(){
-			// console.log("ops! controller found an error", arguments);
+			log.info("ops! controller found an error", arguments);
 		});
 		c.define(window.mock);
 	}

@@ -2,16 +2,16 @@
 @grunt -task=comp-js-all
 */
 define([
-	"sayyes/modules/log",
-	"mout/queryString/getParam"
+	"sayyes/modules/log"
 ],function(
-	log,
-	getParam
+	log
 ){
 
-	var ClosureNav, blob, click_event;
+	var ClosureNav, blob, click_event, reg;
 
 	click_event = "click";
+
+	reg = /([\w-]+)$/;
 
 	ClosureNav = function (node,view) {
 		this.node = $(node);
@@ -23,9 +23,10 @@ define([
 
 		click_handle : function (event){
 			event.preventDefault();
-			var nav_to = getParam(event.target.href,"nav");
-			if (!!nav_to && nav_to.constructor.name === "String"){
-				this.view.on.nav.dispatch(nav_to);
+			console.log(event.target.href);
+			var nav_to = event.target.href.match(reg);
+			if (!!nav_to && !!nav_to[1]){
+				this.view.on.nav.dispatch(nav_to[1]);
 			} else {
 				log.info("plugin-nav couldn't find nav value on:",event.target.href);
 			}
