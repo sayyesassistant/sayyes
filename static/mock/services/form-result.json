@@ -1,9 +1,0 @@
-{
-	"success" : true,
-	"message" : null,
-	"exception" : null,
-	"value" : {
-		"title":"You got it!",
-		"description":"thanks a lot fulano@ada.com"
-	}
-}
