@@ -14,18 +14,41 @@ define([
 ){
 
 	var ClosureFormBind, blob, submit_event,
-		__parseError, __parseSuccess;
+		__parseError, __parseSuccess, reg_action;
+
+	reg_action = /^[\w]+$/;
 
 	submit_event = "submit";
 
+	__fireAction = function (value) {
+
+		if (!value){
+			log.warn("plugin-form.__fireAction got no action to take!");
+			return null;
+		}
+
+		var blob = value.split("="),
+			target = blob[1] || "";
+			target = target.match(reg_action);
+
+		switch (blob[0]) {
+			case "alert":
+				this.view.show_alert();
+				break;
+			case "nav":
+				this.view.on.nav.dispatch(target ? target[0] : null);
+				break;
+		}
+	};
+
 	__parseError = function (result){
-		console.log(" deu certo:",this.on_error);
-		// this.view.show_alert(result,0);
+		this.view.form_result = result;
+		__fireAction.bind(this)(this.on_error);
 	};
 
 	__parseSuccess = function (result){
-		console.log(" deu certo:",this.on_success);
-		// this.view.show_alert(result,0);
+		this.view.form_result = result;
+		__fireAction.bind(this)(this.on_success);
 	};
 
 	ClosureFormBind = function(config){

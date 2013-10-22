@@ -5600,7 +5600,7 @@ define('sayyes/modules/vo',[
 		}
 	};
 
-	ViewVO = function() { VO.call(this,"name","template_name"); };
+	ViewVO = function() { VO.call(this,"name","template_name","data"); };
 	ViewVO.prototype = new VO();
 	ViewVO.prototype.constructor = VO;
 
@@ -5737,7 +5737,7 @@ define('sayyes/modules/ajax',[
 			}
 			this.options.url = url;
 			this.options.data = data;
-			log.info("ajax.request => "+url);
+			log.info("ajax.request => "+url + " method:"+this.options.type, this.options.data);
 			$.ajax(this.options);
 			return this;
 		}
@@ -5762,18 +5762,41 @@ define('sayyes/plugins/plugin-form',[
 ){
 
 	var ClosureFormBind, blob, submit_event,
-		__parseError, __parseSuccess;
+		__parseError, __parseSuccess, reg_action;
+
+	reg_action = /^[\w]+$/;
 
 	submit_event = "submit";
 
+	__fireAction = function (value) {
+
+		if (!value){
+			log.warn("plugin-form.__fireAction got no action to take!");
+			return null;
+		}
+
+		var blob = value.split("="),
+			target = blob[1] || "";
+			target = target.match(reg_action);
+
+		switch (blob[0]) {
+			case "alert":
+				this.view.show_alert();
+				break;
+			case "nav":
+				this.view.on.nav.dispatch(target ? target[0] : null);
+				break;
+		}
+	};
+
 	__parseError = function (result){
-		console.log(" deu certo:",this.on_error);
-		// this.view.show_alert(result,0);
+		this.view.form_result = result;
+		__fireAction.bind(this)(this.on_error);
 	};
 
 	__parseSuccess = function (result){
-		console.log(" deu certo:",this.on_success);
-		// this.view.show_alert(result,0);
+		this.view.form_result = result;
+		__fireAction.bind(this)(this.on_success);
 	};
 
 	ClosureFormBind = function(config){
@@ -5874,6 +5897,7 @@ define('sayyes/modules/view',[
 		instance.template_raw = null;
 		instance.template_fn = null;
 		instance.plugin_closures = null;
+		instance.form_result = null;
 
 		//apply values from object
 		mixIn(instance,value);
@@ -5954,6 +5978,7 @@ define('sayyes/modules/view',[
 			}
 			this.html.addClass(class_open);
 			this.on.open.passed.dispatch(this);
+			this.form_result = null;
 		},
 
 		close : function () {
@@ -5966,11 +5991,11 @@ define('sayyes/modules/view',[
 		},
 
 		show_alert : function (value){
-
+			console.log("show alert",value);
 		},
 
 		close_alert : function (){
-
+			console.log(value);
 		},
 
 		dispose : function () {
@@ -6042,7 +6067,7 @@ define('mout/array/find',['./findIndex'], function (findIndex) {
 });
 
 /*
-@grunt -task=comp-js -page=test-controller
+@grunt -task=comp-js-all
 */
 define('sayyes/modules/controller',[
 	"sayyes/modules/log",
@@ -6104,6 +6129,7 @@ define('sayyes/modules/controller',[
 	}
 
 	function __get_view (name, data){
+		console.log("...getting view:'"+name+"'", "on", data);
 		return find(data,{"name":name});
 	}
 
@@ -6142,6 +6168,7 @@ define('sayyes/modules/controller',[
 			this.queued = this.pooling[config.name];
 			if(!this.queued){
 				try {
+					config.data.form_result = this.previous ? this.previous.form_result : null;
 					this.queued = view(config);
 				} catch (err) {
 					_notify(this,"controller => view '"+config.name+"' failed to create.",error)(err);

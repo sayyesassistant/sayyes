@@ -46,7 +46,7 @@ define([
 		}
 	};
 
-	ViewVO = function() { VO.call(this,"name","template_name"); };
+	ViewVO = function() { VO.call(this,"name","template_name","data"); };
 	ViewVO.prototype = new VO();
 	ViewVO.prototype.constructor = VO;
 

@@ -1,5 +1,5 @@
 /*
-@grunt -task=comp-js -page=test-controller
+@grunt -task=comp-js-all
 */
 define([
 	"sayyes/modules/log",
@@ -60,7 +60,7 @@ define([
 		};
 	}
 
-	function __get_view (name, data){
+	function __get_view (name, data) {
 		return find(data,{"name":name});
 	}
 
@@ -99,6 +99,7 @@ define([
 			this.queued = this.pooling[config.name];
 			if(!this.queued){
 				try {
+					config.data.form_result = this.previous ? this.previous.form_result : null;
 					this.queued = view(config);
 				} catch (err) {
 					_notify(this,"controller => view '"+config.name+"' failed to create.",error)(err);

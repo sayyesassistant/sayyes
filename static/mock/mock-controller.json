@@ -3,52 +3,51 @@
 	"views" : [{
 		"name":"a",
 		"template_name":"mock_template",
-		"data": {
-				"title":"view: a",
-				"description":"Description goes here",
-				"nav":[{
-						"label":"nav => b",
-						"view":"b"
-					}]
-				}
+		"data":{
+		"title":"Mock View example",
+		"description":"Some description goes here",
+		"nav":[{
+			"label":"no forms please!",
+			"view":"b"
+		}],
+		"form" : {
+			"action" : "/static/mock/services/form-result.json",
+			"method" : "GET",
+			"id" : "sayyes",
+			"on_success" : "nav=b",
+			"on_error" : "alert",
+			"hiddens" : [{
+				"name":"expect",
+				"value":"false"
+			}],
+			"buttons" : [{
+				"label":"check...",
+				"value":"foo"
+			}],
+			"inputs" : [{
+				"name":"name",
+				"type":"text",
+				"placeholder":"Type 'sayyes'",
+				"required" : "required"
+			},{
+				"name":"email",
+				"type":"email",
+				"placeholder":"Type your email",
+				"required":"required"
+			}]
+		}
+	}
 		} , {
+
 		"name":"b",
 		"template_name":"mock_template",
 		"data":{
 			"title":"view: b",
-			"description":"Description goes here",
+			"description":"You just said: '{{{form_result.value}}}'",
 			"nav":[{
 				"label":"<= back",
 				"view":"a"
-			}],
-			"form" : {
-				"action" : "/static/mock/response.json",
-				"method" : "POST",
-				"id" : "sayyes",
-				"on_success" : "nav=a",
-				"on_error" : "alert",
-				"hiddens" : [{
-					"name":"foo",
-					"value":"bar"
-				},{
-					"name":"hello",
-					"value":"world"
-				}],
-				"buttons" : [{
-					"label":"send",
-					"value":"foo"
-				}],
-				"inputs" : [{
-					"name":"name",
-					"type":"text",
-					"placeholder":"Type your name"
-				},{
-					"name":"email",
-					"type":"email",
-					"placeholder":"Type your email",
-					"required":"required"
-				}]
-			}
+			}]
 		}
 	}]
 }

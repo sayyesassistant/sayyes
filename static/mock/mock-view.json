@@ -15,11 +15,8 @@
 			"on_success" : "nav=a",
 			"on_error" : "alert",
 			"hiddens" : [{
-				"name":"foo",
-				"value":"bar"
-			},{
-				"name":"hello",
-				"value":"world"
+				"name":"expect",
+				"value":"false"
 			}],
 			"buttons" : [{
 				"label":"send",
