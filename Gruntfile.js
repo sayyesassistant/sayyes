@@ -26,7 +26,7 @@ module.exports = function (grunt) {
 				}
 			},
 			all: {
-				src: ['static/js/sayyes/**/*.js']
+				src: ['./{{{js_sources}}}/sayyes/**/*.js']
 			}
 		}
 	},	ready = false;
@@ -47,10 +47,19 @@ module.exports = function (grunt) {
 		if (!!file) {
 			require("./.grunt/modules/mod-arguments").fromFile(file, grunt);
 		}
-		var args = grunt.config.get("arguments");
+		var args = grunt.config.get("arguments"),
+			paths = grunt.config.get("paths"),
+			render = require("./.grunt/modules/mod-render").render,
+			jshint = grunt.config.get("jshint");
+
+		paths = render(paths);
+		jshint = render(jshint,paths);
+		grunt.config.set("jshint",jshint);
+
 		delete args.__warn;
 		grunt.config.set("arguments",args);
 		grunt.log.writeflags(grunt.config.get("arguments"));
+
 		ready = true;
 	}
 
