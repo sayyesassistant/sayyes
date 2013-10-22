@@ -51,7 +51,7 @@ All the core of Say Yes! is about providing a reliable json config and the javas
 
 There is list of available models for this purposes.
 
-[Check here](/static/README.md)
+[Check here](https://github.com/sayyesassistant/sayyes/blob/master/static/templates/README.md)
 
 ##<a id="ss"></a>Service standards
 
