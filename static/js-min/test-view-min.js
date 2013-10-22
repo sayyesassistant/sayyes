@@ -5698,7 +5698,7 @@ define('sayyes/modules/ajax',[
 			dataType : "json",
 			timeout : 2000,
 			context : instance,
-			cache : false,
+			cache : true,
 			success : on_success.bind(instance),
 			error : on_error.bind(instance)
 		};

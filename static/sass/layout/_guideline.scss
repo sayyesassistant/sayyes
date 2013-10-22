@@ -1,4 +1,31 @@
-div {
-	color:red;
-	border:blue;
+code {
+	display: block;
+	border:gray;
+	padding: 10px;
+	font: Courier;
+	background-color:lightsteelblue;
+}
+div.gl-example{
+	display: block;
+	border:1px solid black;
+	margin-bottom: 10px;
+}
+div.gl-example + h2{
+	display: block;
+	font-size: 2em;
+	margin:0;
+	padding: 0;
+}
+section{
+	display: block;
+	background-color: lightblue;
+}
+input[type=text]{
+	display: block;
+}
+div.alert{
+	display: none;
+}
+div.show {
+	display: block;
 }

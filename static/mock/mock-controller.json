@@ -11,7 +11,7 @@
 			"view":"b"
 		}],
 		"form" : {
-			"action" : "/static/mock/services/form-result.json",
+			"action" : "/mock/login.json",
 			"method" : "GET",
 			"id" : "sayyes",
 			"on_success" : "nav=b",

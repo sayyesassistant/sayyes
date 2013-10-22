@@ -13,7 +13,8 @@
 			"mock_view": "{{{static}}}/mock/mock-view.json"
 		},
 		"data" : {
-			"js_src" : "/{{{dest_js_folder}}}/test-view-min.js",
+			"js" : "{{{www_js_folder}}}/test-view-min.js",
+			"css" : "{{{www_css_folder}}}/guideline-min.css",
 			"templates" : ["mock_template"],
 			"test_title" : "Simple View test"
 		}
@@ -26,7 +27,8 @@
 			"mock_view": "{{{static}}}/mock/mock-controller.json"
 		},
 		"data" : {
-			"js_src" : "/{{{dest_js_folder}}}/test-controller-min.js",
+			"js" : "{{{www_js_folder}}}/test-controller-min.js",
+			"css" : "{{{www_css_folder}}}/guideline-min.css",
 			"templates" : ["mock_template"],
 			"test_title" : "Controller test"
 		}
