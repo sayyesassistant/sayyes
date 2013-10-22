@@ -7,7 +7,7 @@ define([
 	"signals/signals",
 	"sayyes/modules/ajax"
 ],function(
-	mixIn,
+	mix_in,
 	log,
 	signals,
 	ajax
@@ -42,17 +42,17 @@ define([
 	};
 
 	__parseError = function (result){
-		this.view.form_result = result;
+		this.view.form_result = result.value;
 		__fireAction.bind(this)(this.on_error);
 	};
 
 	__parseSuccess = function (result){
-		this.view.form_result = result;
+		this.view.form_result = result.value;
 		__fireAction.bind(this)(this.on_success);
 	};
 
 	ClosureFormBind = function(config){
-		mixIn(this,config);
+		mix_in(this,config);
 		this.form = $(this.node);
 		this.enable_ux();
 		this.service = null;

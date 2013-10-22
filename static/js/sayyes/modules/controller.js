@@ -96,10 +96,10 @@ define([
 				_notify(this,"controller => malformed view template",error)(config);
 				return;
 			}
+			config.data = mix_in(config.data,this.current ? this.current.form_result : {});
 			this.queued = this.pooling[config.name];
 			if(!this.queued){
 				try {
-					config.data.form_result = this.previous ? this.previous.form_result : null;
 					this.queued = view(config);
 				} catch (err) {
 					_notify(this,"controller => view '"+config.name+"' failed to create.",error)(err);

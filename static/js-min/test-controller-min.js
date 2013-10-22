@@ -5341,7 +5341,6 @@ define('sayyes/plugins/plugin-nav',[
 
 		click_handle : function (event){
 			event.preventDefault();
-			console.log(event.target.href);
 			var nav_to = event.target.href.match(reg);
 			if (!!nav_to && !!nav_to[1]){
 				this.view.on.nav.dispatch(nav_to[1]);
@@ -5755,7 +5754,7 @@ define('sayyes/plugins/plugin-form',[
 	"signals/signals",
 	"sayyes/modules/ajax"
 ],function(
-	mixIn,
+	mix_in,
 	log,
 	signals,
 	ajax
@@ -5790,17 +5789,17 @@ define('sayyes/plugins/plugin-form',[
 	};
 
 	__parseError = function (result){
-		this.view.form_result = result;
+		this.view.form_result = result.value;
 		__fireAction.bind(this)(this.on_error);
 	};
 
 	__parseSuccess = function (result){
-		this.view.form_result = result;
+		this.view.form_result = result.value;
 		__fireAction.bind(this)(this.on_success);
 	};
 
 	ClosureFormBind = function(config){
-		mixIn(this,config);
+		mix_in(this,config);
 		this.form = $(this.node);
 		this.enable_ux();
 		this.service = null;
@@ -5897,7 +5896,7 @@ define('sayyes/modules/view',[
 		instance.template_raw = null;
 		instance.template_fn = null;
 		instance.plugin_closures = null;
-		instance.form_result = null;
+		instance.form_result = {};
 
 		//apply values from object
 		mixIn(instance,value);
@@ -5978,7 +5977,7 @@ define('sayyes/modules/view',[
 			}
 			this.html.addClass(class_open);
 			this.on.open.passed.dispatch(this);
-			this.form_result = null;
+			this.form_result = {};
 		},
 
 		close : function () {
@@ -6164,10 +6163,10 @@ define('sayyes/modules/controller',[
 				_notify(this,"controller => malformed view template",error)(config);
 				return;
 			}
+			config.data = mix_in(config.data,this.current ? this.current.form_result : {});
 			this.queued = this.pooling[config.name];
 			if(!this.queued){
 				try {
-					config.data.form_result = this.previous ? this.previous.form_result : null;
 					this.queued = view(config);
 				} catch (err) {
 					_notify(this,"controller => view '"+config.name+"' failed to create.",error)(err);

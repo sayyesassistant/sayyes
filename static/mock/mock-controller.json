@@ -27,7 +27,7 @@
 			"inputs" : [{
 				"name":"name",
 				"type":"text",
-				"placeholder":"Type 'sayyes'",
+				"placeholder":"your name",
 				"required" : "required"
 			},{
 				"name":"email",
@@ -42,10 +42,10 @@
 		"name":"b",
 		"template_name":"mock_template",
 		"data":{
-			"title":"view: b",
-			"description":"You just said: '{{{form_result.value}}}'",
+			"title":"I can't see your info!",
+			"description":"Seems that you don't like forms!",
 			"nav":[{
-				"label":"<= back",
+				"label":"try again",
 				"view":"a"
 			}]
 		}

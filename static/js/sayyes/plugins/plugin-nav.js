@@ -23,7 +23,6 @@ define([
 
 		click_handle : function (event){
 			event.preventDefault();
-			console.log(event.target.href);
 			var nav_to = event.target.href.match(reg);
 			if (!!nav_to && !!nav_to[1]){
 				this.view.on.nav.dispatch(nav_to[1]);
