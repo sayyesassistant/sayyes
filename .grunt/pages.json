@@ -1,10 +1,34 @@
 {
-	"test-view":{
-		"src":"sayyes/main/test-view",
-		"dest":"{{{dest_js_folder}}}/test-view-min.js"
+	"guideline" : {
+		"dest" : "{{{static}}}/index.html",
+		"files" : ["{{{templates}}}/inc/header.mustache","{{{templates}}}/pages/tmplt-guideline.mustache","{{{templates}}}/inc/footer.mustache"],
+		"raw": null,
+		"data" : "{{{static}}}/mock/mock-guideline.json"
 	},
-	"test-controller":{
-		"src":"sayyes/main/test-controller",
-		"dest":"{{{dest_js_folder}}}/test-controller-min.js"
+	"simple-view" : {
+		"dest" : "{{{tests}}}/simple-view.html",
+		"files" : ["{{{templates}}}/inc/header.mustache","{{{templates}}}/pages/tmplt-test.mustache","{{{templates}}}/inc/footer.mustache"],
+		"raw": {
+			"mock_template": "{{{templates}}}/views/view-mock.mustache",
+			"mock_view": "{{{static}}}/mock/mock-view.json"
+		},
+		"data" : {
+			"js_src" : "/{{{dest_js_folder}}}/test-view-min.js",
+			"templates" : ["mock_template"],
+			"test_title" : "Simple View test"
+		}
+	},
+	"controller" : {
+		"dest" : "{{{tests}}}/controller-test1.html",
+		"files" : ["{{{templates}}}/inc/header.mustache","{{{templates}}}/pages/tmplt-test.mustache","{{{templates}}}/inc/footer.mustache"],
+		"raw": {
+			"mock_template": "{{{templates}}}/views/view-mock.mustache",
+			"mock_view": "{{{static}}}/mock/mock-controller.json"
+		},
+		"data" : {
+			"js_src" : "/{{{dest_js_folder}}}/test-controller-min.js",
+			"templates" : ["mock_template"],
+			"test_title" : "Controller test"
+		}
 	}
 }

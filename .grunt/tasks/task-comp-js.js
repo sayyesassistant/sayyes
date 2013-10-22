@@ -1,23 +1,23 @@
 exports.run = function (grunt, scope) {
 
 	var args = grunt.config.get("arguments"),
-		pages = grunt.config.get("pages"),
+		pages = grunt.config.get("app"),
 		task = grunt.config.get("tasks")["comp-js"],
 		path = grunt.config.get("paths"),
 		requirejs = grunt.config.get("requirejs"),
 		render = require("../modules/mod-render").render,
 		bash = require("../modules/mod-run").bash,
-		page, command, blob;
+		app, command, blob;
 
-	if(!args.page){
-		grunt.fatal.fail("No page set on config.");
+	if(!args.app){
+		grunt.fail.fatal("No app set on config.");
 		return;
 	}
 
-	page = pages[args.page];
+	app = pages[args.app];
 
-	if (!page){
-		grunt.fail.fatal("Couldn't find target main:'"+args.page+"'");
+	if (!app){
+		grunt.fail.fatal("Couldn't find target main:'"+args.app+"'");
 		return;
 	}
 
@@ -28,9 +28,9 @@ exports.run = function (grunt, scope) {
 		return;
 	}
 	path = render(path);
-	page = render(page,path);
+	app = render(app,path);
 	requirejs = render(requirejs,path);
-	blob = require("mout/object/mixIn")({},path,page,requirejs);
+	blob = require("mout/object/mixIn")({},path,app,requirejs);
 	command = render(command, blob);
 	require("mout/object/map")(requirejs.paths,function(value, prop){
 		command.args.push("paths."+prop+"="+value);

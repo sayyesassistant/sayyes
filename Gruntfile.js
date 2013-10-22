@@ -33,10 +33,10 @@ module.exports = function (grunt) {
 
 	config.requirejs = grunt.file.readJSON("./.grunt/requirejs-config.json");
 	config.tasks = grunt.file.readJSON("./.grunt/tasks.json");
-	config.pages = grunt.file.readJSON("./.grunt/pages.json");
+	config.app = grunt.file.readJSON("./.grunt/app.json");
 	config.paths = grunt.file.readJSON("./.grunt/paths.json");
 	config.sass = grunt.file.readJSON("./.grunt/sass.json");
-	config["test-views"] = grunt.file.readJSON("./.grunt/test-views.json");
+	config.pages = grunt.file.readJSON("./.grunt/pages.json");
 
 	grunt.initConfig(config);
 
@@ -54,61 +54,63 @@ module.exports = function (grunt) {
 		ready = true;
 	}
 
-	grunt.registerTask( "default" , "Uses the given target file to figure out what to do.", function (value) {
+	grunt.registerTask( "default" , "Uses the given target file to figure out what to do. Use the notation @grunt -task:task_name -arg=foo, [-arg2=bar ...]", function (value) {
 		if (!!value) {
 			init(value);
 			grunt.task.run(grunt.config.get("arguments").task);
 		}
 	});
 
-	grunt.registerTask( "comp-sass" , "Runs sass compiler.\nUse -env={ENV} to define the sort of compresstion and output.", function () {
+	grunt.registerTask( "comp-sass" , "Runs sass compiler.\nUse -env=final|dev (dev is default) to define the sort of compresstion and output.", function () {
 		init();
 		require("./.grunt/tasks/task-comp-sass").run(grunt, this);
 	});
 
 	grunt.registerTask('sass-watch', "Starts the sass -watch command", function () {
 		init();
+		grunt.log.ok("to-do!!");
 		// require("./.grunt/tasks/task-sass-watch").run( grunt, this );
 	});
 
-	grunt.registerTask('comp-js', "Build AMD module.\n@usage grunt comp-js -page=foo -env=final|dev (dev is default)", function (page) {
+	grunt.registerTask('comp-js', "Build AMD module.\n@usage grunt comp-js -app=app_name -env=final|dev (dev is default)", function (app) {
 		init();
-		if (!!page){
+		if (!!app){
 			var args = grunt.config.get("arguments");
-				args.page = page;
+				args.app = app;
 			grunt.config.set("arguments",args);
+			grunt.log.writeflags(args);
 		}
 		var task = require("./.grunt/tasks/task-comp-js");
 		task.run(grunt, this);
 	});
 
-	grunt.task.registerTask('comp-js-all', "run the task 'comp-js' to all targets", function () {
+	grunt.task.registerTask('comp-js-all', "Run the task 'comp-js' for every app\n(@see .grunt/apps.json)", function () {
 		init();
-		var page = grunt.config.get("pages"),
+		var app = grunt.config.get("app"),
 			forOwn = require("mout/object/forOwn"),
 			tasks = ["jshint"];
-			eachPage = function(list){
+			each_app = function(list){
 				return function(value,prop){
 					list.push("comp-js:"+prop);
 				};
 			};
-		forOwn(page,eachPage(tasks));
+		forOwn(app,each_app(tasks));
 		grunt.task.run(tasks);
 	});
 
-	grunt.task.registerTask('render-template', "render target template", function (test_name) {
+	grunt.task.registerTask('render-template', "Render targeted mustache template using page data\n(@see .grunt/pages.json)", function (test_name) {
 		init();
 		var task = require("./.grunt/tasks/task-render-file");
 		task.run(grunt, this);
 	});
 
-	grunt.registerMultiTask('test-views', "run the task 'comp-js' to all targets", function () {
+	grunt.registerMultiTask('pages', "Create all pages\n(@see .grunt/pages.json)", function () {
 		init();
-		var task = require("./.grunt/tasks/task-test-view");
+		var task = require("./.grunt/tasks/task-create-page");
 		task.run(grunt, this);
 	});
 
-	grunt.task.registerTask('run-tests', "Combines 'comp-js-all' with 'test-views'", function () {
+	grunt.task.registerTask('run-tests', "Combines 'comp-js-all' and 'pages'", function () {
 		init();
 		var args = grunt.config.get("arguments");
 		if (!!args && args.reset === "true"){
@@ -121,6 +123,6 @@ module.exports = function (grunt) {
 			grunt.log.warn("Cleaning all tests before ...");
 			bash(command,null,grunt);
 		}
-		grunt.task.run(["comp-js-all","test-views"]);
+		grunt.task.run(["comp-js-all","pages"]);
 	});
 };

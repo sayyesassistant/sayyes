@@ -6128,8 +6128,7 @@ define('sayyes/modules/controller',[
 		};
 	}
 
-	function __get_view (name, data){
-		console.log("...getting view:'"+name+"'", "on", data);
+	function __get_view (name, data) {
 		return find(data,{"name":name});
 	}
 
