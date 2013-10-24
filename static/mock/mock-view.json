@@ -9,7 +9,7 @@
 			"view":"foo"
 		}],
 		"form" : {
-			"action" : "/mock/foo.json",
+			"action" : "/mock-service/foo.json",
 			"method" : "post",
 			"id" : "sayyes",
 			"on_success" : "nav=a",

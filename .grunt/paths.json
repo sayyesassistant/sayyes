@@ -12,7 +12,8 @@
 
 	"www_js_folder" : "/js-min",
 	"www_css_folder" : "/css-min",
-	"www_mock_service" : "/mock",
+	"www_mock_service" : "/mock-sercice",
+	"www_mock_data" : "/mock-data",
 
 	"sass_sources"   : "{{{static}}}/sass",
 	"dest_css_folder": "{{{static}}}/css-min",

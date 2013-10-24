@@ -6127,8 +6127,45 @@ define('sayyes/modules/controller',[
 		};
 	}
 
-	function __get_view (name, data) {
+	function _get_view (name, data) {
 		return find(data,{"name":name});
+	}
+
+	function _on_fail (args) {
+		log.error("fatal error, show alert box");
+		_notify(this,"controller fail =>",error)(args);
+	}
+
+	function _on_close () {
+		if (this.current){
+			this.current.html.remove();
+			this.current.dispose();
+			_notify(this,"controller view '"+this.current.name+"' disposed.")();
+			this.previous = this.current;
+		}
+		this.current = null;
+		this.open();
+	}
+
+	function _on_open () {
+		this.current = this.queued;
+		this.queued = null;
+		this.current.enable_ux();
+		this.current.on.nav.add(_on_nav,this);
+		_notify(this,"controller => view '"+this.current.name+"' opened.")();
+	}
+
+	function _on_nav (name) {
+		if (this.current && this.current.name === name){
+			_notify(this,"controller => view '"+name+"' already opened opened.",warn)();
+			return;
+		}
+		var view_data = _get_view(name,this.data.views);
+		if (!!view_data) {
+			this.create_view(view_data);
+		} else {
+			_notify(this,"controller => view '"+name+"' not found.",warn)();
+		}
 	}
 
 	Controller = function(scope){
@@ -6149,7 +6186,7 @@ define('sayyes/modules/controller',[
 					blob = this.data.views[this.data.start_with];
 				break;
 				case "String" :
-					blob = __get_view(this.data.start_with,this.data.views);
+					blob = _get_view(this.data.start_with,this.data.views);
 				break;
 			}
 			if (!blob){
@@ -6163,7 +6200,6 @@ define('sayyes/modules/controller',[
 				_notify(this,"controller => malformed view template",error)(config);
 				return;
 			}
-			config.data = mix_in(config.data,this.current ? this.current.form_result : {});
 			this.queued = this.pooling[config.name];
 			if(!this.queued){
 				try {
@@ -6174,7 +6210,8 @@ define('sayyes/modules/controller',[
 				}
 			}
 			_notify(this,"controller => view '"+this.queued.name+"' created.")();
-			this.render_view(config.data);
+			var merged_data = mix_in({}, config.data, this.current ? this.current.form_result : {});
+			this.render_view(merged_data);
 		},
 		render_view : function (data) {
 			if (!this.queued) {
@@ -6196,8 +6233,8 @@ define('sayyes/modules/controller',[
 				return;
 			}
 			this.scope.append(this.queued.html);
-			this.queued.on.open.passed.addOnce(this._on_open,this);
-			this.queued.on.open.failed.addOnce(this._on_fail,this);
+			this.queued.on.open.passed.addOnce(_on_open,this);
+			this.queued.on.open.failed.addOnce(_on_fail,this);
 			this.queued.open();
 		},
 		close: function () {
@@ -6206,43 +6243,10 @@ define('sayyes/modules/controller',[
 				this.open();
 				return;
 			}
-			this.current.on.close.passed.addOnce(this._on_close,this);
-			this.current.on.close.failed.addOnce(this._on_fail,this);
+			this.current.on.close.passed.addOnce(_on_close,this);
+			this.current.on.close.failed.addOnce(_on_fail,this);
 			this.current.disable_ux();
 			this.current.close();
-		},
-		_on_fail : function (args) {
-			log.error("fatal erro, show alert box");
-			_notify(this,"controller fail =>",error)(args);
-		},
-		_on_close : function () {
-			if (this.current){
-				this.current.html.remove();
-				this.current.dispose();
-				_notify(this,"controller view '"+this.current.name+"' disposed.")();
-				this.previous = this.current;
-			}
-			this.current = null;
-			this.open();
-		},
-		_on_open : function () {
-			this.current = this.queued;
-			this.queued = null;
-			this.current.enable_ux();
-			this.current.on.nav.add(this._on_nav.bind(this));
-			_notify(this,"controller => view '"+this.current.name+"' opened.")();
-		},
-		_on_nav : function (name) {
-			if (this.current && this.current.name === name){
-				_notify(this,"controller => view '"+name+"' already opened opened.",warn)();
-				return;
-			}
-			var view_data = __get_view(name,this.data.views);
-			if (!!view_data) {
-				this.create_view(view_data);
-			} else {
-				_notify(this,"controller => view '"+name+"' not found.",warn)();
-			}
 		}
 	};
 	return function(scope){

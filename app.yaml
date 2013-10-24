@@ -21,8 +21,11 @@ handlers:
   static_files: static/index.html
   upload: static/index.html
 
-- url: /mock/.*
+- url: /mock-service/.*
   script: mock-service.application
+
+- url: /mock-data/
+  static_dir: static/mock
 
 - url: /session/.*
   script: session.application

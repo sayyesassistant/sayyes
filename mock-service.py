@@ -49,6 +49,6 @@ class Foo(webapp2.RequestHandler):
     def post(self):
         self.default_response(self)
 
-application = webapp2.WSGIApplication([(r'/mock/login.json', LoginForm),
-    (r'/mock/foo.json', Foo)],
+application = webapp2.WSGIApplication([(r'/mock-service/login.json', LoginForm),
+    (r'/mock-service/foo.json', Foo)],
     debug=True)
