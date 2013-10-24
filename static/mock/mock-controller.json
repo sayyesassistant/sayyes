@@ -1,5 +1,13 @@
 {
 	"start_with":"a",
+	"id":"ABC123",
+	"attendant":{
+		"id":"foo",
+		"name":"Attendant Name",
+		"email":"foo@sayyes.com",
+		"phone":null
+	},
+	"client":null,
 	"views" : [{
 		"name":"a",
 		"template_name":"mock_template",

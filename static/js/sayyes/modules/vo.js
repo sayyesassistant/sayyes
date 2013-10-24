@@ -1,5 +1,5 @@
 /*
-@grunt -task=comp-js -page=app
+@grunt -task=comp-js-all
 */
 define([
 	"mout/array/map",
@@ -50,9 +50,9 @@ define([
 	ViewVO.prototype = new VO();
 	ViewVO.prototype.constructor = VO;
 
-	ListVO = function() { VO.call(this,"start_with","views"); };
-	ListVO.prototype = new VO();
-	ListVO.prototype.constructor = VO;
+	ControllerVO = function() { VO.call(this,"id","attendant","client","start_with","views"); };
+	ControllerVO.prototype = new VO();
+	ControllerVO.prototype.constructor = VO;
 
 	ResultVO = function() { VO.call(this,"success","exception", "message", "value"); };
 	ResultVO.prototype = new VO();
@@ -60,7 +60,7 @@ define([
 
 	return {
 		view : ViewVO,
-		list : ListVO,
+		controller : ControllerVO,
 		result : ResultVO
 	};
 });

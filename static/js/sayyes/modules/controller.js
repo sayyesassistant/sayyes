@@ -5,6 +5,7 @@ define([
 	"sayyes/modules/log",
 	"sayyes/modules/view",
 	"sayyes/modules/vo",
+	"sayyes/modules/ajax",
 	"sayyes/helpers/helper-nav",
 	"mout/object/mixIn",
 	"mout/array/find",
@@ -13,19 +14,20 @@ define([
 	log,
 	view,
 	vo,
+	ajax,
 	helper_nav,
 	mix_in,
 	find,
 	signals
 ) {
 
-	var Controller, _viewVO, _listVO, _notify, error, warn;
+	var Controller, _view_vo, _controller_vo, _notify, error, warn;
 
 	error = "error";
 	warn = "warn";
 
-	_viewVO = new vo.view();
-	_listVO = new vo.list();
+	_view_vo = new vo.view();
+	_controller_vo = new vo.controller();
 
 	_notify  = function (self, message, severity) {
 		return function (value) {
@@ -106,8 +108,25 @@ define([
 	};
 
 	Controller.prototype = {
+
+		load_config : function (url, on_success, on_error) {
+			var service = new ajax();
+
+			service.method("get")
+				.expect("success",true)
+				.expect("value",_controller_vo.implements)
+				.error(_notify(this,"controller got invalid config!",error))
+				.error(on_error)
+				.success.add(on_success)
+				.success.add(function(result){
+					service.dispose();
+					this.define(result.value);
+				}.bind(this))
+				.request(url);
+		},
+
 		define : function (data) {
-			if (!_listVO.implements(data)){
+			if (!_controller_vo.implements(data)){
 				_notify(this,"controller got invalid data initialize!",error)();
 				return;
 			}
@@ -129,7 +148,7 @@ define([
 			this.create_view(blob);
 		},
 		create_view : function (config) {
-			if (!_viewVO.implements(config)) {
+			if (!_view_vo.implements(config)) {
 				_notify(this,"controller => malformed view template",error)(config);
 				return;
 			}

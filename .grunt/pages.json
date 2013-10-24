@@ -7,7 +7,7 @@
 	},
 	"simple-view" : {
 		"dest" : "{{{tests}}}/simple-view.html",
-		"files" : ["{{{templates}}}/inc/header.mustache","{{{templates}}}/pages/tmplt-test.mustache","{{{templates}}}/inc/footer.mustache"],
+		"files" : ["{{{templates}}}/inc/header.mustache","{{{templates}}}/pages/tmplt-test-view.mustache","{{{templates}}}/inc/footer.mustache"],
 		"raw": {
 			"mock_template": "{{{templates}}}/views/view-mock.mustache",
 			"mock_view": "{{{static}}}/mock/mock-view.json"
@@ -21,7 +21,7 @@
 	},
 	"controller" : {
 		"dest" : "{{{tests}}}/controller-test.html",
-		"files" : ["{{{templates}}}/inc/header.mustache","{{{templates}}}/pages/tmplt-test.mustache","{{{templates}}}/inc/footer.mustache"],
+		"files" : ["{{{templates}}}/inc/header.mustache","{{{templates}}}/pages/tmplt-test-controller.mustache","{{{templates}}}/inc/footer.mustache"],
 		"raw": {
 			"mock_template": "{{{templates}}}/views/view-mock.mustache",
 			"mock_view": "{{{static}}}/mock/mock-controller.json"

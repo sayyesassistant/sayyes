@@ -63,8 +63,8 @@ define([
 			event.preventDefault();
 			if (!this.service){
 				this.service = new ajax();
-				this.service.trigger.success.add(__parseSuccess.bind(this));
-				this.service.trigger.error.add(__parseError.bind(this));
+				this.service.on.success.add(__parseSuccess.bind(this));
+				this.service.on.error.add(__parseError.bind(this));
 				this.service.expect("success",true);
 			}
 			this.service

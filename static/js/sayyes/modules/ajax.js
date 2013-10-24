@@ -47,30 +47,36 @@ define([
 		}
 	}
 
-	function on_success(xhr){
+	function on_success (xhr) {
+		if (!!this.default_result && !this.default_result.implements(xhr)) {
+			this.result = xhr;
+			this.on.error.dispatch(this.result);
+			return;
+		}
 		if (!!this._xpect){
 			xhr = validate.bind(this)(xhr);
 		}
 		this.result = xhr;
 		if (this.result.success===true){
-			this.trigger.success.dispatch(this.result);
+			this.on.success.dispatch(this.result);
 			return;
 		}
-		this.trigger.error.dispatch(this.result);
+		this.on.error.dispatch(this.result);
 	}
 
 	function on_error(xhr){
 		this.result = new vo.result();
 		this.result.expection = xhr.status;
 		this.result.message = xhr.responseText;
-		this.trigger.error.dispatch(this.result);
+		this.on.error.dispatch(this.result);
 	}
 
 	function __init(instance){
-		instance.trigger = {
+		instance.on = {
 			success : new signals(),
 			error : new signals()
 		};
+		instance.default_result = new vo.result();
 		instance.options = {
 			type : "POST",
 			url : null,
@@ -100,6 +106,26 @@ define([
 		type : function () {
 			this.options.dataType = value || this.options.dataType;
 			return this;
+		},
+
+		allow_cache : function (value) {
+			this.options.cache = value;
+			return this;
+		},
+
+		success : function (fn) {
+			this.on.success.add(fn);
+			return this;
+		},
+
+		error : function (fn) {
+			this.on.error.add(fn);
+			return this;
+		},
+
+		dispose : function (){
+			this.on.error.removeAll();
+			this.on.success.removeAll();
 		},
 
 		expect : function (prop,to_be) {

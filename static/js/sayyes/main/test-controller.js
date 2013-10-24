@@ -12,21 +12,41 @@ require([
 	domReady,
 	controller
 ){
-	function init () {
-		var c;
-		try{
-			c = controller(document.getElementById("sayyes-assistant"));
-		} catch (err){
-			log.error("error to create controller",err);
+
+	var instance, form;
+
+	function create_controller(url) {
+		try {
+			instance = controller(document.getElementById("sayyes-assistant"));
+		} catch (error) {
+			log.error("error to create controller",error);
 			return;
 		}
-		c.on.warn.add(function(){
-			log.warn("ops! controller yeld a warning", arguments);
-		});
-		c.on.error.add(function(){
-			log.info("ops! controller found an error", arguments);
-		});
-		c.define(window.mock);
+		instance.load_config(url, remove_form, show_alert);
 	}
+
+	function remove_form(){
+		$(form).remove();
+	}
+
+	function show_alert(value){
+		alert("Failed to load service.\nCheck you console to see the result");
+		console.dir(value);
+	}
+
+	function init(){
+		form = document.getElementById("load-config");
+		if (!form){
+			log.error("error to find form to load config");
+			return;
+		}
+
+		$(form).on("submit",function(event){
+			event.preventDefault();
+			event.stopPropagation();
+			create_controller($(this).find("#service").val());
+		});
+	}
+
 	domReady(init);
 });

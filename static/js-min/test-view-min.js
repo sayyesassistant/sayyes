@@ -5552,7 +5552,7 @@ define('mout/object/keys',['./forOwn'], function (forOwn) {
 });
 
 /*
-@grunt -task=comp-js -page=app
+@grunt -task=comp-js-all
 */
 define('sayyes/modules/vo',[
 	"mout/array/map",
@@ -5603,9 +5603,9 @@ define('sayyes/modules/vo',[
 	ViewVO.prototype = new VO();
 	ViewVO.prototype.constructor = VO;
 
-	ListVO = function() { VO.call(this,"start_with","views"); };
-	ListVO.prototype = new VO();
-	ListVO.prototype.constructor = VO;
+	ControllerVO = function() { VO.call(this,"id","attendant","client","start_with","views"); };
+	ControllerVO.prototype = new VO();
+	ControllerVO.prototype.constructor = VO;
 
 	ResultVO = function() { VO.call(this,"success","exception", "message", "value"); };
 	ResultVO.prototype = new VO();
@@ -5613,7 +5613,7 @@ define('sayyes/modules/vo',[
 
 	return {
 		view : ViewVO,
-		list : ListVO,
+		controller : ControllerVO,
 		result : ResultVO
 	};
 });
@@ -5666,30 +5666,36 @@ define('sayyes/modules/ajax',[
 		}
 	}
 
-	function on_success(xhr){
+	function on_success (xhr) {
+		if (!!this.default_result && !this.default_result.implements(xhr)) {
+			this.result = xhr;
+			this.on.error.dispatch(this.result);
+			return;
+		}
 		if (!!this._xpect){
 			xhr = validate.bind(this)(xhr);
 		}
 		this.result = xhr;
 		if (this.result.success===true){
-			this.trigger.success.dispatch(this.result);
+			this.on.success.dispatch(this.result);
 			return;
 		}
-		this.trigger.error.dispatch(this.result);
+		this.on.error.dispatch(this.result);
 	}
 
 	function on_error(xhr){
 		this.result = new vo.result();
 		this.result.expection = xhr.status;
 		this.result.message = xhr.responseText;
-		this.trigger.error.dispatch(this.result);
+		this.on.error.dispatch(this.result);
 	}
 
 	function __init(instance){
-		instance.trigger = {
+		instance.on = {
 			success : new signals(),
 			error : new signals()
 		};
+		instance.default_result = new vo.result();
 		instance.options = {
 			type : "POST",
 			url : null,
@@ -5719,6 +5725,26 @@ define('sayyes/modules/ajax',[
 		type : function () {
 			this.options.dataType = value || this.options.dataType;
 			return this;
+		},
+
+		allow_cache : function (value) {
+			this.options.cache = value;
+			return this;
+		},
+
+		success : function (fn) {
+			this.on.success.add(fn);
+			return this;
+		},
+
+		error : function (fn) {
+			this.on.error.add(fn);
+			return this;
+		},
+
+		dispose : function (){
+			this.on.error.removeAll();
+			this.on.success.removeAll();
 		},
 
 		expect : function (prop,to_be) {
@@ -5810,8 +5836,8 @@ define('sayyes/plugins/plugin-form',[
 			event.preventDefault();
 			if (!this.service){
 				this.service = new ajax();
-				this.service.trigger.success.add(__parseSuccess.bind(this));
-				this.service.trigger.error.add(__parseError.bind(this));
+				this.service.on.success.add(__parseSuccess.bind(this));
+				this.service.on.error.add(__parseError.bind(this));
 				this.service.expect("success",true);
 			}
 			this.service
@@ -6072,6 +6098,7 @@ define('sayyes/modules/controller',[
 	"sayyes/modules/log",
 	"sayyes/modules/view",
 	"sayyes/modules/vo",
+	"sayyes/modules/ajax",
 	"sayyes/helpers/helper-nav",
 	"mout/object/mixIn",
 	"mout/array/find",
@@ -6080,19 +6107,20 @@ define('sayyes/modules/controller',[
 	log,
 	view,
 	vo,
+	ajax,
 	helper_nav,
 	mix_in,
 	find,
 	signals
 ) {
 
-	var Controller, _viewVO, _listVO, _notify, error, warn;
+	var Controller, _view_vo, _controller_vo, _notify, error, warn;
 
 	error = "error";
 	warn = "warn";
 
-	_viewVO = new vo.view();
-	_listVO = new vo.list();
+	_view_vo = new vo.view();
+	_controller_vo = new vo.controller();
 
 	_notify  = function (self, message, severity) {
 		return function (value) {
@@ -6173,8 +6201,25 @@ define('sayyes/modules/controller',[
 	};
 
 	Controller.prototype = {
+
+		load_config : function (url, on_success, on_error) {
+			var service = new ajax();
+
+			service.method("get")
+				.expect("success",true)
+				.expect("value",_controller_vo.implements)
+				.error(_notify(this,"controller got invalid config!",error))
+				.error(on_error)
+				.success.add(on_success)
+				.success.add(function(result){
+					service.dispose();
+					this.define(result.value);
+				}.bind(this))
+				.request(url);
+		},
+
 		define : function (data) {
-			if (!_listVO.implements(data)){
+			if (!_controller_vo.implements(data)){
 				_notify(this,"controller got invalid data initialize!",error)();
 				return;
 			}
@@ -6196,7 +6241,7 @@ define('sayyes/modules/controller',[
 			this.create_view(blob);
 		},
 		create_view : function (config) {
-			if (!_viewVO.implements(config)) {
+			if (!_view_vo.implements(config)) {
 				_notify(this,"controller => malformed view template",error)(config);
 				return;
 			}
