@@ -10,12 +10,14 @@
 	</script>
 	<script type="text/javascript" charset="utf-8">
 		var mock = {{{raw.mock_view}}};
-		(function (s, h) {
-			s.async = true;
-			s.type = 'text/javascript';
-			s.src = "{{{data.js}}}";
-			h.appendChild(s);
-		}(document.createElement('script'), document.documentElement));
+		{{#data.js}}
+			(function (s, h) {
+				s.async = true;
+				s.type = 'text/javascript';
+				s.src = "{{{data.js}}}";
+				h.appendChild(s);
+			}(document.createElement('script'), document.documentElement));
+		{{/data.js}}
 	</script>
 	<link rel="stylesheet" type="text/css" href="{{{data.css}}}" /></link>
 </head>
