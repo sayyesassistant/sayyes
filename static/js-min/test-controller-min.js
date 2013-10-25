@@ -5607,7 +5607,7 @@ define('sayyes/modules/vo',[
 	ControllerVO.prototype = new VO();
 	ControllerVO.prototype.constructor = VO;
 
-	ResultVO = function() { VO.call(this,"success","exception", "message", "value"); };
+	ResultVO = function() { VO.call(this,"status","exception", "message", "value"); };
 	ResultVO.prototype = new VO();
 	ResultVO.prototype.constructor = VO;
 
@@ -5651,7 +5651,7 @@ define('sayyes/modules/ajax',[
 			});
 			if (passed===false){
 				result = new vo.result();
-				result.success = false;
+				result.status = "error";
 				result.exception = -101;
 				result.message = "'"+prop+"' doesn't match expected value";
 				return result;
@@ -5659,7 +5659,7 @@ define('sayyes/modules/ajax',[
 			return xhr;
 		} else {
 			result = new vo.result();
-			result.success = false;
+			result.status = "error";
 			result.exception = -100;
 			result.message = "result isn't a valid json";
 			return result;
@@ -5676,7 +5676,7 @@ define('sayyes/modules/ajax',[
 			xhr = validate.bind(this)(xhr);
 		}
 		this.result = xhr;
-		if (this.result.success===true){
+		if (this.result.status!=="error"){
 			this.on.success.dispatch(this.result);
 			return;
 		}
@@ -5836,9 +5836,12 @@ define('sayyes/plugins/plugin-form',[
 			event.preventDefault();
 			if (!this.service){
 				this.service = new ajax();
-				this.service.on.success.add(__parseSuccess.bind(this));
-				this.service.on.error.add(__parseError.bind(this));
-				this.service.expect("success",true);
+				this.service
+					.success(__parseSuccess.bind(this))
+					.error(__parseError.bind(this))
+					.expect("status",function(value){
+						return value !== "error";
+					});
 			}
 			this.service
 				.method(this.form.attr("method"))
@@ -6206,7 +6209,7 @@ define('sayyes/modules/controller',[
 			var service = new ajax();
 
 			service.method("get")
-				.expect("success",true)
+				.expect("status","output")
 				.expect("value",_controller_vo.implements)
 				.error(_notify(this,"controller got invalid config!",error))
 				.error(on_error)

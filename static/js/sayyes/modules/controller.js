@@ -113,7 +113,7 @@ define([
 			var service = new ajax();
 
 			service.method("get")
-				.expect("success",true)
+				.expect("status","output")
 				.expect("value",_controller_vo.implements)
 				.error(_notify(this,"controller got invalid config!",error))
 				.error(on_error)

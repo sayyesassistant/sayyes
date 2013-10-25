@@ -10,6 +10,8 @@
 
 - [Service standards](#ss)
 
+- [Testing workflow](#tw)
+
 ##<a id="gs"></a>Getting started
 
 ###Front end dependencies setup:
@@ -114,3 +116,17 @@ Simple fail example:
 			"message" : "Sorry! something wrong happend. Try again later",
 			"value" : null
 		}
+
+##<a id="tw"></a>Testing workflow
+
+When you pull the repository no test page will be available.
+
+Test pages won't be committed since they are designed to test only and the best way to keep them updated is making sure that all developers will generate a fresh version.
+
+There is a grunt task designed to wrap everything:
+
+		grunt run-tests -reset=true
+
+After running this command you should be able to see the tests index page:
+
+		http://<YOUR-ENV>/tests/index.html

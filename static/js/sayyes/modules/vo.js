@@ -54,7 +54,7 @@ define([
 	ControllerVO.prototype = new VO();
 	ControllerVO.prototype.constructor = VO;
 
-	ResultVO = function() { VO.call(this,"success","exception", "message", "value"); };
+	ResultVO = function() { VO.call(this,"status","exception", "message", "value"); };
 	ResultVO.prototype = new VO();
 	ResultVO.prototype.constructor = VO;
 

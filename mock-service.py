@@ -8,14 +8,14 @@ class LoginForm(webapp2.RequestHandler):
         user = self.request.get('name')
         email = self.request.get('email')
         obj = {
-            "success": False,
+            "status": "error",
             "exception": -100,
             "message" : "expecting user and email",
             "value" : None
         }
         if user != None and user != "" and email != None and email != "" :
             obj = {
-                "success" : True,
+                "status" : "success",
                 "exception" : None,
                 "message" : None,
                 "value" : {
@@ -36,9 +36,9 @@ class Foo(webapp2.RequestHandler):
     def default_response(self, *args):
         self.response.headers['Content-Type'] = 'application/json'
         obj = {
-            "success": True,
+            "status": "success",
             "exception": None,
-            "message" : None,
+            "message" : "well done!",
             "value" : None
         }
         self.response.out.write(json.dumps(obj))

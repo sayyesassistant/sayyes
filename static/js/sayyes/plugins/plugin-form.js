@@ -63,9 +63,12 @@ define([
 			event.preventDefault();
 			if (!this.service){
 				this.service = new ajax();
-				this.service.on.success.add(__parseSuccess.bind(this));
-				this.service.on.error.add(__parseError.bind(this));
-				this.service.expect("success",true);
+				this.service
+					.success(__parseSuccess.bind(this))
+					.error(__parseError.bind(this))
+					.expect("status",function(value){
+						return value !== "error";
+					});
 			}
 			this.service
 				.method(this.form.attr("method"))

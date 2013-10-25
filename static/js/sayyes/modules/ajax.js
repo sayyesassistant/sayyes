@@ -32,7 +32,7 @@ define([
 			});
 			if (passed===false){
 				result = new vo.result();
-				result.success = false;
+				result.status = "error";
 				result.exception = -101;
 				result.message = "'"+prop+"' doesn't match expected value";
 				return result;
@@ -40,7 +40,7 @@ define([
 			return xhr;
 		} else {
 			result = new vo.result();
-			result.success = false;
+			result.status = "error";
 			result.exception = -100;
 			result.message = "result isn't a valid json";
 			return result;
@@ -57,7 +57,7 @@ define([
 			xhr = validate.bind(this)(xhr);
 		}
 		this.result = xhr;
-		if (this.result.success===true){
+		if (this.result.status!=="error"){
 			this.on.success.dispatch(this.result);
 			return;
 		}
