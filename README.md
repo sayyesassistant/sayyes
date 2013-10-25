@@ -59,7 +59,7 @@ There is list of available models for this purposes.
 
 Every single service must be a json object with the following properties:
 
--`success` **Boolean** *required* and `not null`
+-`status` **String** *required* and `not null`. Possible values: success, error, output.
 
 Designed to work as flag for success or failure
 
@@ -86,7 +86,7 @@ Designed to provice extra values on result.
 Simple success example:
 
 		{
-			"success" : true,
+			"status" : "success",
 			"exception" : null,
 			"message" : null,
 			"value" : null
@@ -95,7 +95,7 @@ Simple success example:
 Simple success example with `value` set (just for example purposes):
 
 		{
-			"success" : true,
+			"status" : "success",
 			"exception" : null,
 			"message" : null,
 			"value" : {
@@ -109,8 +109,12 @@ Simple success example with `value` set (just for example purposes):
 Simple fail example:
 
 		{
-			"success" : false,
+			"status" : "error",
 			"exception" : 123,
 			"message" : "Sorry! something wrong happend. Try again later",
 			"value" : null
 		}
+
+###Exception Index:
+
+* #1 - Validation error, entity could not be created.

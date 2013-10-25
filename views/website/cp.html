@@ -7,7 +7,7 @@
     <tr>
         <td>
             <h3>New Session</h3>
-            <h3 class="ajaxMessage">The system seems to be having problems, please try again later.</h3>
+            <h3 class="ajaxMessage"></h3>
             <form action="/" method="post" id="sessionForm">
                 <input type="hidden" name="accessKey" value="{{ auth.accessKey }}">
                 <input type="hidden" name="email" value="{{ auth.email }}">
@@ -111,7 +111,7 @@
                 if (data.status == 'success') {
                     window.location.reload();
                 } else {
-                    $('.ajaxMessage').show(300);
+                    $('.ajaxMessage').html(data.message).show(300);
                 }
             }, 'json');
             return false;

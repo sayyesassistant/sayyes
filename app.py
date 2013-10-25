@@ -64,29 +64,35 @@ class AppHandler(webapp2.RequestHandler):
         self.response.write(json.dumps(dictionary))
         return True
         
-    def jsonSuccess(self, msg=";)"):
+    def jsonSuccess(self, msg=None, value=None):
         r = {}
         r['status'] = "success"
         r['message'] = msg
+        r['exception'] = None
+        r['value'] = value
         self.json(r)
     
-    def jsonError(self, msg=":("):
+    def jsonError(self, msg=None, exception=None, value=None):
         r = {}
         r['status'] = "error"
         r['message'] = msg
+        r['exception'] = exception
+        r['value'] = value
         self.json(r)
         
     def jsonOutput(self, output):
         r = {}
         r['status'] = "output"
-        r['output'] = output
+        r['message'] = None
+        r['exception'] = None
+        r['value'] = {"output": output}
         self.json(r)
 
     def isAjax(self):
         if 'X-Requested-With' in self.request.headers.keys():
-          return True
+            return True
         else:
-          return False
+            return False
         
         
         

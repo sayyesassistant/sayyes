@@ -39,6 +39,7 @@ class Start(AppHandler):
         self.render(Const.SESSION + 'start.html', templateValues)
 
 class Create(AppHandler):
+
     def post(self):
         logging.info(self.isAjax())
         
@@ -54,7 +55,7 @@ class Create(AppHandler):
             #logging.info(user)
             
             if user is None or user.accessKey != accessKey:
-                errors['accessKey'] = "Invalid e-mail or access key"
+                errors['authenticationFailed'] = "Invalid e-mail or access key"
                 errors['accessKeySent'] = accessKey
                 errors['emailSent'] = email
                 raise Exception()
@@ -75,19 +76,19 @@ class Create(AppHandler):
             newKey = session.put()
 
             if newKey is None:
-                errors['entity'] = "Session could not be created"
                 raise Exception()
 
             ss = newKey.get()
             # cria a sessao
             cs = {}
             cs['url'] = Const.APP_URL + 'session/start/?key=' + str(ss.key.id())
-            cs['message'] = "Session created"
 
-            self.jsonSuccess(cs)
+            self.jsonSuccess("Session created", cs)
+
         except Exception as e:
+            
             logging.info(e.args)
-            self.jsonError({'errors': errors})
+            self.jsonError("Session could not be created", 1, errors)
 
 config = {}
 config['webapp2_extras.sessions'] = {

@@ -18,7 +18,7 @@ class HomePage(AppHandler):
         
 class SignUp(AppHandler):
     def get(self):
-        # verifica a sessao
+        # check the browser session
         self.logged()
         if self.auth is not None:
             self.redirect('/cp')
@@ -45,15 +45,15 @@ class SignUp(AppHandler):
             user.pwd = user.hash(self.request.get('pwd'))
             user.website = self.request.get('website')
             user.accessKey = user.pwdGenerator(12) + strftime("%y%m%d%H%M%S", gmtime())
-            # salva e pega a key
+            # save and get the key
             newKey = user.put()
             
             if newKey is None:
-                errors['entity'] = "Entity not saved"
+                errors['user'] = "User could not be created"
                 raise Exception()
         
             ss = newKey.get()
-            # cria a sessao
+            # create a browser session
             auth = {}
             auth['key'] = user.key.id()
             auth['name'] = user.name
@@ -66,7 +66,7 @@ class SignUp(AppHandler):
             self.jsonSuccess("Account created")
         except Exception as e:
             logging.info(e.args)
-            self.jsonError({'errors': errors})
+            self.jsonError(None, 1, errors)
 
 class LogIn(AppHandler):
     def get(self):
@@ -80,7 +80,7 @@ class LogIn(AppHandler):
         user = User()
         logged = user.login(self.request.get('email'), self.request.get('pwd'))
         if logged is None:
-            self.jsonError()
+            self.jsonError("Wrong username or password")
         else:
             # cria a sessao
             auth = {}
