@@ -117,7 +117,7 @@ Simple fail example:
 
 ###Output example:
 
-Simple fail example:
+Simple output example:
 
 		{
 			"status" : "output",
