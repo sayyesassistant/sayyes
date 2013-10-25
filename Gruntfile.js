@@ -113,7 +113,7 @@ module.exports = function (grunt) {
 		task.run(grunt, this);
 	});
 
-	grunt.task.registerTask('run-tests', "Combines 'comp-js-all' and 'pages'\n", function () {
+	grunt.task.registerTask('run-tests', "Combines 'comp-js-all' and 'pages'\nThere is an argument '-reset=true' that removes all tests made before\n", function () {
 		init();
 		var args = grunt.config.get("arguments");
 		if (!!args && args.reset === "true"){
