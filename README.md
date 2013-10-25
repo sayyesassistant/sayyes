@@ -115,6 +115,17 @@ Simple fail example:
 			"value" : null
 		}
 
+###Output example:
+
+Simple fail example:
+
+		{
+			"status" : "output",
+			"exception" : null,
+			"message" : null,
+			"value" : "data outputed, could be HTML o binary"
+		}
+
 ###Exception Index:
 
 * #1 - Validation error, entity could not be created.
