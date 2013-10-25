@@ -6210,8 +6210,8 @@ define('sayyes/modules/controller',[
 				.expect("value",_controller_vo.implements)
 				.error(_notify(this,"controller got invalid config!",error))
 				.error(on_error)
-				.success.add(on_success)
-				.success.add(function(result){
+				.success(on_success)
+				.success(function(result){
 					service.dispose();
 					this.define(result.value);
 				}.bind(this))
