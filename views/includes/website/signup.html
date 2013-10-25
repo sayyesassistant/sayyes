@@ -67,8 +67,8 @@
                 if (data.status == 'success') {
                     window.location.href = "/cp";
                 } else {
-                    if(data.message.errors.email) {
-                        $('.errorEmail').html(data.message.errors.email);
+                    if(data.value.email) {
+                        $('.errorEmail').html(data.value.email);
                     } else {
                         $('.ajaxMessage').html("The system seems to be having problems, please try again later.");
                     }

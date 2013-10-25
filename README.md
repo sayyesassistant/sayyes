@@ -61,17 +61,19 @@ There is list of available models for this purposes.
 
 Every single service must be a json object with the following properties:
 
--`success` **Boolean** *required* and `not null`
+-`status` **String** *required* and `not null`.
+
+Possible values: `success`, `error`, `output`.
 
 Designed to work as flag for success or failure
 
 -`exception` **String** *required*
 
-Designed for **success=false**. Place the system exeption here for debug purposes
+Designed for **status="error"**. Place the system exeption here for debug purposes
 
 -`message` **String** *required*
 
-Designed for **success=false**. Place a human like text here
+Designed for **status="error"**. Place a human like text here
 
 -`value` **\*** *required*
 
@@ -88,16 +90,29 @@ Designed to provice extra values on result.
 Simple success example:
 
 		{
-			"success" : true,
+			"status" : "success",
 			"exception" : null,
 			"message" : null,
 			"value" : null
 		}
 
-Simple success example with `value` set (just for example purposes):
+###Fail example:
+
+Simple fail example:
 
 		{
-			"success" : true,
+			"status" : "error",
+			"exception" : 123,
+			"message" : "Sorry! something wrong happend. Try again later",
+			"value" : null
+		}
+
+###Output example:
+
+Simple output example (data outputed, could be object/html or even binary):
+
+		{
+			"status" : "output",
 			"exception" : null,
 			"message" : null,
 			"value" : {
@@ -106,16 +121,9 @@ Simple success example with `value` set (just for example purposes):
 			}
 		}
 
-###Fail example:
+###Exception Index:
 
-Simple fail example:
-
-		{
-			"success" : false,
-			"exception" : 123,
-			"message" : "Sorry! something wrong happend. Try again later",
-			"value" : null
-		}
+* `#1` - Validation error, entity could not be created.
 
 ##<a id="tw"></a>Testing workflow
 

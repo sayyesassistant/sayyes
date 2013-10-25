@@ -16,57 +16,107 @@ class HomePage(AppHandler):
         templateValues = {'teste':'teste'}
         self.render(Const.WEBSITE + 'index.html', templateValues)
         
-class SignUp(AppHandler):
+class Profile(AppHandler):
+    
     def get(self):
-        # verifica a sessao
+        # check the browser session
         self.logged()
-        if self.auth is not None:
-            self.redirect('/cp')
-            
-        self.render(Const.WEBSITE + 'signup.html', {})
+        if self.auth is None:
+            self.redirect('/login')
+
+        templateValues = {}
+        templateValues['auth'] = self.auth
+        templateValues['user'] = User.get_by_id(self.auth['key'])
+        
+        self.render(Const.WEBSITE + 'profile.html', templateValues)
         
     def post(self):
         
         errors = {}
         
         try:
+            self.logged()
+            user = User.get_by_id(self.auth['key'])
+            user.name = self.util.stripTags(self.request.get('name'))
+            user.companyName = self.util.stripTags(self.request.get('companyName'))
+
+            if self.request.get('pwd') is not None:
+                user.pwd = user.hash(self.request.get('pwd'))
+
+            user.website = self.request.get('website')
+
+            # save and get the key
+            newKey = user.put()
+
+            if newKey is None:
+                errors['user'] = "User could not be updated"
+                raise Exception()
+
+            ss = newKey.get()
+            # update the browser session
+            auth = {}
+            auth['key'] = user.key.id()
+            auth['name'] = user.name
+
+            #logging.info(auth)
+            self.session['auth'] = auth
+
+            self.jsonSuccess("Profile updated")
+        except Exception as e:
+            logging.info(e.args)
+            self.jsonError(None, 1, errors)
+
+class SignUp(AppHandler):
+    def get(self):
+        # check the browser session
+        self.logged()
+        if self.auth is not None:
+            self.redirect('/cp')
+
+        self.render(Const.WEBSITE + 'signup.html', {})
+
+    def post(self):
+
+        errors = {}
+
+        try:
             user = User()
             user.name = self.util.stripTags(self.request.get('name'))
-            
+
             email = self.util.stripTags(self.request.get('email').strip())
             usrEmail = User.query(User.email == email).get()
-            
+
             if usrEmail is not None:
                 errors['email'] = "This e-mail has already been registered"
                 raise Exception()
-            
+
             user.email = self.request.get('email')
             user.companyName = self.util.stripTags(self.request.get('companyName'))
             user.pwd = user.hash(self.request.get('pwd'))
             user.website = self.request.get('website')
             user.accessKey = user.pwdGenerator(12) + strftime("%y%m%d%H%M%S", gmtime())
-            # salva e pega a key
+            # save and get the key
             newKey = user.put()
-            
+
             if newKey is None:
-                errors['entity'] = "Entity not saved"
+                errors['user'] = "User could not be created"
                 raise Exception()
-        
+
             ss = newKey.get()
-            # cria a sessao
+            # create a browser session
             auth = {}
             auth['key'] = user.key.id()
             auth['name'] = user.name
             auth['email'] = user.email
             auth['accessKey'] = user.accessKey
-    
+
             #logging.info(auth)
             self.session['auth'] = auth
-            
+
             self.jsonSuccess("Account created")
         except Exception as e:
             logging.info(e.args)
-            self.jsonError({'errors': errors})
+            self.jsonError(None, 1, errors)
 
 class LogIn(AppHandler):
     def get(self):
@@ -80,7 +130,7 @@ class LogIn(AppHandler):
         user = User()
         logged = user.login(self.request.get('email'), self.request.get('pwd'))
         if logged is None:
-            self.jsonError()
+            self.jsonError("Wrong username or password")
         else:
             # cria a sessao
             auth = {}
@@ -141,7 +191,7 @@ class ForgotPassword(AppHandler):
 class CP(AppHandler):
     def get(self):
 
-        # verifica a sessao
+        # check the browser session
         self.logged()
         if self.auth is None:
             self.redirect('/login')
@@ -208,31 +258,6 @@ class CP(AppHandler):
         
         self.render(Const.WEBSITE + 'cp.html', templateValues)
 
-class Pref(AppHandler):
-    def post(self):
-
-        self.logged()
-        if self.auth is None:
-            self.redirect('/login')
-
-        user = User.get_by_id(self.auth['key'])
-        #logging.info(user)
-
-        if user is None:
-            self.redirect('/login')
-
-        layout = Layout()
-
-        layout.title = self.util.stripTags(self.request.get('title'))
-        layout.user = user.key
-        
-        if self.request.get('img'):
-            layout.bg = self.request.get('img')
-
-        layout.put()
-        self.redirect('/cp')
-
-
 config = {}
 config['webapp2_extras.sessions'] = {
     'secret_key': Const.SESSION_SECRET_KEY,
@@ -243,7 +268,7 @@ application = webapp2.WSGIApplication([
     ('/logout', LogOut),
     ('/login', LogIn),
     ('/signup', SignUp),
-    ('/pref', Pref),
     ('/forgot_password', ForgotPassword),
-    ('/cp', CP)
+    ('/cp', CP),
+    ('/profile', Profile)
 ], debug=True, config=config)

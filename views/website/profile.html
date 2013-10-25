@@ -1,0 +1,83 @@
+{% extends "views/layout/website.html" %}
+{% block body %}
+{% include 'views/includes/website/greeting.html' %}
+<div id="profileFormDiv">
+    <h3 class="ajaxMessage"></h3>
+    <form action="/" method="post" id="profileForm">
+        <table>
+            <tr>
+                <td><label>Name:</label></td>
+                <td><input type="text" name="name" autofocus required placeholder="Fill out your name" value="{{user.name}}"></td>
+            </tr>
+            <tr>
+                <td><label>Change Password:</label></td>
+                <td>
+                    <input type="password" id="pwd" name="pwd" autocomplete="off" placeholder="At least 6 characters">
+                    <div class="errorForm errorPwd"></div>
+                </td>
+            </tr>
+            <tr>
+                <td><label>Confirm New Password:</label></td>
+                <td>
+                    <input type="password" id="confirmPwd" name="confirm-pwd" autocomplete="off" placeholder="At least 6 characters">
+                    <div class="errorForm errorConfirmPwd"></div>
+                </td>
+            </tr>
+            <tr>
+                <td><label>E-mail:</label></td>
+                <td>{{user.email}}</td>
+            </tr>
+            <tr>
+                <td><label>Company Name:</label></td>
+                <td><input type="text" name="companyName" required placeholder="Fill out your company's name" value="{{user.companyName}}"></td>
+            </tr>
+            <tr>
+                <td><label>Company Website:</label></td>
+                <td><input type="url" name="website" required placeholder="Ex: http://mysite.com" value="{{user.website}}"></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <div class=submit>
+                        <input type="submit" value="Submit">
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </form>
+    <script type="text/javascript">
+        $(function(){
+            $('#profileForm').submit(function(){
+                var val = true;
+                if($('#pwd').val()) {
+                    if ($('#pwd').val().length < 6) {
+                        val = false;
+                        $('.errorPwd').html("Password must have at least 6 characters");
+                    } else {
+                        $('.errorPwd').html('');
+                    }
+                    if ($('#confirmPwd').val() != $('#pwd').val()) {
+                        val = false;
+                        $('.errorConfirmPwd').html("Your password and confirmation password do not match");
+                    } else {
+                        $('.errorConfirmPwd').html('');
+                    }
+                }
+                if (!val) {
+                    return false;
+                }
+                $.post('/profile', $(this).serialize(), function(data) {
+                    if (data.status != 'success') {
+                        alert('Houston, we have a problem.');
+                    } else {
+                        alert('Updated!');
+                    }
+                    window.location.href = "/profile";
+                }, 'json');
+                return false;
+            });
+        });
+    </script>
+</div>
+<a href="/cp">CP</a>
+{% endblock %}
