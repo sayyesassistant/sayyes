@@ -23,8 +23,7 @@
 		"dest" : "{{{tests}}}/controller-test.html",
 		"files" : ["{{{templates}}}/inc/header.mustache","{{{templates}}}/pages/tmplt-test-controller.mustache","{{{templates}}}/inc/footer.mustache"],
 		"raw": {
-			"mock_template": "{{{templates}}}/views/view-mock.mustache",
-			"mock_view": "{{{static}}}/mock/mock-controller.json"
+			"mock_template": "{{{templates}}}/views/view-mock.mustache"
 		},
 		"data" : {
 			"js" : "{{{www_js_folder}}}/test-controller-min.js",
