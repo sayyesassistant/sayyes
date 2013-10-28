@@ -12,7 +12,6 @@ Thumbs.db
 ######################
 node_modules
 bower_components
-static/tests/*
 
 # Project's ignores
 ######################
