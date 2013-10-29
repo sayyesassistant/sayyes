@@ -11,7 +11,7 @@
 	},
 	"clear-tests" : {
 		"cmd" : "rm",
-		"args" : ["{{{tests}}}/*.html"]
+		"args" : ["{{{examples}}}/*.html"]
 	},
 	"sass-watch" : {
 

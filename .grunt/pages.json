@@ -6,7 +6,7 @@
 		"data" : "{{{static}}}/mock/mock-guideline.json"
 	},
 	"simple-view" : {
-		"dest" : "{{{tests}}}/simple-view.html",
+		"dest" : "{{{examples}}}/simple-view.html",
 		"files" : ["{{{templates}}}/inc/header.mustache","{{{templates}}}/pages/tmplt-test-view.mustache","{{{templates}}}/inc/footer.mustache"],
 		"raw": {
 			"mock_template": "{{{templates}}}/views/view-mock.mustache",
@@ -20,7 +20,7 @@
 		}
 	},
 	"controller" : {
-		"dest" : "{{{tests}}}/controller-test.html",
+		"dest" : "{{{examples}}}/controller-test.html",
 		"files" : ["{{{templates}}}/inc/header.mustache","{{{templates}}}/pages/tmplt-test-controller.mustache","{{{templates}}}/inc/footer.mustache"],
 		"raw": {
 			"mock_template": "{{{templates}}}/views/view-mock.mustache"
@@ -33,7 +33,7 @@
 		}
 	},
 	"toc" : {
-		"dest" : "{{{tests}}}/index.html",
+		"dest" : "{{{examples}}}/index.html",
 		"files" : ["{{{templates}}}/inc/header.mustache","{{{templates}}}/pages/tmplt-tests-index.mustache","{{{templates}}}/inc/footer.mustache"],
 		"raw" : null,
 		"data" : {

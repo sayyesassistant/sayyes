@@ -1,22 +1,23 @@
 {
 
-	"root"           : ".",
+	"root"             : ".",
 
 	"static"           : "static",
 
-	"templates"		: "{{{root}}}/{{{static}}}/templates",
-	"tests"			: "{{{static}}}/tests",
+	"templates"        : "{{{root}}}/{{{static}}}/templates",
+	"tests"            : "{{{static}}}/tests",
+	"examples"         : "{{{static}}}/examples",
 
-	"js_sources"     : "{{{static}}}/js",
-	"dest_js_folder" : "{{{static}}}/js-min",
+	"js_sources"       : "{{{static}}}/js",
+	"dest_js_folder"   : "{{{static}}}/js-min",
 
-	"www_js_folder" : "/js-min",
-	"www_css_folder" : "/css-min",
+	"www_js_folder"    : "/js-min",
+	"www_css_folder"   : "/css-min",
 	"www_mock_service" : "/mock-sercice",
-	"www_mock_data" : "/mock-data",
+	"www_mock_data"    : "/mock-data",
 
-	"sass_sources"   : "{{{static}}}/sass",
-	"dest_css_folder": "{{{static}}}/css-min",
+	"sass_sources"     : "{{{static}}}/sass",
+	"dest_css_folder"  : "{{{static}}}/css-min",
 
-	"bower_path": "bower_components"
+	"bower_path"       : "bower_components"
 }

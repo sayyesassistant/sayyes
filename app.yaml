@@ -14,8 +14,8 @@ handlers:
 - url: /img
   static_dir: static/img
 
-- url: /tests
-  static_dir: static/tests
+- url: /examples
+  static_dir: static/examples
 
 - url: /guideline
   static_files: static/index.html
