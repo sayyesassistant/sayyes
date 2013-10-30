@@ -26,7 +26,7 @@ module.exports = function (grunt) {
 				}
 			},
 			all: {
-				src: ['./{{{js_sources}}}/sayyes/**/*.js']
+				src: ['./**/js/sayyes/**/*.js','./**/test/spec/*.js']
 			}
 		}
 	},	ready = false;
