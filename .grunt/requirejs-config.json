@@ -1,6 +1,7 @@
 {
 	"baseUrl": ".",
 	"paths": {
+		"test": "{{{static}}}/test",
 		"lib": "{{{js_sources}}}/libs",
 		"sayyes": "{{{js_sources}}}/sayyes",
 		"mout": "{{{bower_path}}}/mout/src",
