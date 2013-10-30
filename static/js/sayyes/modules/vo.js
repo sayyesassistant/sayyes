@@ -11,56 +11,63 @@ define([
 	keys
 ) {
 
-	var VO, ViewVO, ListVO, __cast;
+	var model, __cast;
 
-	__cast = function (scope) {
-		return function(value){
-			scope[value] = null;
+	_cast = function (scope) {
+		return function(prop){
+			scope.value[prop] = null;
 		};
 	};
 
-	VO = function(){
+	model = function(){
+		this.value = {};
 		if (!!arguments.length){
-			var props = Array.prototype.slice.call(arguments);
-			this.__dna = props;
-			map(props,__cast(this));
+			map(Array.prototype.slice.call(arguments),_cast(this));
 		}
 	};
-	VO.prototype = {
 
-		fromJSON : function (data){
-			console.log(data);
+	model.prototype = {
+
+		from_json : function (json){
+			return new model(keys(json));
 		},
 
-		implements : function (value) {
-			if (!value){
+		match : function (value) {
+			if (!value || typeof value == "object") {
 				return false;
 			}
-			var props = keys(value),
-				diff = difference(this.__dna,props);
+			var dna = keys(this.value),
+				props = keys(value),
+				diff = difference(dna,props);
 			return diff.length===0;
 		},
 
 		set : function (prop,value) {
+			this.value[prop] = value;
+		},
 
+		get : function (prop) {
+			return this.value[prop];
 		}
 	};
 
-	ViewVO = function() { VO.call(this,"name","template_name","data"); };
-	ViewVO.prototype = new VO();
-	ViewVO.prototype.constructor = VO;
+	// ViewVO = function() { VO.call(this,"name","template_name","data"); };
+	// ViewVO.prototype = new VO();
+	// ViewVO.prototype.constructor = VO;
 
-	ControllerVO = function() { VO.call(this,"id","attendant","client","start_with","views"); };
-	ControllerVO.prototype = new VO();
-	ControllerVO.prototype.constructor = VO;
+	// ControllerVO = function() { VO.call(this,"id","attendant","client","start_with","views"); };
+	// ControllerVO.prototype = new VO();
+	// ControllerVO.prototype.constructor = VO;
 
-	ResultVO = function() { VO.call(this,"status","exception", "message", "value"); };
-	ResultVO.prototype = new VO();
-	ResultVO.prototype.constructor = VO;
+	// ResultVO = function() { VO.call(this,"status","exception", "message", "value"); };
+	// ResultVO.prototype = new VO();
+	// ResultVO.prototype.constructor = VO;
 
-	return {
-		view : ViewVO,
-		controller : ControllerVO,
-		result : ResultVO
-	};
+	return model;
+	// {
+	// 	constructor : VO,
+	// 	view : ViewVO,
+	// 	controller : ControllerVO,
+	// 	result : ResultVO
+	// };
 });
