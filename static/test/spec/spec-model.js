@@ -41,12 +41,17 @@ define(["sayyes/util/model"], function(model) {
 		it("should be able to componse the model already set with more properties", function() {
 			blob = new model("foo","bar");
 			blob.compose({"loren":"ipsun"});
-			expect(blob.implements("foo","bar","loren"));
+			expect(blob.implements("foo","bar","loren")).toBeTruthy();
+			expect(blob.data()).toEqual({"foo":null,"bar":null,"loren":"ipsun"});
 		});
 		it("should be able to clone itself", function() {
 			blob = new model("foo","bar");
 			var c = blob.clone();
-			expect(blob.implements(c));
+			expect(blob.data()).toEqual(c.data());
+		});
+		it("should be able to return model's data", function() {
+			blob = new model({"foo":"bar"});
+			expect(blob.data()).toEqual({"foo":"bar"});
 		});
 	});
 });
