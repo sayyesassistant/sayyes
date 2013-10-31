@@ -78,7 +78,11 @@ define([
 		};
 
 		this.clone = function () {
-			return new model(this.keys());
+			return new model(value);
+		};
+
+		this.data = function () {
+			return value;
 		};
 	};
 
