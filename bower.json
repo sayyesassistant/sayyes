@@ -3,7 +3,7 @@
 	"dependencies": {
 		"mout": "0.7",
 		"js-signals": "1.0",
-		"zeptojs": "git://github.com/iki/zepto.git",
+		"zeptojs": "047da348224daa1dc1ac153c46e09f6fac2653dc",
 		"mustache": "0.7.2",
 		"requirejs": "2.1.8",
 		"r.js": "2.1.8"
