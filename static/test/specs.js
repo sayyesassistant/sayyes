@@ -10,8 +10,14 @@ jasmineEnv.specFilter = function(spec) {
 };
 
 require([
+	"zepto/zepto",
+	"zepto/data",
+	"zepto/event",
+	"zepto/form",
+	"zepto/ajax",
 	"test/spec/spec-model",
-	"test/spec/spec-vos"
+	"test/spec/spec-vos",
+	"test/spec/spec-ajax"
 ],function(){
 	jasmineEnv.execute();
 });
