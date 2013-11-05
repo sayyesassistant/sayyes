@@ -16,7 +16,7 @@
 	"www_mock_service" : "/mock-sercice",
 	"www_mock_data"    : "/mock-data",
 
-	"sass_sources"     : "{{{static}}}/sass",
+	"sass_sources"     : "{{{static}}}/sass/sayyes/output",
 	"dest_css_folder"  : "{{{static}}}/css-min",
 
 	"bower_path"       : "bower_components"
