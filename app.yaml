@@ -17,6 +17,9 @@ handlers:
 - url: /examples
   static_dir: static/examples
 
+- url: /tests
+  static_dir: static/tests
+
 - url: /guideline
   static_files: static/index.html
   upload: static/index.html
