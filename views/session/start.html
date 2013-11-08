@@ -1,18 +1,6 @@
 {% extends "views/layout/session.html" %}
 {% block body %}
 <h3>Session Title: {{session.title}}</h3>
-<pre>{{session.instruction}}</pre>
-
-<script type="text/javascript">
-    var j = "{{instruction}}";
-    var obj = JSON.parse(j);
-    var txt = "Attendant Name: " + obj.attendant.name;
-    txt += "\nAttendant E-mail: " + obj.attendant.email;
-    txt += "\n\nClient Name: " + obj.client.name;
-    txt += "\nClient E-mail: " + obj.client.email;
-    alert(txt)
-</script>
-
 {% endblock %}
 <!-- put bg if exists -->
-{% block bodyStyle %}{% if layout.bg %}style="background: url(/session/img.py?key={{layout.key.urlsafe()}}) no-repeat scroll center top transparent"{% endif %}{% endblock %}
+{% block template %}{{template}}{% endblock %}

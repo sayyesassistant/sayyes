@@ -211,7 +211,7 @@ class CP(AppHandler):
         # um exemplo do json p/ testes
         j = {
             "name":"simple-view",
-            "template_name":"mock_template",
+            "template_name":"sayyes_template",
             "data":{
                 "title":"Mock View example",
                 "description":"Some description goes here",
@@ -250,40 +250,39 @@ class CP(AppHandler):
 
         templateValues['json'] = json.dumps(j)
         templateValues['html'] = """
-        <div class="view">
-            <div class="alert"></div>
-            {{#title}}
-                <h1>{{{title}}}</h1>
-            {{/title}}
-            {{#description}}
-                <h2>{{{description}}}</h2>
-            {{/description}}
-            {{#has_nav}}
-                <nav>
-                    <ul>
-                    {{#nav}}
-                        <a href="#{{{view}}}" data-role="nav">{{{label}}}</a>
-                    {{/nav}}
-                    </ul>
-                </nav>
-            {{/has_nav}}
-            {{#form}}
-                <form id="{{{form.id}}}" action="{{{form.action}}}" method="{{{form.method}}}" data-on-success="{{{form.on_success}}}" data-on-error="{{{form.on_error}}}">
-                    {{#form.hiddens}}
-                        <input type="hidden" name="{{{name}}}" value="{{{value}}}" />
-                    {{/form.hiddens}}
-                    {{#form.inputs}}
-                        <input type="{{{type}}}" name="{{{name}}}" placeholder="{{{placeholder}}}" {{{required}}} />
-                    {{/form.inputs}}
-                    <nav>
-                    {{#form.buttons}}
-                        <button value="{{{value}}}">{{{label}}}</button>
-                    {{/form.buttons}}
-                    </nav>
-                </form>
-            {{/form}}
-        </div>
-    </div>
+<div class="view">
+	<div class="alert"></div>
+	{{#title}}
+		<h1>{{{title}}}</h1>
+	{{/title}}
+	{{#description}}
+		<h2>{{{description}}}</h2>
+	{{/description}}
+	{{#has_nav}}
+		<nav>
+			<ul>
+			{{#nav}}
+				<a href="#{{{view}}}" data-role="nav">{{{label}}}</a>
+			{{/nav}}
+			</ul>
+		</nav>
+	{{/has_nav}}
+	{{#form}}
+		<form id="{{{form.id}}}" action="{{{form.action}}}" method="{{{form.method}}}" data-on-success="{{{form.on_success}}}" data-on-error="{{{form.on_error}}}">
+			{{#form.hiddens}}
+				<input type="hidden" name="{{{name}}}" value="{{{value}}}" />
+			{{/form.hiddens}}
+			{{#form.inputs}}
+				<input type="{{{type}}}" name="{{{name}}}" placeholder="{{{placeholder}}}" {{{required}}} />
+			{{/form.inputs}}
+			<nav>
+			{{#form.buttons}}
+				<button value="{{{value}}}">{{{label}}}</button>
+			{{/form.buttons}}
+			</nav>
+		</form>
+	{{/form}}
+</div>
 """
     
         self.render(Const.WEBSITE + 'cp.html', templateValues)

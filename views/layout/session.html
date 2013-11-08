@@ -1,11 +1,36 @@
-<!DOCTYPE html>
-{% autoescape true %}
-<html>
-  <meta charset="utf-8">
-  <head>
-    <link type="text/css" rel="stylesheet" href="/css-min/main.css" />
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-  </head>
-  <body {% block bodyStyle %}{% endblock %}>{% block body %}{% endblock %}</body>
+<!doctype html>
+{% autoescape false %}
+<!--[if lt IE 8]><html class="no-js ie lt-ie8 lt-ie9"><![endif]-->
+<!--[if lt IE 9]><html class="no-js ie lt-ie9"><![endif]-->
+<!--[if gte IE 9]><!--><html class="no-js"><!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <title>Sayyes :: Simple View test</title>
+        <script type="text/javascript">
+            (function(d){ d.className = d.className.replace('no-js', 'js'); })(document.documentElement);
+        </script>
+        <script type="text/javascript" charset="utf-8">
+            (function (s, h) {
+                s.async = true;
+                s.type = 'text/javascript';
+                s.src = "/js-min/test-controller-min.js";
+                h.appendChild(s);
+            }(document.createElement('script'), document.documentElement));
+        </script>
+        <link rel="stylesheet" type="text/css" href="/css-min/guideline-min.css" /></link>
+    </head>
+    <body>
+        <div id="sayyes-assistant"></div>
+        <form id="load-config" method="GET" action="#">
+            <label for="service">
+                Load controller data:
+                <input id="service" name="service" type="text" value="/mock-data/mock-controller.json" required/>
+            </label>
+            <button type="submit">load config</button>
+        </form>
+        <script id="sayyes_template" type="text/mustache-template" charset="utf-8">
+            {% block template %}{% endblock %}
+        </script>
+    </body>
 </html>
 {% endautoescape %}
