@@ -12,12 +12,12 @@ from google.appengine.ext import ndb
 
 class HomePage(AppHandler):
     def get(self):
-        
+
         templateValues = {'teste':'teste'}
         self.render(Const.WEBSITE + 'index.html', templateValues)
-        
+
 class Profile(AppHandler):
-    
+
     def get(self):
         # check the browser session
         self.logged()
@@ -27,13 +27,13 @@ class Profile(AppHandler):
         templateValues = {}
         templateValues['auth'] = self.auth
         templateValues['user'] = User.get_by_id(self.auth['key'])
-        
+
         self.render(Const.WEBSITE + 'profile.html', templateValues)
-        
+
     def post(self):
-        
+
         errors = {}
-        
+
         try:
             self.logged()
             user = User.get_by_id(self.auth['key'])
@@ -187,7 +187,7 @@ class ForgotPassword(AppHandler):
             message.send()
         # returns success anyway as you cannot tell if email was found
         self.jsonSuccess()
-        
+
 class CP(AppHandler):
     def get(self):
 
@@ -200,7 +200,7 @@ class CP(AppHandler):
         templateValues['auth'] = self.auth
 
         key = ndb.Key(User, self.auth['key'])
-        
+
         query = Session.queryUser(key)
         templateValues['sessions'] = query.fetch(10)
 
@@ -211,7 +211,7 @@ class CP(AppHandler):
         # um exemplo do json p/ testes
         j = {
             "name":"simple-view",
-            "template_name":"sayyes_template",
+            "template_name":"mock_template",
             "data":{
                 "title":"Mock View example",
                 "description":"Some description goes here",
@@ -284,7 +284,7 @@ class CP(AppHandler):
 	{{/form}}
 </div>
 """
-    
+
         self.render(Const.WEBSITE + 'cp.html', templateValues)
 
 config = {}
