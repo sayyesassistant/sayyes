@@ -181,7 +181,7 @@ define([
 			} else {
 				this.options.url = url;
 				this.options.data = data;
-				log.info("ajax.request => "+url + " method:"+this.options.type, this.options.data);
+				log.info("ajax.request => "+url + " method:"+this.options.type, " data:", this.options.data);
 				$.ajax(this.options);
 			}
 			return this;

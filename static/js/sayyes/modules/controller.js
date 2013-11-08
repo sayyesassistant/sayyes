@@ -33,15 +33,15 @@ define([
 		return function (value) {
 			switch (severity) {
 				case warn :
-					log.warn(message);
+					log.warn(message,value);
 					self.on.warn.dispatch(message, value);
 				break;
 				case error :
-					log.error(message);
+					log.error(message,value);
 					self.on.error.dispatch(message, value);
 				break;
 				default:
-					log.info(message);
+					log.info(message,value);
 					self.on.info.dispatch(message, value);
 				break;
 			}
