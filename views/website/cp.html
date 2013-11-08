@@ -20,12 +20,12 @@
                         </td>
                     </tr>
                     <tr>
-                        <td><label>Layout:</label></td>
+                        <td><label>Template:</label></td>
                         <td>
-                            <select name="layout">
+                            <select name="template">
                                 <option value=""> --- </option>
-                                {% for layout in layouts %}
-                                <option  value="{{ layout.key.urlsafe() }}">{{layout.title}}</option>
+                                {% for template in templates %}
+                                <option  value="{{ template.key.urlsafe() }}">{{template.title}}</option>
                                 {% endfor %}
                             </select>
                         </td>
@@ -65,18 +65,22 @@
 <table>
     <tr>
         <td>
-            <h3>New Layout</h3>
-            <form action="/pref" method="post" enctype="multipart/form-data">
+            <h3>New Template</h3>
+            <form action="/" method="post" id="templateForm">
+                <input type="hidden" name="accessKey" value="{{ auth.accessKey }}">
+                <input type="hidden" name="email" value="{{ auth.email }}">
                 <table>
                     <tr>
                         <td><label>Title:</label></td>
                         <td>
-                            <input type="text" name="title" required placeholder="Fill out the title of your layout">
+                            <input type="text" name="title" required placeholder="Fill out the title of your template">
                         </td>
                     </tr>
                     <tr>
-                        <td><label>Background Image:</label></td>
-                        <td><input type="file" name="img"/></td>
+                        <td><label>HTML:</label></td>
+                        <td>
+                            <textarea name="instruction" required placeholder="Fill out the HTML of your template" cols="40" rows="10">{{ html }}</textarea>
+                        </td>
                     </tr>
                     <tr>
                         <td></td>
@@ -90,13 +94,13 @@
             </form>
         </td>
         <td>
-            <h3>Last 10 layouts</h3>
+            <h3>Last 10 templates</h3>
             <ul>
-                {% for layout in layouts %}
+                {% for template in templates %}
                 <li>
-                    {{ layout.title }}<br>
-                    {% if layout.bg %}
-                    <img src="/session/img.py?key={{ layout.key.urlsafe() }}" width="200">
+                    {{ template.title }}<br>
+                    {% if template.bg %}
+                    <img src="/session/img.py?key={{ template.key.urlsafe() }}" width="200">
                     {% endif %}
                 </li>
                 {% endfor %}
@@ -114,6 +118,15 @@
                 } else {
                     $('.ajaxMessage').html(data.message).show(300);
                 }
+            }, 'json');
+            return false;
+        });
+        $('#templateForm').submit(function(){
+            $.post('/session/template.py', $(this).serialize(), function(data) {
+                if (data.status != 'success') {
+                    alert(data.message);
+                }
+                window.location.reload();
             }, 'json');
             return false;
         });

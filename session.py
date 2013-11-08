@@ -13,10 +13,10 @@ from util import *
 class Image(webapp2.RequestHandler):
     def get(self):
         key = ndb.Key(urlsafe=self.request.get('key'))
-        layout = key.get()
-        if layout.bg:
+        template = key.get()
+        if template.bg:
             self.response.headers['Content-Type'] = 'image/png'
-            self.response.out.write(layout.bg)
+            self.response.out.write(template.bg)
         else:
             self.response.out.write('No image')
 
@@ -30,31 +30,29 @@ class Start(AppHandler):
         # faz escape por double quote apenas, pois eh o unico permitido oficialmente pelo json
         instruction = session.instruction.replace('"', '\\"')
         
-        layout = None
-        if session.layout:
-            layout = session.layout.get()
+        template = None
+        if session.template:
+            template = session.template.get()
 
-        templateValues = {'session': session, 'instruction': instruction, 'layout': layout}
+        templateValues = {'session': session, 'instruction': instruction, 'template': template}
 
         self.render(Const.SESSION + 'start.html', templateValues)
 
 class Create(AppHandler):
 
     def post(self):
-        logging.info(self.isAjax())
+        #logging.info(self.isAjax())
         
         errors = {}
 
         try:
-
             user = User()
             accessKey = self.request.get('accessKey')
             email = self.request.get('email')
 
-            user = User.query(User.email == email).get()
-            #logging.info(user)
-            
-            if user is None or user.accessKey != accessKey:
+            user = self.authKey(accessKey, email);
+
+            if user is None:
                 errors['authenticationFailed'] = "Invalid e-mail or access key"
                 errors['accessKeySent'] = accessKey
                 errors['emailSent'] = email
@@ -65,12 +63,12 @@ class Create(AppHandler):
             session.instruction = self.request.get('instruction')
             session.user = user.key
 
-            if self.request.get('layout'):
-                key = ndb.Key(urlsafe=self.request.get('layout'))
-                layout = key.get()
+            if self.request.get('template'):
+                key = ndb.Key(urlsafe=self.request.get('template'))
+                template = key.get()
                 # testa de novo p/ ver se achou a entidade
-                if layout is not None:
-                    session.layout = layout.key
+                if template is not None:
+                    session.template = template.key
             
             # salva e pega a key
             newKey = session.put()
@@ -90,6 +88,40 @@ class Create(AppHandler):
             logging.info(e.args)
             self.jsonError("Session could not be created", 1, errors)
 
+class TemplateCreate(AppHandler):
+
+    def post(self):
+
+        errors = {}
+
+        try:
+            user = User()
+            accessKey = self.request.get('accessKey')
+            email = self.request.get('email')
+
+            user = self.authKey(accessKey, email);
+
+            if user is None:
+                errors['authenticationFailed'] = "Invalid e-mail or access key"
+                errors['accessKeySent'] = accessKey
+                errors['emailSent'] = email
+                raise Exception()
+
+            template = Template()
+            template.title = self.util.stripTags(self.request.get('title'))
+            template.html = self.request.get('html')
+            template.user = user.key
+
+            template.put()
+
+            self.jsonSuccess()
+            
+        except Exception as e:
+
+            logging.info(e.args)
+            self.jsonError("Template could not be created", 2, errors)
+
+
 config = {}
 config['webapp2_extras.sessions'] = {
     'secret_key': Const.SESSION_SECRET_KEY,
@@ -99,4 +131,5 @@ application = webapp2.WSGIApplication([
     ('/session/img.py', Image),
     ('/session/create.py', Create),
     ('/session/start.py', Start),
+    ('/session/template.py', TemplateCreate),
 ], debug=True, config=config)
