@@ -6,20 +6,20 @@
 
 	<link rel="stylesheet" type="text/css" href="lib/jasmine/jasmine.css">
 
-	<script type="text/javascript" src="../../bower_components/requirejs/require.js"></script>
+	<script type="text/javascript" src="/bower_path/requirejs/require.js"></script>
 
 	<script type="text/javascript">
 		requirejs.config({
-			"baseUrl": "../../",
+			"baseUrl": "/",
 			"paths": {
-				"test": "static/test",
-				"lib": "static/js/libs",
-				"sayyes": "static/js/sayyes",
-				"mout": "bower_components/mout/src",
-				"signals": "bower_components/js-signals/dist",
-				"zepto": "bower_components/zeptojs/src",
-				"req": "bower_components/requirejs",
-				"mustache": "bower_components/mustache/"
+				"tests": "tests",
+				"lib": "js-src/lib",
+				"sayyes": "js-src/sayyes",
+				"mout": "bower_path/mout/src",
+				"signals": "bower_path/js-signals/dist",
+				"zepto": "bower_path/zeptojs/src",
+				"req": "bower_path/requirejs",
+				"mustache": "bower_path/mustache/"
 			}
 		});
 	</script>

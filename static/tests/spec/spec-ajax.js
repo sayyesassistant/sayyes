@@ -111,7 +111,7 @@ define(["sayyes/util/ajax"], function(ajax) {
 			});
 
 			runs(function(){
-				xhr.request("/static/mock/mock-view.json");
+				xhr.request("/mock-data/mock-view.json");
 			});
 
 			waitsFor(function(){
@@ -193,7 +193,7 @@ define(["sayyes/util/ajax"], function(ajax) {
 			});
 
 			runs(function(){
-				xhr.request("/static/mock/crossdomain.xml");
+				xhr.request("/mock-data/crossdomain.xml");
 			});
 
 			waitsFor(function(){

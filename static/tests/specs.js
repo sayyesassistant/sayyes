@@ -15,9 +15,9 @@ require([
 	"zepto/event",
 	"zepto/form",
 	"zepto/ajax",
-	"test/spec/spec-model",
-	"test/spec/spec-vos",
-	"test/spec/spec-ajax"
+	"tests/spec/spec-model",
+	"tests/spec/spec-vos",
+	"tests/spec/spec-ajax"
 ],function(){
 	jasmineEnv.execute();
 });

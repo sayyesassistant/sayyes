@@ -5,6 +5,10 @@ api_version: 1
 threadsafe: true
 
 handlers:
+# prod and final routes
+- url: /session/.*
+  script: session.application
+
 - url: /css-min
   static_dir: static/css-min/
 
@@ -14,11 +18,18 @@ handlers:
 - url: /img
   static_dir: static/img
 
+# dev and tests routes
 - url: /examples
   static_dir: static/examples
 
 - url: /tests
   static_dir: static/tests
+
+- url: /bower_path
+  static_dir: bower_components
+
+- url: /js-src
+  static_dir: static/js
 
 - url: /guideline
   static_files: static/index.html
@@ -30,9 +41,7 @@ handlers:
 - url: /mock-data/
   static_dir: static/mock
 
-- url: /session/.*
-  script: session.application
-
+# all url fallbacks goes here
 - url: /.*
   script: website.application
 
