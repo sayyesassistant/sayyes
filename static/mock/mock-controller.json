@@ -1,66 +1,61 @@
 {
-	"status" : "output",
-	"exception" : null,
-	"message" : null,
-	"value" : {
-		"start_with":"a",
-		"id":"ABC123",
-		"attendant":{
-			"id":"foo",
-			"name":"Attendant Name",
-			"email":"foo@sayyes.com",
-			"phone":null
-		},
-		"client":null,
-		"views" : [{
-			"name":"a",
-			"template_name":"mock_template",
-			"data":{
-			"title":"Mock View example",
-			"description":"Some description goes here",
-			"nav":[{
-				"label":"no forms please!",
-				"view":"b"
+	"start_with":"a",
+	"id":"ABC123",
+	"attendant":{
+		"id":"foo",
+		"name":"Attendant Name",
+		"email":"foo@sayyes.com",
+		"phone":null
+	},
+	"client":null,
+	"views" : [{
+		"name":"a",
+		"template_name":"mock_template",
+		"data":{
+		"title":"Mock View example",
+		"description":"Some description goes here",
+		"nav":[{
+			"label":"no forms please!",
+			"view":"b"
+		}],
+		"form" : {
+			"action" : "/mock-service/login.json",
+			"method" : "GET",
+			"id" : "sayyes",
+			"on_success" : "nav=b",
+			"on_error" : "alert",
+			"hiddens" : [{
+				"name":"expect",
+				"value":"false"
 			}],
-			"form" : {
-				"action" : "/mock-service/login.json",
-				"method" : "GET",
-				"id" : "sayyes",
-				"on_success" : "nav=b",
-				"on_error" : "alert",
-				"hiddens" : [{
-					"name":"expect",
-					"value":"false"
-				}],
-				"buttons" : [{
-					"label":"check...",
-					"value":"foo"
-				}],
-				"inputs" : [{
-					"name":"name",
-					"type":"text",
-					"placeholder":"your name",
-					"required" : "required"
-				},{
-					"name":"email",
-					"type":"email",
-					"placeholder":"Type your email",
-					"required":"required"
-				}]
-			}
+			"buttons" : [{
+				"label":"check...",
+				"value":"foo"
+			}],
+			"inputs" : [{
+				"name":"name",
+				"type":"text",
+				"placeholder":"your name",
+				"required" : "required"
+			},{
+				"name":"email",
+				"type":"email",
+				"placeholder":"Type your email",
+				"required":"required"
+			}]
 		}
-			} , {
-
-			"name":"b",
-			"template_name":"mock_template",
-			"data":{
-				"title":"I can't see your info!",
-				"description":"Seems that you don't like forms!",
-				"nav":[{
-					"label":"try again",
-					"view":"a"
-				}]
-			}
-		}]
 	}
+		} , {
+
+		"name":"b",
+		"template_name":"mock_template",
+		"data":{
+			"title":"I can't see your info!",
+			"description":"Seems that you don't like forms!",
+			"nav":[{
+				"label":"try again",
+				"view":"a"
+			}]
+		}
+	}]
 }

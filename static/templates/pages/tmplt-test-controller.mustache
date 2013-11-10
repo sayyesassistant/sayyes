@@ -2,14 +2,15 @@
 	<h1>-- {{{data.test_title}}} ---</h1>
 	<hr/>
 	<div id="sayyes-assistant"></div>
-
+	{{#data.form}}
 	<form id="load-config" method="GET" action="#">
 		<label for="service">
 			Load controller data:
-			<input id="service" name="service" type="text" value="/mock-data/mock-controller.json" required/>
+			<input id="service" name="service" type="text" value="{{{data.placeholder}}}" required/>
 		</label>
 		<button type="submit">load config</button>
 	</form>
+	{{/data.form}}
 
 	{{#data.templates}}
 	<script id="{{.}}" type="text/mustache-template" charset="utf-8">
