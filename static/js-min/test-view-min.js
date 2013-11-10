@@ -2058,7 +2058,7 @@ define("req/require", function(){});
 /*
 @grunt -task=comp-js -page=app
 */
-define('sayyes/modules/log',[], function () {
+define('sayyes/util/log',[], function () {
 
 	var Logger, Log, instance,
 		__init, __log, _reg,
@@ -2150,16 +2150,16 @@ define('sayyes/modules/log',[], function () {
 	return instance;
 });
 //     Zepto.js
-//     (c) 2010-2012 Thomas Fuchs
+//     (c) 2010-2013 Thomas Fuchs
 //     Zepto.js may be freely distributed under the MIT license.
 
 var Zepto = (function() {
   var undefined, key, $, classList, emptyArray = [], slice = emptyArray.slice, filter = emptyArray.filter,
     document = window.document,
     elementDisplay = {}, classCache = {},
-    getComputedStyle = document.defaultView.getComputedStyle,
     cssNumber = { 'column-count': 1, 'columns': 1, 'font-weight': 1, 'line-height': 1,'opacity': 1, 'z-index': 1, 'zoom': 1 },
     fragmentRE = /^\s*<(\w+|!)[^>]*>/,
+    singleTagRE = /^<(\w+)\s*\/?>(?:<\/\1>|)$/,
     tagExpanderRE = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([\w:]+)[^>]*)\/>/ig,
     rootNodeRE = /^(?:body|html)$/i,
 
@@ -2208,7 +2208,7 @@ var Zepto = (function() {
   function isDocument(obj)   { return obj != null && obj.nodeType == obj.DOCUMENT_NODE }
   function isObject(obj)     { return type(obj) == "object" }
   function isPlainObject(obj) {
-    return isObject(obj) && !isWindow(obj) && obj.__proto__ == Object.prototype
+    return isObject(obj) && !isWindow(obj) && Object.getPrototypeOf(obj) == Object.prototype
   }
   function isArray(value) { return value instanceof Array }
   function likeArray(obj) { return typeof obj.length == 'number' }
@@ -2259,15 +2259,23 @@ var Zepto = (function() {
   // This function can be overriden in plugins for example to make
   // it compatible with browsers that don't support the DOM fully.
   zepto.fragment = function(html, name, properties) {
-    if (html.replace) html = html.replace(tagExpanderRE, "<$1></$2>")
-    if (name === undefined) name = fragmentRE.test(html) && RegExp.$1
-    if (!(name in containers)) name = '*'
+    var dom, nodes, container
 
-    var nodes, dom, container = containers[name]
-    container.innerHTML = '' + html
-    dom = $.each(slice.call(container.childNodes), function(){
-      container.removeChild(this)
-    })
+    // A special case optimization for a single tag
+    if (singleTagRE.test(html)) dom = $(document.createElement(RegExp.$1))
+
+    if (!dom) {
+      if (html.replace) html = html.replace(tagExpanderRE, "<$1></$2>")
+      if (name === undefined) name = fragmentRE.test(html) && RegExp.$1
+      if (!(name in containers)) name = '*'
+
+      container = containers[name]
+      container.innerHTML = '' + html
+      dom = $.each(slice.call(container.childNodes), function(){
+        container.removeChild(this)
+      })
+    }
+
     if (isPlainObject(properties)) {
       nodes = $(dom)
       $.each(properties, function(key, value) {
@@ -2275,6 +2283,7 @@ var Zepto = (function() {
         else nodes.attr(key, value)
       })
     }
+
     return dom
   }
 
@@ -2310,9 +2319,9 @@ var Zepto = (function() {
       var dom
       // normalize array if an array of nodes is given
       if (isArray(selector)) dom = compact(selector)
-      // Wrap DOM nodes. If a plain object is given, duplicate it.
+      // Wrap DOM nodes.
       else if (isObject(selector))
-        dom = [isPlainObject(selector) ? $.extend({}, selector) : selector], selector = null
+        dom = [selector], selector = null
       // If it's a html fragment, create nodes from it
       else if (fragmentRE.test(selector))
         dom = zepto.fragment(selector.trim(), RegExp.$1, context), selector = null
@@ -2374,7 +2383,7 @@ var Zepto = (function() {
   }
 
   function filtered(nodes, selector) {
-    return selector === undefined ? $(nodes) : $(nodes).filter(selector)
+    return selector == null ? $(nodes) : $(nodes).filter(selector)
   }
 
   $.contains = function(parent, node) {
@@ -2438,7 +2447,9 @@ var Zepto = (function() {
   }
 
   $.camelCase = camelize
-  $.trim = function(str) { return str.trim() }
+  $.trim = function(str) {
+    return str == null ? "" : String.prototype.trim.call(str)
+  }
 
   // plugin compatibility
   $.uuid = 0
@@ -2628,7 +2639,7 @@ var Zepto = (function() {
     },
     show: function(){
       return this.each(function(){
-        this.style.display == "none" && (this.style.display = null)
+        this.style.display == "none" && (this.style.display = '')
         if (getComputedStyle(this, '').getPropertyValue("display") == "none")
           this.style.display = defaultDisplay(this.nodeName)
       })
@@ -2688,7 +2699,7 @@ var Zepto = (function() {
     prev: function(selector){ return $(this.pluck('previousElementSibling')).filter(selector || '*') },
     next: function(selector){ return $(this.pluck('nextElementSibling')).filter(selector || '*') },
     html: function(html){
-      return html === undefined ?
+      return arguments.length === 0 ?
         (this.length > 0 ? this[0].innerHTML : null) :
         this.each(function(idx){
           var originHtml = this.innerHTML
@@ -2696,9 +2707,9 @@ var Zepto = (function() {
         })
     },
     text: function(text){
-      return text === undefined ?
+      return arguments.length === 0 ?
         (this.length > 0 ? this[0].textContent : null) :
-        this.each(function(){ this.textContent = text })
+        this.each(function(){ this.textContent = (text === undefined) ? '' : ''+text })
     },
     attr: function(name, value){
       var result
@@ -2728,7 +2739,7 @@ var Zepto = (function() {
       return data !== null ? deserializeValue(data) : undefined
     },
     val: function(value){
-      return (value === undefined) ?
+      return arguments.length === 0 ?
         (this[0] && (this[0].multiple ?
            $(this[0]).find('option').filter(function(o){ return this.selected }).pluck('value') :
            this[0].value)
@@ -2760,8 +2771,19 @@ var Zepto = (function() {
       }
     },
     css: function(property, value){
-      if (arguments.length < 2 && typeof property == 'string')
-        return this[0] && (this[0].style[camelize(property)] || getComputedStyle(this[0], '').getPropertyValue(property))
+      if (arguments.length < 2) {
+        var element = this[0], computedStyle = getComputedStyle(element, '')
+        if(!element) return
+        if (typeof property == 'string')
+          return element.style[camelize(property)] || computedStyle.getPropertyValue(property)
+        else if (isArray(property)) {
+          var props = {}
+          $.each(isArray(property) ? property: [property], function(_, prop){
+            props[prop] = (element.style[camelize(prop)] || computedStyle.getPropertyValue(prop))
+          })
+          return props
+        }
+      }
 
       var css = ''
       if (type(property) == 'string') {
@@ -2816,9 +2838,13 @@ var Zepto = (function() {
         })
       })
     },
-    scrollTop: function(){
+    scrollTop: function(value){
       if (!this.length) return
-      return ('scrollTop' in this[0]) ? this[0].scrollTop : this[0].scrollY
+      var hasScrollTop = 'scrollTop' in this[0]
+      if (value === undefined) return hasScrollTop ? this[0].scrollTop : this[0].pageYOffset
+      return this.each(hasScrollTop ?
+        function(){ this.scrollTop = value } :
+        function(){ this.scrollTo(this.scrollX, value) })
     },
     position: function() {
       if (!this.length) return
@@ -2861,11 +2887,13 @@ var Zepto = (function() {
 
   // Generate the `width` and `height` functions
   ;['width', 'height'].forEach(function(dimension){
+    var dimensionProperty =
+      dimension.replace(/./, function(m){ return m[0].toUpperCase() })
+
     $.fn[dimension] = function(value){
-      var offset, el = this[0],
-        Dimension = dimension.replace(/./, function(m){ return m[0].toUpperCase() })
-      if (value === undefined) return isWindow(el) ? el['inner' + Dimension] :
-        isDocument(el) ? el.documentElement['offset' + Dimension] :
+      var offset, el = this[0]
+      if (value === undefined) return isWindow(el) ? el['inner' + dimensionProperty] :
+        isDocument(el) ? el.documentElement['scroll' + dimensionProperty] :
         (offset = this.offset()) && offset[dimension]
       else return this.each(function(idx){
         el = $(this)
@@ -2938,19 +2966,19 @@ var Zepto = (function() {
 
 // If `$` is not yet defined, point it to `Zepto`
 window.Zepto = Zepto
-'$' in window || (window.$ = Zepto)
+window.$ === undefined && (window.$ = Zepto)
 ;
 define("zepto/zepto", function(){});
 
 //     Zepto.js
-//     (c) 2010-2012 Thomas Fuchs
+//     (c) 2010-2013 Thomas Fuchs
 //     Zepto.js may be freely distributed under the MIT license.
 
 // The following code is heavily inspired by jQuery's $.fn.data()
 
 ;(function($) {
   var data = {}, dataAttr = $.fn.data, camelize = $.camelCase,
-    exp = $.expando = 'Zepto' + (+new Date())
+    exp = $.expando = 'Zepto' + (+new Date()), emptyArray = []
 
   // Get value from node:
   // 1. first try key as given,
@@ -2980,7 +3008,7 @@ define("zepto/zepto", function(){});
   // Read all "data-*" attributes from a node
   function attributeData(node) {
     var store = {}
-    $.each(node.attributes, function(i, attr){
+    $.each(node.attributes || emptyArray, function(i, attr){
       if (attr.name.indexOf('data-') == 0)
         store[camelize(attr.name.replace('data-', ''))] =
           $.zepto.deserializeValue(attr.value)
@@ -3013,7 +3041,7 @@ define("zepto/zepto", function(){});
 define("zepto/data", function(){});
 
 //     Zepto.js
-//     (c) 2010-2012 Thomas Fuchs
+//     (c) 2010-2013 Thomas Fuchs
 //     Zepto.js may be freely distributed under the MIT license.
 
 ;(function($){
@@ -3073,14 +3101,15 @@ define("zepto/data", function(){});
       }
       handler.del   = getDelegate && getDelegate(fn, event)
       var callback  = handler.del || fn
-      handler.proxy = function (e) {
+      handler.proxy = function(e){
         var result = callback.apply(element, [e].concat(e.data))
         if (result === false) e.preventDefault(), e.stopPropagation()
         return result
       }
       handler.i = set.length
       set.push(handler)
-      element.addEventListener(realEvent(handler.e), handler.proxy, eventCapture(handler, capture))
+      if ('addEventListener' in element)
+        element.addEventListener(realEvent(handler.e), handler.proxy, eventCapture(handler, capture))
     })
   }
   function remove(element, events, fn, selector, capture){
@@ -3088,6 +3117,7 @@ define("zepto/data", function(){});
     eachEvent(events || '', fn, function(event, fn){
       findHandlers(element, event, fn, selector).forEach(function(handler){
         delete handlers[id][handler.i]
+      if ('removeEventListener' in element)
         element.removeEventListener(realEvent(handler.e), handler.proxy, eventCapture(handler, capture))
       })
     })
@@ -3157,9 +3187,9 @@ define("zepto/data", function(){});
     if (!('defaultPrevented' in event)) {
       event.defaultPrevented = false
       var prevent = event.preventDefault
-      event.preventDefault = function() {
-        this.defaultPrevented = true
-        prevent.call(this)
+      event.preventDefault = function(){
+        event.defaultPrevented = true
+        prevent.call(event)
       }
     }
   }
@@ -3207,8 +3237,8 @@ define("zepto/data", function(){});
     event.data = data
     return this.each(function(){
       // items in the collection might not be DOM elements
-      // (todo: possibly support events on plain old objects)
       if('dispatchEvent' in this) this.dispatchEvent(event)
+      else $(this).triggerHandler(event, data)
     })
   }
 
@@ -3254,8 +3284,8 @@ define("zepto/data", function(){});
     if (typeof type != 'string') props = type, type = props.type
     var event = document.createEvent(specialEvents[type] || 'Events'), bubbles = true
     if (props) for (var name in props) (name == 'bubbles') ? (bubbles = !!props[name]) : (event[name] = props[name])
-    event.initEvent(type, bubbles, true, null, null, null, null, null, null, null, null, null, null, null, null)
-    event.isDefaultPrevented = function(){ return this.defaultPrevented }
+    event.initEvent(type, bubbles, true)
+    event.isDefaultPrevented = function(){ return event.defaultPrevented }
     return event
   }
 
@@ -3264,21 +3294,18 @@ define("zepto/data", function(){});
 define("zepto/event", function(){});
 
 //     Zepto.js
-//     (c) 2010-2012 Thomas Fuchs
+//     (c) 2010-2013 Thomas Fuchs
 //     Zepto.js may be freely distributed under the MIT license.
 
 ;(function($){
   var touch = {},
-    touchTimeout, tapTimeout, swipeTimeout,
-    longTapDelay = 750, longTapTimeout
-
-  function parentIfText(node) {
-    return 'tagName' in node ? node : node.parentNode
-  }
+    touchTimeout, tapTimeout, swipeTimeout, longTapTimeout,
+    longTapDelay = 750,
+    gesture
 
   function swipeDirection(x1, x2, y1, y2) {
-    var xDelta = Math.abs(x1 - x2), yDelta = Math.abs(y1 - y2)
-    return xDelta >= yDelta ? (x1 - x2 > 0 ? 'Left' : 'Right') : (y1 - y2 > 0 ? 'Up' : 'Down')
+    return Math.abs(x1 - x2) >=
+      Math.abs(y1 - y2) ? (x1 - x2 > 0 ? 'Left' : 'Right') : (y1 - y2 > 0 ? 'Up' : 'Down')
   }
 
   function longTap() {
@@ -3303,30 +3330,56 @@ define("zepto/event", function(){});
     touch = {}
   }
 
-  $(document).ready(function(){
-    var now, delta
+  function isPrimaryTouch(event){
+    return event.pointerType == event.MSPOINTER_TYPE_TOUCH && event.isPrimary
+  }
 
-    $(document.body)
-      .bind('touchstart', function(e){
+  $(document).ready(function(){
+    var now, delta, deltaX = 0, deltaY = 0, firstTouch
+
+    if ('MSGesture' in window) {
+      gesture = new MSGesture()
+      gesture.target = document.body
+    }
+
+    $(document)
+      .bind('MSGestureEnd', function(e){
+        var swipeDirectionFromVelocity =
+          e.velocityX > 1 ? 'Right' : e.velocityX < -1 ? 'Left' : e.velocityY > 1 ? 'Down' : e.velocityY < -1 ? 'Up' : null;
+        if (swipeDirectionFromVelocity) {
+          touch.el.trigger('swipe')
+          touch.el.trigger('swipe'+ swipeDirectionFromVelocity)
+        }
+      })
+      .on('touchstart MSPointerDown', function(e){
+        if(e.type == 'MSPointerDown' && !isPrimaryTouch(e)) return;
+        firstTouch = e.type == 'MSPointerDown' ? e : e.touches[0]
         now = Date.now()
         delta = now - (touch.last || now)
-        touch.el = $(parentIfText(e.touches[0].target))
+        touch.el = $('tagName' in firstTouch.target ?
+          firstTouch.target : firstTouch.target.parentNode)
         touchTimeout && clearTimeout(touchTimeout)
-        touch.x1 = e.touches[0].pageX
-        touch.y1 = e.touches[0].pageY
+        touch.x1 = firstTouch.pageX
+        touch.y1 = firstTouch.pageY
         if (delta > 0 && delta <= 250) touch.isDoubleTap = true
         touch.last = now
         longTapTimeout = setTimeout(longTap, longTapDelay)
+        // adds the current touch contact for IE gesture recognition
+        if (gesture && e.type == 'MSPointerDown') gesture.addPointer(e.pointerId);
       })
-      .bind('touchmove', function(e){
+      .on('touchmove MSPointerMove', function(e){
+        if(e.type == 'MSPointerMove' && !isPrimaryTouch(e)) return;
+        firstTouch = e.type == 'MSPointerMove' ? e : e.touches[0]
         cancelLongTap()
-        touch.x2 = e.touches[0].pageX
-        touch.y2 = e.touches[0].pageY
-        if (Math.abs(touch.x1 - touch.x2) > 10)
-          e.preventDefault()
+        touch.x2 = firstTouch.pageX
+        touch.y2 = firstTouch.pageY
+
+        deltaX += Math.abs(touch.x1 - touch.x2)
+        deltaY += Math.abs(touch.y1 - touch.y2)
       })
-      .bind('touchend', function(e){
-         cancelLongTap()
+      .on('touchend MSPointerUp', function(e){
+        if(e.type == 'MSPointerUp' && !isPrimaryTouch(e)) return;
+        cancelLongTap()
 
         // swipe
         if ((touch.x2 && Math.abs(touch.x1 - touch.x2) > 30) ||
@@ -3340,57 +3393,69 @@ define("zepto/event", function(){});
 
         // normal tap
         else if ('last' in touch)
+          // don't fire tap when delta position changed by more than 30 pixels,
+          // for instance when moving to a point and back to origin
+          if (deltaX < 30 && deltaY < 30) {
+            // delay by one tick so we can cancel the 'tap' event if 'scroll' fires
+            // ('tap' fires before 'scroll')
+            tapTimeout = setTimeout(function() {
 
-          // delay by one tick so we can cancel the 'tap' event if 'scroll' fires
-          // ('tap' fires before 'scroll')
-          tapTimeout = setTimeout(function() {
+              // trigger universal 'tap' with the option to cancelTouch()
+              // (cancelTouch cancels processing of single vs double taps for faster 'tap' response)
+              var event = $.Event('tap')
+              event.cancelTouch = cancelAll
+              touch.el.trigger(event)
 
-            // trigger universal 'tap' with the option to cancelTouch()
-            // (cancelTouch cancels processing of single vs double taps for faster 'tap' response)
-            var event = $.Event('tap')
-            event.cancelTouch = cancelAll
-            touch.el.trigger(event)
-
-            // trigger double tap immediately
-            if (touch.isDoubleTap) {
-              touch.el.trigger('doubleTap')
-              touch = {}
-            }
-
-            // trigger single tap after 250ms of inactivity
-            else {
-              touchTimeout = setTimeout(function(){
-                touchTimeout = null
-                touch.el.trigger('singleTap')
+              // trigger double tap immediately
+              if (touch.isDoubleTap) {
+                touch.el.trigger('doubleTap')
                 touch = {}
-              }, 250)
-            }
+              }
 
-          }, 0)
+              // trigger single tap after 250ms of inactivity
+              else {
+                touchTimeout = setTimeout(function(){
+                  touchTimeout = null
+                  touch.el.trigger('singleTap')
+                  touch = {}
+                }, 250)
+              }
+            }, 0)
+          } else {
+            touch = {}
+          }
+          deltaX = deltaY = 0
 
       })
-      .bind('touchcancel', cancelAll)
+      // when the browser window loses focus,
+      // for example when a modal dialog is shown,
+      // cancel all ongoing events
+      .on('touchcancel MSPointerCancel', cancelAll)
 
-    $(window).bind('scroll', cancelAll)
+    // scrolling the window indicates intention of the user
+    // to scroll, not tap or swipe, so cancel all ongoing events
+    $(window).on('scroll', cancelAll)
   })
 
-  ;['swipe', 'swipeLeft', 'swipeRight', 'swipeUp', 'swipeDown', 'doubleTap', 'tap', 'singleTap', 'longTap'].forEach(function(m){
-    $.fn[m] = function(callback){ return this.bind(m, callback) }
+  ;['swipe', 'swipeLeft', 'swipeRight', 'swipeUp', 'swipeDown',
+    'doubleTap', 'tap', 'singleTap', 'longTap'].forEach(function(eventName){
+    $.fn[eventName] = function(callback){ return this.on(eventName, callback) }
   })
 })(Zepto)
 ;
 define("zepto/touch", function(){});
 
 //     Zepto.js
-//     (c) 2010-2012 Thomas Fuchs
+//     (c) 2010-2013 Thomas Fuchs
 //     Zepto.js may be freely distributed under the MIT license.
 
 ;(function($){
   function detect(ua){
     var os = this.os = {}, browser = this.browser = {},
       webkit = ua.match(/WebKit\/([\d.]+)/),
-      android = ua.match(/(Android)\s+([\d.]+)/),
+      android = ua.match(/(Android);?\s+([\d.]+)?/),
       ipad = ua.match(/(iPad).*OS\s([\d_]+)/),
+      ipod = ua.match(/(iPod)(.*OS\s([\d_]+))?/),
       iphone = !ipad && ua.match(/(iPhone\sOS)\s([\d_]+)/),
       webos = ua.match(/(webOS|hpwOS)[\s\/]([\d.]+)/),
       touchpad = webos && ua.match(/TouchPad/),
@@ -3401,7 +3466,11 @@ define("zepto/touch", function(){});
       rimtabletos = ua.match(/(RIM\sTablet\sOS)\s([\d.]+)/),
       playbook = ua.match(/PlayBook/),
       chrome = ua.match(/Chrome\/([\d.]+)/) || ua.match(/CriOS\/([\d.]+)/),
-      firefox = ua.match(/Firefox\/([\d.]+)/)
+      firefox = ua.match(/Firefox\/([\d.]+)/),
+      ie = ua.match(/MSIE ([\d.]+)/),
+      safari = webkit && ua.match(/Mobile\//) && !chrome,
+      webview = ua.match(/(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/) && !chrome,
+      ie = ua.match(/MSIE\s([\d.]+)/)
 
     // Todo: clean this up with a better OS/browser seperation:
     // - discern (more) between multiple browsers on android
@@ -3412,8 +3481,9 @@ define("zepto/touch", function(){});
     if (browser.webkit = !!webkit) browser.version = webkit[1]
 
     if (android) os.android = true, os.version = android[2]
-    if (iphone) os.ios = os.iphone = true, os.version = iphone[2].replace(/_/g, '.')
+    if (iphone && !ipod) os.ios = os.iphone = true, os.version = iphone[2].replace(/_/g, '.')
     if (ipad) os.ios = os.ipad = true, os.version = ipad[2].replace(/_/g, '.')
+    if (ipod) os.ios = os.ipod = true, os.version = ipod[3] ? ipod[3].replace(/_/g, '.') : null
     if (webos) os.webos = true, os.version = webos[2]
     if (touchpad) os.touchpad = true
     if (blackberry) os.blackberry = true, os.version = blackberry[2]
@@ -3425,10 +3495,16 @@ define("zepto/touch", function(){});
     if (!silk && os.android && ua.match(/Kindle Fire/)) browser.silk = true
     if (chrome) browser.chrome = true, browser.version = chrome[1]
     if (firefox) browser.firefox = true, browser.version = firefox[1]
+    if (ie) browser.ie = true, browser.version = ie[1]
+    if (safari && (ua.match(/Safari/) || !!os.ios)) browser.safari = true
+    if (webview) browser.webview = true
+    if (ie) browser.ie = true, browser.version = ie[1]
 
-    os.tablet = !!(ipad || playbook || (android && !ua.match(/Mobile/)) || (firefox && ua.match(/Tablet/)))
-    os.phone  = !!(!os.tablet && (android || iphone || webos || blackberry || bb10 ||
-      (chrome && ua.match(/Android/)) || (chrome && ua.match(/CriOS\/([\d.]+)/)) || (firefox && ua.match(/Mobile/))))
+    os.tablet = !!(ipad || playbook || (android && !ua.match(/Mobile/)) ||
+      (firefox && ua.match(/Tablet/)) || (ie && !ua.match(/Phone/) && ua.match(/Touch/)))
+    os.phone  = !!(!os.tablet && !os.ipod && (android || iphone || webos || blackberry || bb10 ||
+      (chrome && ua.match(/Android/)) || (chrome && ua.match(/CriOS\/([\d.]+)/)) ||
+      (firefox && ua.match(/Mobile/)) || (ie && ua.match(/Touch/))))
   }
 
   detect.call($, navigator.userAgent)
@@ -3440,13 +3516,13 @@ define("zepto/touch", function(){});
 define("zepto/detect", function(){});
 
 //     Zepto.js
-//     (c) 2010-2012 Thomas Fuchs
+//     (c) 2010-2013 Thomas Fuchs
 //     Zepto.js may be freely distributed under the MIT license.
 
 ;(function ($) {
-  $.fn.serializeArray = function () {
+  $.fn.serializeArray = function() {
     var result = [], el
-    $( Array.prototype.slice.call(this.get(0).elements) ).each(function () {
+    $([].slice.call(this.get(0).elements)).each(function(){
       el = $(this)
       var type = el.attr('type')
       if (this.nodeName.toLowerCase() != 'fieldset' &&
@@ -3460,15 +3536,15 @@ define("zepto/detect", function(){});
     return result
   }
 
-  $.fn.serialize = function () {
+  $.fn.serialize = function(){
     var result = []
-    this.serializeArray().forEach(function (elm) {
-      result.push( encodeURIComponent(elm.name) + '=' + encodeURIComponent(elm.value) )
+    this.serializeArray().forEach(function(elm){
+      result.push(encodeURIComponent(elm.name) + '=' + encodeURIComponent(elm.value))
     })
     return result.join('&')
   }
 
-  $.fn.submit = function (callback) {
+  $.fn.submit = function(callback) {
     if (callback) this.bind('submit', callback)
     else if (this.length) {
       var event = $.Event('submit')
@@ -3483,7 +3559,7 @@ define("zepto/detect", function(){});
 define("zepto/form", function(){});
 
 //     Zepto.js
-//     (c) 2010-2012 Thomas Fuchs
+//     (c) 2010-2013 Thomas Fuchs
 //     Zepto.js may be freely distributed under the MIT license.
 
 ;(function($){
@@ -3539,7 +3615,7 @@ define("zepto/form", function(){});
   function ajaxError(error, type, xhr, settings) {
     var context = settings.context
     settings.error.call(context, xhr, type, error)
-    triggerGlobal(settings, context, 'ajaxError', [xhr, settings, error])
+    triggerGlobal(settings, context, 'ajaxError', [xhr, settings, error || type])
     ajaxComplete(type, xhr, settings)
   }
   // status: "success", "notmodified", "error", "timeout", "abort", "parsererror"
@@ -3556,7 +3632,9 @@ define("zepto/form", function(){});
   $.ajaxJSONP = function(options){
     if (!('type' in options)) return $.ajax(options)
 
-    var callbackName = 'jsonp' + (++jsonpID),
+    var _callbackName = options.jsonpCallback,
+      callbackName = ($.isFunction(_callbackName) ?
+        _callbackName() : _callbackName) || ('jsonp' + (++jsonpID)),
       script = document.createElement('script'),
       cleanup = function() {
         clearTimeout(abortTimeout)
@@ -3640,6 +3718,7 @@ define("zepto/form", function(){});
   }
 
   function appendQuery(url, query) {
+    if (query == '') return url
     return (url + '&' + query).replace(/[&?]{1,2}/, '?')
   }
 
@@ -3666,7 +3745,9 @@ define("zepto/form", function(){});
 
     var dataType = settings.dataType, hasPlaceholder = /=\?/.test(settings.url)
     if (dataType == 'jsonp' || hasPlaceholder) {
-      if (!hasPlaceholder) settings.url = appendQuery(settings.url, 'callback=?')
+      if (!hasPlaceholder)
+        settings.url = appendQuery(settings.url,
+          settings.jsonp ? (settings.jsonp + '=?') : settings.jsonp === false ? '' : 'callback=?')
       return $.ajaxJSONP(settings)
     }
 
@@ -3704,7 +3785,7 @@ define("zepto/form", function(){});
           if (error) ajaxError(error, 'parsererror', xhr, settings)
           else ajaxSuccess(result, xhr, settings)
         } else {
-          ajaxError(null, xhr.status ? 'error' : 'abort', xhr, settings)
+          ajaxError(xhr.statusText || null, xhr.status ? 'error' : 'abort', xhr, settings)
         }
       }
     }
@@ -5320,7 +5401,7 @@ define('mout/array/every',['../function/makeIterator_'], function (makeIterator)
 @grunt -task=comp-js-all
 */
 define('sayyes/plugins/plugin-nav',[
-	"sayyes/modules/log"
+	"sayyes/util/log"
 ],function(
 	log
 ){
@@ -5551,85 +5632,124 @@ define('mout/object/keys',['./forOwn'], function (forOwn) {
 
 });
 
+define('mout/lang/isString',['./isKind'], function (isKind) {
+    /**
+     */
+    function isString(val) {
+        return isKind(val, 'String');
+    }
+    return isString;
+});
+
 /*
 @grunt -task=comp-js-all
 */
-define('sayyes/modules/vo',[
+define('sayyes/util/model',[
 	"mout/array/map",
 	"mout/array/difference",
-	"mout/object/keys"
+	"mout/object/keys",
+	"mout/object/hasOwn",
+	"mout/object/mixIn",
+	"mout/lang/isString"
 ], function (
 	map,
 	difference,
-	keys
+	keys,
+	has_own,
+	mix_in,
+	is_string
 ) {
+	function _cast(data) {
+		return function(prop){
+			if (!is_string(prop)){
+				throw  "attempt to create a property that isn't a String";
+			}
+			data[prop] = null;
+		};
+	}
 
-	var VO, ViewVO, ListVO, __cast;
+	var model = function () {
 
-	__cast = function (scope) {
-		return function(value){
-			scope[value] = null;
+		var value = {};
+
+		if (!!arguments.length){
+			if (arguments.length===1 && typeof arguments[0] === "object"){
+				value = arguments[0];
+			} else {
+				map(Array.prototype.slice.call(arguments),_cast(value));
+			}
+		}
+
+		this.implements = function () {
+			if (!arguments.length) {
+				return false;
+			}
+			var dna = keys(value),
+				props = null,
+				diff = null;
+			if (!!arguments.length){
+				if (arguments.length===1 && typeof arguments[0] === "object"){
+					props = keys(arguments[0]);
+				} else {
+					props = Array.prototype.slice.call(arguments);
+				}
+			}
+			return dna.length === props.length && difference(props,dna).length===0;
+		};
+
+		this.set = function (prop,val) {
+			if (!this.has(prop)){
+				throw "attempt to create new prop '"+prop+"'";
+			}
+			value[prop] = val;
+		};
+
+		this.has = function(prop){
+			return has_own(value,prop);
+		};
+
+		this.get = function (prop) {
+			return value[prop];
+		};
+
+		this.keys = function () {
+			return keys(value);
+		};
+
+		this.compose = function (object) {
+			mix_in(value,object);
+		};
+
+		this.clone = function () {
+			return new model(value);
+		};
+
+		this.data = function () {
+			return value;
 		};
 	};
 
-	VO = function(){
-		if (!!arguments.length){
-			var props = Array.prototype.slice.call(arguments);
-			this.__dna = props;
-			map(props,__cast(this));
-		}
+	return model;
+});
+define('sayyes/util/vo/result-vo',["sayyes/util/model"], function (model) {
+	var vo = function() {
+		return new model("status","exception", "message", "value");
 	};
-	VO.prototype = {
-
-		fromJSON : function (data){
-			console.log(data);
-		},
-
-		implements : function (value) {
-			if (!value){
-				return false;
-			}
-			var props = keys(value),
-				diff = difference(this.__dna,props);
-			return diff.length===0;
-		},
-
-		set : function (prop,value) {
-
-		}
-	};
-
-	ViewVO = function() { VO.call(this,"name","template_name","data"); };
-	ViewVO.prototype = new VO();
-	ViewVO.prototype.constructor = VO;
-
-	ControllerVO = function() { VO.call(this,"id","attendant","client","start_with","views"); };
-	ControllerVO.prototype = new VO();
-	ControllerVO.prototype.constructor = VO;
-
-	ResultVO = function() { VO.call(this,"status","exception", "message", "value"); };
-	ResultVO.prototype = new VO();
-	ResultVO.prototype.constructor = VO;
-
-	return {
-		view : ViewVO,
-		controller : ControllerVO,
-		result : ResultVO
-	};
+	return vo;
 });
 /*
 @grunt -task=comp-js-all
 */
-define('sayyes/modules/ajax',[
-	"sayyes/modules/log",
-	"sayyes/modules/vo",
+define('sayyes/util/ajax',[
+	"sayyes/util/log",
+	"sayyes/util/vo/result-vo",
 	"signals/signals",
 	"mout/lang/kindOf",
 	"mout/array/every",
 	"mout/object/hasOwn"
 ],function(
 	log,
-	vo,
+	result_vo,
 	signals,
 	kindOf,
 	every,
@@ -5639,55 +5759,67 @@ define('sayyes/modules/ajax',[
 	function validate (xhr) {
 
 		var result, passed, prop, val, prop_fail;
-		if (kindOf(xhr) === "Object"){
-			passed = every(this._xpect,function(value){
-				prop = value[0]; val = value[1];
-				switch(kindOf(val)){
-					case "Function":
-						return hasOwn(xhr,prop) && val.call(null,xhr[prop]);
-					default:
-						return hasOwn(xhr,prop) && xhr[prop] === val;
+
+		if (this.options.dataType === "json"){
+			if (kindOf(xhr) === "Object"){
+				passed = every(this._xpect,function(value){
+					prop = value[0]; val = value[1];
+					switch(kindOf(val)){
+						case "Function":
+							return hasOwn(xhr,prop) && val.call(null,xhr[prop]);
+						default:
+							return hasOwn(xhr,prop) && xhr[prop] === val;
+					}
+				});
+				if (passed===false){
+					result = new result_vo();
+					result.set("status","error");
+					result.set("exception" , this.NOT_MATCH);
+					result.set("message", "'"+prop+"' doesn't match expected value");
+					this.result = result.data();
+					this.on.error.dispatch(this.result);
+					return;
 				}
-			});
-			if (passed===false){
-				result = new vo.result();
-				result.status = "error";
-				result.exception = -101;
-				result.message = "'"+prop+"' doesn't match expected value";
-				return result;
+				this.result = xhr;
+				this.on.success.dispatch(this.result);
+			} else {
+				result = new result_vo();
+				result.set("status", "error");
+				result.set("exception", this.MALFORMED_JSON);
+				result.set("message", "result isn't a valid JSON");
+				this.result = result.data();
+				this.on.error.dispatch(this.result);
 			}
-			return xhr;
 		} else {
-			result = new vo.result();
-			result.status = "error";
-			result.exception = -100;
-			result.message = "result isn't a valid json";
-			return result;
+			//TODO
+			this.result = xhr;
+			this.on.success.dispatch(this.result);
 		}
 	}
 
 	function on_success (xhr) {
-		if (!!this.default_result && !this.default_result.implements(xhr)) {
-			this.result = xhr;
+		if (!!this._xpect){
+			validate.bind(this)(xhr);
+			return;
+		}
+		if (xhr===null){
+			var vo = new result_vo();
+			vo.set("status","error");
+			vo.set("exception",this.REQUEST_FAILED);
+			vo.set("message","XHR couldn't complete the resquest");
+			this.result = vo.data();
 			this.on.error.dispatch(this.result);
 			return;
 		}
-		if (!!this._xpect){
-			xhr = validate.bind(this)(xhr);
-		}
 		this.result = xhr;
-		if (this.result.status!=="error"){
-			this.on.success.dispatch(this.result);
-			return;
-		}
-		this.on.error.dispatch(this.result);
+		this.on.success.dispatch(this.result);
 	}
 
-	function on_error(xhr){
-		this.result = new vo.result();
-		this.result.expection = xhr.status;
-		this.result.message = xhr.responseText;
-		this.on.error.dispatch(this.result);
+	function on_error(xhr, type){
+		this.result = new result_vo();
+		this.result.set("exception", xhr.status);
+		this.result.set("message", xhr.responseText);
+		this.on.error.dispatch(this.result.data());
 	}
 
 	function __init(instance){
@@ -5695,9 +5827,8 @@ define('sayyes/modules/ajax',[
 			success : new signals(),
 			error : new signals()
 		};
-		instance.default_result = new vo.result();
 		instance.options = {
-			type : "POST",
+			type : "GET",
 			url : null,
 			data  : null,
 			processData : false,
@@ -5708,6 +5839,10 @@ define('sayyes/modules/ajax',[
 			success : on_success.bind(instance),
 			error : on_error.bind(instance)
 		};
+		instance.MALFORMED_JSON = -100;
+		instance.NOT_MATCH = -101;
+		instance.REQUEST_FAILED = -102;
+		instance.ALLOWED_TYPES = ["json", "jsonp", "xml", "html", "text"];
 	}
 
 	var ajax = function(type){
@@ -5722,22 +5857,34 @@ define('sayyes/modules/ajax',[
 			return this;
 		},
 
-		type : function () {
+		type : function (value, jsonp_callback) {
+			if (this.ALLOWED_TYPES.indexOf(value)===-1){
+				throw "argument must be:'"+this.ALLOWED_TYPES.join("','")+"'";
+			}
+			if (value==="jsonp" && !!jsonp_callback){
+				this.options.jsonpCallback = jsonp_callback;
+			}
 			this.options.dataType = value || this.options.dataType;
 			return this;
 		},
 
 		allow_cache : function (value) {
-			this.options.cache = value;
+			this.options.cache = Boolean(value);
 			return this;
 		},
 
 		success : function (fn) {
+			if (!fn || typeof fn !== "function") {
+				throw "argument must be a function";
+			}
 			this.on.success.add(fn);
 			return this;
 		},
 
 		error : function (fn) {
+			if (!fn || typeof fn !== "function") {
+				throw "argument must be a function";
+			}
 			this.on.error.add(fn);
 			return this;
 		},
@@ -5745,6 +5892,8 @@ define('sayyes/modules/ajax',[
 		dispose : function (){
 			this.on.error.removeAll();
 			this.on.success.removeAll();
+			this.mock_data = null;
+			__init(this);
 		},
 
 		expect : function (prop,to_be) {
@@ -5755,18 +5904,27 @@ define('sayyes/modules/ajax',[
 			return this;
 		},
 
+		mock : function (data) {
+			this.mock_data = data;
+			return this;
+		},
+
 		request : function (url, data) {
 			if (!url){
 				log.error("ajax.request can't be done without url.");
 				return null;
 			}
-			this.options.url = url;
-			this.options.data = data;
-			log.info("ajax.request => "+url + " method:"+this.options.type, this.options.data);
-			$.ajax(this.options);
+			if (!!this.mock_data){
+				this.options.success(this.mock_data);
+				this.mock_data = undefined;
+			} else {
+				this.options.url = url;
+				this.options.data = data;
+				log.info("ajax.request => "+url + " method:"+this.options.type, " data:", this.options.data);
+				$.ajax(this.options);
+			}
 			return this;
 		}
-
 	};
 
 	return ajax;
@@ -5776,9 +5934,9 @@ define('sayyes/modules/ajax',[
 */
 define('sayyes/plugins/plugin-form',[
 	"mout/object/mixIn",
-	"sayyes/modules/log",
+	"sayyes/util/log",
 	"signals/signals",
-	"sayyes/modules/ajax"
+	"sayyes/util/ajax"
 ],function(
 	mix_in,
 	log,
@@ -5893,7 +6051,7 @@ define('sayyes/modules/view',[
 	"mout/array/every",
 	"mustache/mustache",
 	"signals/signals",
-	"sayyes/modules/log",
+	"sayyes/util/log",
 	"sayyes/plugins/plugin-nav",
 	"sayyes/plugins/plugin-form"
 ], function (
@@ -6049,6 +6207,18 @@ define('sayyes/modules/view',[
 		return new View(config);
 	};
 });
+define('sayyes/util/vo/view-vo',["sayyes/util/model"], function (model) {
+	var vo = function() {
+		return new model("name","template_name","data");
+	};
+	return vo;
+});
+define('sayyes/util/vo/controller-vo',["sayyes/util/model"], function (model) {
+	var vo = function() {
+		return new model("id","attendant","client","start_with","views");
+	};
+	return vo;
+});
 define('sayyes/helpers/helper-nav',[],function(){
 	return {
 		has_nav : function (){
@@ -6098,10 +6268,11 @@ define('mout/array/find',['./findIndex'], function (findIndex) {
 @grunt -task=comp-js-all
 */
 define('sayyes/modules/controller',[
-	"sayyes/modules/log",
+	"sayyes/util/log",
 	"sayyes/modules/view",
-	"sayyes/modules/vo",
-	"sayyes/modules/ajax",
+	"sayyes/util/vo/view-vo",
+	"sayyes/util/vo/controller-vo",
+	"sayyes/util/ajax",
 	"sayyes/helpers/helper-nav",
 	"mout/object/mixIn",
 	"mout/array/find",
@@ -6109,7 +6280,8 @@ define('sayyes/modules/controller',[
 ], function (
 	log,
 	view,
-	vo,
+	view_vo,
+	controller_vo,
 	ajax,
 	helper_nav,
 	mix_in,
@@ -6122,22 +6294,22 @@ define('sayyes/modules/controller',[
 	error = "error";
 	warn = "warn";
 
-	_view_vo = new vo.view();
-	_controller_vo = new vo.controller();
+	_view_vo = new view_vo();
+	_controller_vo = new controller_vo();
 
 	_notify  = function (self, message, severity) {
 		return function (value) {
 			switch (severity) {
 				case warn :
-					log.warn(message);
+					log.warn(message,value);
 					self.on.warn.dispatch(message, value);
 				break;
 				case error :
-					log.error(message);
+					log.error(message,value);
 					self.on.error.dispatch(message, value);
 				break;
 				default:
-					log.info(message);
+					log.info(message,value);
 					self.on.info.dispatch(message, value);
 				break;
 			}
@@ -6306,10 +6478,10 @@ define('sayyes/modules/controller',[
 	};
 });
 /*
-@grunt -task=comp-js-all
+@grunt -task=comp-js -app=test-view
 */
 require([
-	"sayyes/modules/log",
+	"sayyes/util/log",
 	"sayyes/modules/core",
 	"lib/domReady",
 	"sayyes/modules/controller"

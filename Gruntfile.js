@@ -123,10 +123,10 @@ module.exports = function (grunt) {
 				paths = grunt.config.get("paths");
 			paths = render(paths);
 			command = render(command,paths);
-			grunt.log.warn("Cleaning all tests before ...");
+			grunt.log.warn("Cleaning all tests and generated files...");
 			bash(command,null,grunt);
 		}
-		grunt.task.run(["comp-js-all","pages"]);
+		grunt.task.run(["comp-js-all","pages","comp-sass"]);
 	});
 
 	grunt.registerTask('sass-watch', "Starts the sass -watch command", function () {

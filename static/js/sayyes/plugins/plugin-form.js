@@ -3,9 +3,9 @@
 */
 define([
 	"mout/object/mixIn",
-	"sayyes/modules/log",
+	"sayyes/util/log",
 	"signals/signals",
-	"sayyes/modules/ajax"
+	"sayyes/util/ajax"
 ],function(
 	mix_in,
 	log,

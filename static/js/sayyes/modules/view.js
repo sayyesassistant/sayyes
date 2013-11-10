@@ -7,7 +7,7 @@ define([
 	"mout/array/every",
 	"mustache/mustache",
 	"signals/signals",
-	"sayyes/modules/log",
+	"sayyes/util/log",
 	"sayyes/plugins/plugin-nav",
 	"sayyes/plugins/plugin-form"
 ], function (

@@ -2,7 +2,7 @@
 @grunt -task=comp-js-all
 */
 define([
-	"sayyes/modules/log"
+	"sayyes/util/log"
 ],function(
 	log
 ){

@@ -2,7 +2,7 @@
 @grunt -task=comp-js-all
 */
 define([
-	"sayyes/modules/log",
+	"sayyes/util/log",
 	"sayyes/util/vo/result-vo",
 	"signals/signals",
 	"mout/lang/kindOf",
@@ -21,7 +21,7 @@ define([
 
 		var result, passed, prop, val, prop_fail;
 
-		if (this.options.dataType == "json"){
+		if (this.options.dataType === "json"){
 			if (kindOf(xhr) === "Object"){
 				passed = every(this._xpect,function(value){
 					prop = value[0]; val = value[1];

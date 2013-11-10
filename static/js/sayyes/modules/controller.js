@@ -2,10 +2,11 @@
 @grunt -task=comp-js-all
 */
 define([
-	"sayyes/modules/log",
+	"sayyes/util/log",
 	"sayyes/modules/view",
-	"sayyes/modules/vo",
-	"sayyes/modules/ajax",
+	"sayyes/util/vo/view-vo",
+	"sayyes/util/vo/controller-vo",
+	"sayyes/util/ajax",
 	"sayyes/helpers/helper-nav",
 	"mout/object/mixIn",
 	"mout/array/find",
@@ -13,7 +14,8 @@ define([
 ], function (
 	log,
 	view,
-	vo,
+	view_vo,
+	controller_vo,
 	ajax,
 	helper_nav,
 	mix_in,
@@ -26,8 +28,8 @@ define([
 	error = "error";
 	warn = "warn";
 
-	_view_vo = new vo.view();
-	_controller_vo = new vo.controller();
+	_view_vo = new view_vo();
+	_controller_vo = new controller_vo();
 
 	_notify  = function (self, message, severity) {
 		return function (value) {

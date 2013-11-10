@@ -19,14 +19,27 @@
 			"test_title" : "Simple View test"
 		}
 	},
-	"controller" : {
-		"dest" : "{{{examples}}}/controller-test.html",
+	"controller-local" : {
+		"dest" : "{{{examples}}}/controller-local.html",
 		"files" : ["{{{templates}}}/inc/header.mustache","{{{templates}}}/pages/tmplt-test-controller.mustache","{{{templates}}}/inc/footer.mustache"],
 		"raw": {
 			"mock_template": "{{{templates}}}/views/view-mock.mustache"
 		},
 		"data" : {
-			"js" : "{{{www_js_folder}}}/test-controller-min.js",
+			"js" : "{{{www_js_folder}}}/test-controller-local-min.js",
+			"css" : "{{{www_css_folder}}}/guideline-min.css",
+			"templates" : ["mock_template"],
+			"test_title" : "Controller test"
+		}
+	},
+	"controller-service" : {
+		"dest" : "{{{examples}}}/controller-service.html",
+		"files" : ["{{{templates}}}/inc/header.mustache","{{{templates}}}/pages/tmplt-test-controller.mustache","{{{templates}}}/inc/footer.mustache"],
+		"raw": {
+			"mock_template": "{{{templates}}}/views/view-mock.mustache"
+		},
+		"data" : {
+			"js" : "{{{www_js_folder}}}/test-controller-service-min.js",
 			"css" : "{{{www_css_folder}}}/guideline-min.css",
 			"templates" : ["mock_template"],
 			"test_title" : "Controller test"
@@ -39,7 +52,7 @@
 		"data" : {
 			"css" : "{{{www_css_folder}}}/guideline-min.css",
 			"test_title" : "Table of content:",
-			"tests" : ["controller-test.html","simple-view.html"]
+			"tests" : ["controller-service.html","controller-local.html","simple-view.html"]
 		}
 	}
 }

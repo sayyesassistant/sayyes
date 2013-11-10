@@ -1,8 +1,8 @@
 /*
-@grunt -task=comp-js-all
+@grunt -task=comp-js -app=test-view
 */
 require([
-	"sayyes/modules/log",
+	"sayyes/util/log",
 	"sayyes/modules/core",
 	"lib/domReady",
 	"sayyes/modules/controller"
