@@ -2,7 +2,7 @@
 @grunt -task=comp-js-all
 */
 require([
-	"sayyes/modules/log",
+	"sayyes/util/log",
 	"sayyes/modules/core",
 	"lib/domReady",
 	"sayyes/modules/controller"
