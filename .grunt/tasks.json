@@ -11,7 +11,7 @@
 	},
 	"clear-tests" : {
 		"cmd" : "rm",
-		"args" : ["-f","{{{examples}}}/*.html","{{{dest_js_folder}}}/*.js","{{{dest_css_folder}}}/*.css"]
+		"args" : ["-f","{{{examples}}}/*.html","{{{dest_js_folder}}}/*.{js,map}","{{{dest_css_folder}}}/*.css"]
 	},
 	"sass-watch" : {
 
