@@ -26,11 +26,11 @@ class User(ndb.Model):
         pwd = self.hash(pwd)
         return self.query(User.email == email.strip(), User.pwd == pwd).get()
 
-class Layout(ndb.Model):
+class Template(ndb.Model):
 
     title = ndb.StringProperty(required=True)
     user = ndb.KeyProperty(kind=User)
-    bg = ndb.BlobProperty(compressed=True)
+    html = ndb.StringProperty(required=True)
     created = ndb.DateTimeProperty(auto_now_add=True)
     modified = ndb.DateTimeProperty(auto_now_add=True)
 
@@ -44,7 +44,7 @@ class Session(ndb.Model):
     instruction = ndb.JsonProperty(required=True, compressed=True)
     userData = ndb.JsonProperty(compressed=True)
     user = ndb.KeyProperty(kind=User)
-    layout = ndb.KeyProperty(kind=Layout)
+    template = ndb.KeyProperty(kind=Template)
     created = ndb.DateTimeProperty(auto_now_add=True)
     modified = ndb.DateTimeProperty(auto_now_add=True)
 

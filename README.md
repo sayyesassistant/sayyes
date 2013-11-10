@@ -124,6 +124,7 @@ Simple output example (data outputed, could be object/html or even binary):
 ###Exception Index:
 
 * `#1` - Validation error, entity could not be created.
+* `#2` - Authentication failure.
 
 ##<a id="tw"></a>Testing workflow
 

@@ -4,7 +4,8 @@ import jinja2
 import logging
 import os
 import webapp2
-from util import Util
+from models import *
+from util import *
 from webapp2_extras import sessions
 
 JINJA_ENVIRONMENT = jinja2.Environment(
@@ -93,6 +94,19 @@ class AppHandler(webapp2.RequestHandler):
             return True
         else:
             return False
+
+    def authKey(self, accessKey, email):
+        
+        user = User()
+        user = User.query(User.email == email).get()
+
+        if user is None or user.accessKey != accessKey:
+            errors['authenticationFailed'] = "Invalid e-mail or access key"
+            errors['accessKeySent'] = accessKey
+            errors['emailSent'] = email
+            return None
+
+        return user
         
         
         

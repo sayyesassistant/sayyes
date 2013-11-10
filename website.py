@@ -12,12 +12,12 @@ from google.appengine.ext import ndb
 
 class HomePage(AppHandler):
     def get(self):
-        
+
         templateValues = {'teste':'teste'}
         self.render(Const.WEBSITE + 'index.html', templateValues)
-        
+
 class Profile(AppHandler):
-    
+
     def get(self):
         # check the browser session
         self.logged()
@@ -27,13 +27,13 @@ class Profile(AppHandler):
         templateValues = {}
         templateValues['auth'] = self.auth
         templateValues['user'] = User.get_by_id(self.auth['key'])
-        
+
         self.render(Const.WEBSITE + 'profile.html', templateValues)
-        
+
     def post(self):
-        
+
         errors = {}
-        
+
         try:
             self.logged()
             user = User.get_by_id(self.auth['key'])
@@ -187,7 +187,7 @@ class ForgotPassword(AppHandler):
             message.send()
         # returns success anyway as you cannot tell if email was found
         self.jsonSuccess()
-        
+
 class CP(AppHandler):
     def get(self):
 
@@ -200,62 +200,91 @@ class CP(AppHandler):
         templateValues['auth'] = self.auth
 
         key = ndb.Key(User, self.auth['key'])
-        
+
         query = Session.queryUser(key)
         templateValues['sessions'] = query.fetch(10)
 
-        query2 = Layout.queryUser(key)
-        templateValues['layouts'] = query2.fetch(10)
-        #logging.info(templateValues['layouts'])
+        query2 = Template.queryUser(key)
+        templateValues['templates'] = query2.fetch(10)
+        #logging.info(templateValues['templates'])
 
         # um exemplo do json p/ testes
         j = {
-            'attendant': {
-                'name': 'Maria Das Couves',
-                'email': 'mary@email.com',
-                'phone': '+55 11 2233-4499'
-            },
-            'client': {
-                'name': 'Alberto Das Couves',
-                'email': 'alberto@email.com'
-            },
-            'step1': {
-                'output': {
-                    'content': 'Step 1!',
-                    'type': 'text'
-                },
-                'input': {
-                    'type': 'button',
-                    'options': {
-                        'value': 'Yes, please!',
-                        'action': 'step2'
-                    }
-                },
-                'input': {
-                    'type': 'button',
-                    'options': {
-                        'value': 'No, thanks.',
-                        'action': 'endSession'
-                    }
+            "name":"simple-view",
+            "template_name":"mock_template",
+            "data":{
+                "title":"Mock View example",
+                "description":"Some description goes here",
+                "nav":[{
+                    "label":"nav to <view>",
+                    "view":"foo"
+                }],
+                "form": {
+                    "action": "/mock-service/foo.json",
+                    "method": "post",
+                    "id": "sayyes",
+                    "on_success": "nav=a",
+                    "on_error": "alert",
+                    "hiddens": [{
+                        "name":"expect",
+                        "value":"false"
+                    }],
+                    "buttons": [{
+                        "label":"send",
+                        "value":"foo"
+                    }],
+                    "inputs": [{
+                        "name":"name",
+                        "type":"text",
+                        "placeholder":"Type your name",
+                        "required": "required"
+                    }, {
+                        "name":"email",
+                        "type":"email",
+                        "placeholder":"Type your email",
+                        "required":"required"
+                    }]
                 }
-            },
-            'step2': {
-                'output': {
-                    'content': "Oh my god, that's Step 2!",
-                    'type': 'text'
-                },
-                'input': {
-                    'type': 'button',
-                    'options': {
-                        'value': "That's the end baby!",
-                        'action': 'endSession'
-                    }
-                },
             }
         }
 
         templateValues['json'] = json.dumps(j)
-        
+        templateValues['html'] = """
+<div class="view">
+	<div class="alert"></div>
+	{{#title}}
+		<h1>{{{title}}}</h1>
+	{{/title}}
+	{{#description}}
+		<h2>{{{description}}}</h2>
+	{{/description}}
+	{{#has_nav}}
+		<nav>
+			<ul>
+			{{#nav}}
+				<a href="#{{{view}}}" data-role="nav">{{{label}}}</a>
+			{{/nav}}
+			</ul>
+		</nav>
+	{{/has_nav}}
+	{{#form}}
+		<form id="{{{form.id}}}" action="{{{form.action}}}" method="{{{form.method}}}" data-on-success="{{{form.on_success}}}" data-on-error="{{{form.on_error}}}">
+			{{#form.hiddens}}
+				<input type="hidden" name="{{{name}}}" value="{{{value}}}" />
+			{{/form.hiddens}}
+			{{#form.inputs}}
+				<input type="{{{type}}}" name="{{{name}}}" placeholder="{{{placeholder}}}" {{{required}}} />
+			{{/form.inputs}}
+			<nav>
+			{{#form.buttons}}
+				<button value="{{{value}}}">{{{label}}}</button>
+			{{/form.buttons}}
+			</nav>
+		</form>
+	{{/form}}
+</div>
+"""
+
         self.render(Const.WEBSITE + 'cp.html', templateValues)
 
 config = {}
