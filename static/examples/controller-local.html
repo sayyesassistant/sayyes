@@ -1,0 +1,125 @@
+<!doctype html>
+<!--[if lt IE 8]><html class="no-js ie lt-ie8 lt-ie9"><![endif]-->
+<!--[if lt IE 9]><html class="no-js ie lt-ie9"><![endif]-->
+<!--[if gte IE 9]><!--><html class="no-js"><!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<title>Sayyes :: Controller test</title>
+	<script type="text/javascript">
+		(function(d){ d.className = d.className.replace('no-js', 'js'); })(document.documentElement);
+	</script>
+	<script type="text/javascript" charset="utf-8">
+	//foo
+			var mock = {
+	"start_with":"a",
+	"id":"ABC123",
+	"attendant":{
+		"id":"foo",
+		"name":"Attendant Name",
+		"email":"foo@sayyes.com",
+		"phone":null
+	},
+	"client":null,
+	"views" : [{
+		"name":"a",
+		"template_name":"mock_template",
+		"data":{
+		"title":"Mock View example",
+		"description":"Some description goes here",
+		"nav":[{
+			"label":"no forms please!",
+			"view":"b"
+		}],
+		"form" : {
+			"action" : "/mock-service/login.json",
+			"method" : "GET",
+			"id" : "sayyes",
+			"on_success" : "nav=b",
+			"on_error" : "alert",
+			"hiddens" : [{
+				"name":"expect",
+				"value":"false"
+			}],
+			"buttons" : [{
+				"label":"check...",
+				"value":"foo"
+			}],
+			"inputs" : [{
+				"name":"name",
+				"type":"text",
+				"placeholder":"your name",
+				"required" : "required"
+			},{
+				"name":"email",
+				"type":"email",
+				"placeholder":"Type your email",
+				"required":"required"
+			}]
+		}
+	}
+		} , {
+
+		"name":"b",
+		"template_name":"mock_template",
+		"data":{
+			"title":"I can't see your info!",
+			"description":"Seems that you don't like forms!",
+			"nav":[{
+				"label":"try again",
+				"view":"a"
+			}]
+		}
+	}]
+};
+			(function (s, h) {
+				s.async = true;
+				s.type = 'text/javascript';
+				s.src = "/js-min/test-controller-local-min.js";
+				h.appendChild(s);
+			}(document.createElement('script'), document.documentElement));
+	</script>
+	<link rel="stylesheet" type="text/css" href="/css-min/guideline-min.css" /></link>
+</head>
+
+<body>
+	<h1>-- Controller test ---</h1>
+	<hr/>
+	<div id="sayyes-assistant"></div>
+
+	<script id="mock_template" type="text/mustache-template" charset="utf-8">
+		<div class="view">
+	<div class="alert"></div>
+	{{#title}}
+		<h1>{{{title}}}</h1>
+	{{/title}}
+	{{#description}}
+		<h2>{{{description}}}</h2>
+	{{/description}}
+	{{#has_nav}}
+		<nav>
+			<ul>
+			{{#nav}}
+				<a href="#{{{view}}}" data-role="nav">{{{label}}}</a>
+			{{/nav}}
+			</ul>
+		</nav>
+	{{/has_nav}}
+	{{#form}}
+		<form id="{{{form.id}}}" action="{{{form.action}}}" method="{{{form.method}}}" data-on-success="{{{form.on_success}}}" data-on-error="{{{form.on_error}}}">
+			{{#form.hiddens}}
+				<input type="hidden" name="{{{name}}}" value="{{{value}}}" />
+			{{/form.hiddens}}
+			{{#form.inputs}}
+				<input type="{{{type}}}" name="{{{name}}}" placeholder="{{{placeholder}}}" {{{required}}} />
+			{{/form.inputs}}
+			<nav>
+			{{#form.buttons}}
+				<button value="{{{value}}}">{{{label}}}</button>
+			{{/form.buttons}}
+			</nav>
+		</form>
+	{{/form}}
+</div>
+	</script>
+</body>
+</html>
