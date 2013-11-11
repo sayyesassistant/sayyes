@@ -6,7 +6,7 @@
 
 ###The kickoff is the [controller](#controller) model
 
-##<a id="controller"></a>controller
+##<a name="controller"></a>controller
 
 Designed for wrapping all controller's information
 
@@ -20,7 +20,7 @@ Designed for wrapping all controller's information
 
 -`views` **Array** of [view](#view)
 
-##<a id="attendant_data"></a>attendant_data
+##<a name="attendant_data"></a>attendant_data
 
 Designed for wrapping attendant's information
 
@@ -32,7 +32,7 @@ Designed for wrapping attendant's information
 
 -`phone` **String**
 
-##<a id="client_data"></a>client_data
+##<a name="client_data"></a>client_data
 
 Designed for wrapping client's information
 
@@ -42,7 +42,7 @@ Designed for wrapping client's information
 
 -`email` **String**
 
-##<a id="view"></a>view
+##<a name="view"></a>view
 
 Designed for wrapping views
 
@@ -52,7 +52,7 @@ Designed for wrapping views
 
 -`data` intance of [view_data](#view_data)
 
-##<a id="view_data"></a>view_data
+##<a name="view_data"></a>view_data
 
 Designed for wrapping all possible data that can be **rendered by the template**.
 
@@ -68,7 +68,7 @@ Designed for wrapping all possible data that can be **rendered by the template**
 
 -`form` intance of [form_data](#form_data)
 
-##<a id="nav_data"></a>nav_data
+##<a name="nav_data"></a>nav_data
 
 Designed for navigation buttons
 
@@ -76,7 +76,7 @@ Designed for navigation buttons
 
 -`label` **String**
 
-##<a id="picture_data"></a>picture_data
+##<a name="picture_data"></a>picture_data
 
 Designed for showing pictures.
 
@@ -84,7 +84,7 @@ Designed for showing pictures.
 
 -`caption` **String**
 
-##<a id="form_data"></a>form_data
+##<a name="form_data"></a>form_data
 
 Designed for creating forms.
 
@@ -94,9 +94,9 @@ Designed for creating forms.
 
 -`method` **String**
 
--`on_success` **String** (action to be taken after service's response. ie: nav=foo or alert)
+-`on_success` **String** view's name. This property work as a [nav_data](#nav_data)
 
--`on_error` **String** (action to be taken after service's response. ie: nav=foo or alert)
+-`on_error` **String** view's name. This property work as a [nav_data](#nav_data)
 
 -`hiddens` **Array** of [hidden_data](#hidden_data)
 
@@ -104,7 +104,7 @@ Designed for creating forms.
 
 -`inputs` **Array** of [form_input](#form_input)
 
-##<a id="hidden_data"></a>hidden_data
+##<a name="hidden_data"></a>hidden_data
 
 Designed for rendering hidden informations
 
@@ -112,7 +112,7 @@ Designed for rendering hidden informations
 
 -`value` **String**
 
-##<a id="form_button"></a>form_button
+##<a name="form_button"></a>form_button
 
 Designed for rendering form buttons
 
@@ -120,7 +120,7 @@ Designed for rendering form buttons
 
 -`label` **String**
 
-##<a id="form_input"></a>form_input
+##<a name="form_input"></a>form_input
 
 Designed for rendering **input text**
 

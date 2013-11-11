@@ -12,7 +12,7 @@
 
 - [Testing workflow](#tw)
 
-##<a id="gs"></a>Getting started
+##<a name="gs"></a>Getting started
 
 ###Front end dependencies setup:
 
@@ -47,7 +47,7 @@ Now that you are good to go, check grunt available tasks by hitting:
 
 		grunt -h (@see 'Available tasks')
 
-##<a id="dm"></a>Template Modeling
+##<a name="dm"></a>Template Modeling
 
 All the core of Say Yes! is about providing a reliable json config and the javascript and tempaltes will do the magic.
 
@@ -55,7 +55,7 @@ There is list of available models for this purposes.
 
 [Check here](https://github.com/sayyesassistant/sayyes/blob/master/static/templates/README.md)
 
-##<a id="ss"></a>Service standards
+##<a name="ss"></a>Service standards
 
 ###Service modeling
 
@@ -126,7 +126,7 @@ Simple output example (data outputed, could be object/html or even binary):
 * `#1` - Validation error, entity could not be created.
 * `#2` - Authentication failure.
 
-##<a id="tw"></a>Testing workflow
+##<a name="tw"></a>Testing workflow
 
 When you pull the repository no test page will be available.
 

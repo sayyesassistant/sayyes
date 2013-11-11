@@ -43,12 +43,12 @@ define([
 
 	__parseError = function (result){
 		this.view.form_result = result.value;
-		__fireAction.bind(this)(this.on_error);
+		this.view.on.nav.dispatch(this.on_error);
 	};
 
 	__parseSuccess = function (result){
 		this.view.form_result = result.value;
-		__fireAction.bind(this)(this.on_success);
+		this.view.on.nav.dispatch(this.on_success);
 	};
 
 	ClosureFormBind = function(config){
