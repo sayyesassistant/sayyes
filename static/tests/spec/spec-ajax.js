@@ -156,7 +156,7 @@ define(["sayyes/util/ajax"], function(ajax) {
 
 			waitsFor(function(){
 				return !!result;
-			},"error callback to be trigged", 500);
+			},"error callback to be trigged", 2000);
 
 			runs(function(){
 				expect(result.exception).toEqual(404);
