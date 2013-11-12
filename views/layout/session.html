@@ -5,15 +5,20 @@
 <!--[if gte IE 9]><!--><html class="no-js"><!--<![endif]-->
     <head>
         <meta charset="utf-8">
-        <title>Sayyes :: Simple View test</title>
+        <title>Sayyes :: Controller test</title>
         <script type="text/javascript">
             (function(d){ d.className = d.className.replace('no-js', 'js'); })(document.documentElement);
         </script>
         <script type="text/javascript" charset="utf-8">
+            //foo
+            var j = "{{instruction}}";
+            var mock = JSON.parse(j);
+            //console.log(mock.id);
+            //console.log(mock);
             (function (s, h) {
                 s.async = true;
                 s.type = 'text/javascript';
-                s.src = "/js-min/test-controller-min.js";
+                s.src = "/js-min/test-controller-local-min.js";
                 h.appendChild(s);
             }(document.createElement('script'), document.documentElement));
         </script>
@@ -21,13 +26,7 @@
     </head>
     <body>
         <div id="sayyes-assistant"></div>
-        <form id="load-config" method="GET" action="#">
-            <label for="service">
-                Load controller data:
-                <input id="service" name="service" type="text" value="/mock-data/mock-controller.json" required/>
-            </label>
-            <button type="submit">load config</button>
-        </form>
+
         <script id="mock_template" type="text/mustache-template" charset="utf-8">
             {% block template %}{% endblock %}
         </script>

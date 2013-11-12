@@ -30,7 +30,7 @@ class Template(ndb.Model):
 
     title = ndb.StringProperty(required=True)
     user = ndb.KeyProperty(kind=User)
-    html = ndb.StringProperty(required=True)
+    html = ndb.StringProperty(indexed=False, required=True)
     created = ndb.DateTimeProperty(auto_now_add=True)
     modified = ndb.DateTimeProperty(auto_now_add=True)
 

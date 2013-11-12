@@ -210,33 +210,43 @@ class CP(AppHandler):
 
         # um exemplo do json p/ testes
         j = {
-            "name":"simple-view",
-            "template_name":"mock_template",
-            "data":{
+            "start_with":"a",
+            "id":"ABC123",
+            "attendant":{
+                "id":"foo",
+                "name":"Attendant Name",
+                "email":"foo@sayyes.com",
+                "phone":None
+            },
+            "client":None,
+            "views": [{
+                "name":"a",
+                "template_name":"mock_template",
+                "data":{
                 "title":"Mock View example",
                 "description":"Some description goes here",
                 "nav":[{
-                    "label":"nav to <view>",
-                    "view":"foo"
+                    "label":"no forms please!",
+                    "view":"b"
                 }],
                 "form": {
-                    "action": "/mock-service/foo.json",
-                    "method": "post",
+                    "action": "/mock-service/login.json",
+                    "method": "GET",
                     "id": "sayyes",
-                    "on_success": "nav=a",
+                    "on_success": "nav=b",
                     "on_error": "alert",
                     "hiddens": [{
                         "name":"expect",
                         "value":"false"
                     }],
                     "buttons": [{
-                        "label":"send",
+                        "label":"check...",
                         "value":"foo"
                     }],
                     "inputs": [{
                         "name":"name",
                         "type":"text",
-                        "placeholder":"Type your name",
+                        "placeholder":"your name",
                         "required": "required"
                     }, {
                         "name":"email",
@@ -246,6 +256,19 @@ class CP(AppHandler):
                     }]
                 }
             }
+                }, {
+
+                "name":"b",
+                "template_name":"mock_template",
+                "data":{
+                    "title":"I can't see your info!",
+                    "description":"Seems that you don't like forms!",
+                    "nav":[{
+                        "label":"try again",
+                        "view":"a"
+                    }]
+                }
+            }]
         }
 
         templateValues['json'] = json.dumps(j)
