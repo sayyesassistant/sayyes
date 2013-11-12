@@ -209,7 +209,8 @@ class CP(AppHandler):
         #logging.info(templateValues['templates'])
 
         # um exemplo do json p/ testes
-        j = {"start_with":"a",
+        j = {
+            "start_with":"a",
             "id":"ABC123",
             "attendant":{
                 "id":"foo",
