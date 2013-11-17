@@ -101,9 +101,6 @@ class AppHandler(webapp2.RequestHandler):
         user = User.query(User.email == email).get()
 
         if user is None or user.accessKey != accessKey:
-            errors['authenticationFailed'] = "Invalid e-mail or access key"
-            errors['accessKeySent'] = accessKey
-            errors['emailSent'] = email
             return None
 
         return user

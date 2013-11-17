@@ -42,7 +42,6 @@ class Session(ndb.Model):
     
     title = ndb.StringProperty(indexed=False, required=True)
     instruction = ndb.JsonProperty(required=True, compressed=True)
-    userData = ndb.JsonProperty(compressed=True)
     user = ndb.KeyProperty(kind=User)
     template = ndb.KeyProperty(kind=Template)
     created = ndb.DateTimeProperty(auto_now_add=True)
@@ -51,5 +50,16 @@ class Session(ndb.Model):
     @classmethod
     def queryUser(cls, ancestorKey):
         return cls.query(cls.user == ancestorKey).order(-cls.created)
+
+class SessionResponse(ndb.Model):
+
+    response = ndb.JsonProperty(compressed=True)
+    session = ndb.KeyProperty(kind=Session)
+    created = ndb.DateTimeProperty(auto_now_add=True)
+    modified = ndb.DateTimeProperty(auto_now_add=True)
+
+    @classmethod
+    def querySession(cls, ancestorKey):
+        return cls.query(cls.session == ancestorKey).order(-cls.created)
 
     

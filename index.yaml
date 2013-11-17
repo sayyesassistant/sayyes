@@ -13,3 +13,8 @@ indexes:
   - name: user
   - name: created
     direction: desc
+- kind: SessionResponse
+  properties:
+  - name: session
+  - name: created
+    direction: desc

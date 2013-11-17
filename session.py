@@ -85,7 +85,9 @@ class Create(AppHandler):
 
         except Exception as e:
             
-            logging.info(e.args)
+            if len(e.args) > 0:
+                errors['app_exception'] = e.args
+                
             self.jsonError("Session could not be created", 1, errors)
 
 class TemplateCreate(AppHandler):
@@ -118,8 +120,48 @@ class TemplateCreate(AppHandler):
             
         except Exception as e:
 
-            logging.info(e.args)
+            if len(e.args) > 0:
+                errors['app_exception'] = e.args
+                
             self.jsonError("Template could not be created", 2, errors)
+
+class RegisterResponse(AppHandler):
+
+    def post(self):
+
+        errors = {}
+
+        try:
+
+            user = User()
+            accessKey = self.request.get('accessKey')
+            email = self.request.get('email')
+
+            user = self.authKey(accessKey, email);
+            logging.info(user)
+
+            if user is None:
+                errors['authenticationFailed'] = "Invalid e-mail or access key"
+                errors['accessKeySent'] = accessKey
+                errors['emailSent'] = email
+                raise Exception()
+
+            sr = SessionResponse()
+            sr.response = self.request.get('response')
+
+            key = ndb.Key(urlsafe=self.request.get('sessionKey'))
+            sr.session = key
+
+            sr.put()
+
+            self.jsonSuccess()
+
+        except Exception as e:
+
+            if len(e.args) > 0:
+                errors['app_exception'] = e.args
+
+            self.jsonError("Response could not be registered", 2, errors)
 
 
 config = {}
@@ -132,4 +174,5 @@ application = webapp2.WSGIApplication([
     ('/session/create.py', Create),
     ('/session/start.py', Start),
     ('/session/template.py', TemplateCreate),
+    ('/session/response.py', RegisterResponse),
 ], debug=True, config=config)
