@@ -26,8 +26,8 @@
 				"action" : "/mock-service/login.json",
 				"method" : "GET",
 				"id" : "sayyes",
-				"on_success" : "nav=b",
-				"on_error" : "alert",
+				"on_success" : "b",
+				"on_error" : "b",
 				"hiddens" : [{
 					"name":"expect",
 					"value":"false"

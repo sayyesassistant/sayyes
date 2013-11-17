@@ -31,8 +31,8 @@ define([], function () {
 		var blob = new Log(level,args);
 		if (!!instance.keep_history){
 			instance.history.push(blob);
-			if (instance.history.length === instance.max_history) {
-				instance.max_history.shift();
+			if (instance.history.length-1 === instance.max_history) {
+				instance.history.shift();
 			}
 		}
 		if (!!instance.verbose){
@@ -63,7 +63,7 @@ define([], function () {
 		this.type = type;
 		this.message = message;
 		var date = new Date();
-		this.prefix = (date.toTimeString().match(_reg)[0])||"" + ":" + date.getMilliseconds();
+		this.prefix = ((date.toTimeString().match(_reg)[0])||"") + ":" + date.getMilliseconds();
 	};
 
 	Logger = function () {
@@ -81,12 +81,15 @@ define([], function () {
 		error : function (args) {
 			__log(ERR,Array.prototype.slice.call(arguments));
 		},
-		dump : function (){
-			var c,t;
-			t = this.keep_history.length;
-			for (c=0;c<t;t++) {
-				__yeld(this.keep_history[c]);
+		dump : function () {
+			var c = 0,
+				t = this.history.length;
+			for (;c<t;c++) {
+				__yeld(this.history[c]);
 			}
+		},
+		clear : function () {
+			this.history = [];
 		}
 	};
 	__init();
