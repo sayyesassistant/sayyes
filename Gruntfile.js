@@ -70,11 +70,6 @@ module.exports = function (grunt) {
 		}
 	});
 
-	grunt.registerTask( "comp-sass" , "Runs sass compiler.\n@usage: grunt comp-sass -env=final|dev (dev is default)\n@see .grunt/sass.json\n", function () {
-		init();
-		require("./.grunt/tasks/task-comp-sass").run(grunt, this);
-	});
-
 	grunt.registerTask('comp-js', "Build AMD module.\n@usage grunt comp-js -app=app_name -env=final|dev (dev is default)\n@see .grunt/requirejs-config.json\n", function (app) {
 		init();
 		if (!!app){
@@ -85,6 +80,11 @@ module.exports = function (grunt) {
 		}
 		var task = require("./.grunt/tasks/task-comp-js");
 		task.run(grunt, this);
+	});
+
+	grunt.registerTask( "comp-sass" , "Runs sass compiler.\n@usage: grunt comp-sass -env=final|dev (dev is default)\n@see .grunt/sass.json\n", function () {
+		init();
+		require("./.grunt/tasks/task-comp-sass").run(grunt, this);
 	});
 
 	grunt.task.registerTask('comp-js-all', "Run the task 'comp-js' for every app\n@see .grunt/apps.json\n", function () {
@@ -101,7 +101,7 @@ module.exports = function (grunt) {
 		grunt.task.run(tasks);
 	});
 
-	grunt.registerMultiTask('pages', "Create all pages\n@see .grunt/pages.json", function () {
+	grunt.registerMultiTask('examples', "Create all examples\n@see .grunt/pages.json", function () {
 		init();
 		var task = require("./.grunt/tasks/task-create-page");
 		task.run(grunt, this);
@@ -126,7 +126,7 @@ module.exports = function (grunt) {
 			grunt.log.warn("Cleaning all tests and generated files...");
 			bash(command,null,grunt);
 		}
-		grunt.task.run(["comp-js-all","pages","comp-sass"]);
+		grunt.task.run(["comp-js-all","examples","comp-sass"]);
 	});
 
 	grunt.registerTask('sass-watch', "Starts the sass -watch command", function () {

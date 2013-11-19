@@ -1,6 +1,6 @@
 {
 	"guideline" : {
-		"dest" : "{{{static}}}/index.html",
+		"dest" : "{{{static}}}/examples/guideline.html",
 		"files" : ["{{{templates}}}/inc/header.mustache","{{{templates}}}/pages/tmplt-guideline.mustache","{{{templates}}}/inc/footer.mustache"],
 		"raw": null,
 		"data" : "{{{static}}}/mock/mock-guideline.json"
@@ -55,7 +55,7 @@
 		"data" : {
 			"css" : "{{{www_css_folder}}}/guideline-min.css",
 			"test_title" : "Table of content:",
-			"tests" : ["controller-service.html","controller-local.html","simple-view.html"]
+			"tests" : ["controller-service.html","controller-local.html","simple-view.html","guideline.html"]
 		}
 	}
 }

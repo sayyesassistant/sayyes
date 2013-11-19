@@ -24,7 +24,7 @@ handlers:
   upload: static/img/(.*\.(gif|png|jpg))
 
 # dev and tests routes
-- url: /examples
+- url: /(examples|examples\/index.html)
   mime_type: text/html
   static_files: static/examples/index.html
   upload: static/examples/index.html
