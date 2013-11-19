@@ -1,4 +1,4 @@
-#Say Yes!
+#<a name="top"></a>Say Yes!
 
 ---
 
@@ -12,7 +12,7 @@
 
 - [Testing workflow](#tw)
 
-##<a name="gs"></a>Getting started
+##<a name="gs"># </a>Getting started
 
 ###Front end dependencies setup:
 
@@ -47,41 +47,45 @@ Now that you are good to go, check grunt available tasks by hitting:
 
 		grunt -h (@see 'Available tasks')
 
-##<a name="dm"></a>Template Modeling
+[#top](#top)
 
-All the core of Say Yes! is about providing a reliable json config and the javascript and tempaltes will do the magic.
+##<a name="dm"># </a>Template Modeling
+
+All the core of Say Yes! is about providing a reliable json config and the javascript will do the magic using some mustache tamplates.
 
 There is list of available models for this purposes.
 
 [Check here](https://github.com/sayyesassistant/sayyes/blob/master/static/templates/README.md)
 
-##<a name="ss"></a>Service standards
+[#top](#top)
+
+##<a name="ss"># </a>Service standards
 
 ###Service modeling
 
 Every single service must be a json object with the following properties:
 
--`status` **String** *required* and `not null`.
+- `status` **String** *required* and `not null`.
 
-Possible values: `success`, `error`, `output`.
+	Possible values: `success`, `error`, `output`.
+	
+	Designed to work as flag for success or failure
 
-Designed to work as flag for success or failure
+- `exception` **String** *required*
 
--`exception` **String** *required*
+	Designed for **status="error"**. Place the system exeption here for debug purposes
 
-Designed for **status="error"**. Place the system exeption here for debug purposes
+- `message` **String** *required*
 
--`message` **String** *required*
+	Designed for **status="error"**. Place a human like text here
 
-Designed for **status="error"**. Place a human like text here
+- `value` **\*** *required*
 
--`value` **\*** *required*
-
-Designed to provice extra values on result.
+	Designed to provice extra values on result.
 
 ---
 
-* *required*: means that even `null` the property must be there
+* `required` : means that even `null` the property must be there
 
 * `not null`: means that the property value can't be null and must respect the data type definition
 
@@ -89,44 +93,46 @@ Designed to provice extra values on result.
 
 Simple success example:
 
-		{
-			"status" : "success",
-			"exception" : null,
-			"message" : null,
-			"value" : null
-		}
+	{
+		"status" : "success",
+		"exception" : null,
+		"message" : null,
+		"value" : null
+	}
 
 ###Fail example:
 
 Simple fail example:
 
-		{
-			"status" : "error",
-			"exception" : 123,
-			"message" : "Sorry! something wrong happend. Try again later",
-			"value" : null
-		}
+	{
+		"status" : "error",
+		"exception" : 123,
+		"message" : "Sorry! something wrong happend. Try again later",
+		"value" : null
+	}
 
 ###Output example:
 
 Simple output example (data outputed, could be object/html or even binary):
 
-		{
-			"status" : "output",
-			"exception" : null,
-			"message" : null,
-			"value" : {
-				"first_name" : "foo"
-				"last_name" : "bar"
-			}
+	{
+		"status" : "output",
+		"exception" : null,
+		"message" : null,
+		"value" : {
+			"first_name" : "foo"
+			"last_name" : "bar"
 		}
+	}
 
 ###Exception Index:
 
 * `#1` - Validation error, entity could not be created.
 * `#2` - Authentication failure.
 
-##<a name="tw"></a>Testing workflow
+[#top](#top)
+
+##<a name="tw"># </a>Testing workflow
 
 When you pull the repository no test page will be available.
 
@@ -135,7 +141,11 @@ Test pages won't be committed since they are designed to test only and the best 
 There is a grunt task designed to wrap everything:
 
 		grunt run-tests -reset=true
+		
+For more information about grunt tasks, check [this document]()
 
 After running this command you should be able to see the tests index page:
 
-		http://<YOUR-ENV>/tests/index.html
+		http://<YOUR-ENV>/examples
+		
+[#top](#top)
