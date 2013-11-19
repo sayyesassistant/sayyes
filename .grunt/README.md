@@ -1,7 +1,5 @@
 #<a name="top"></a>Say Yes!
 
----
-
 This documents explains the main files we have here and the [grunt tasks](#grunt) we most use during the daily workflow.
 
 - [Folder structure](#structure)

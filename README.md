@@ -1,7 +1,5 @@
 #<a name="top"></a>Say Yes!
 
----
-
 ###Table of contents:
 
 - [Getting started](#gs)
@@ -9,8 +7,6 @@
 - [Template Modelling](#dm)
 
 - [Service standards](#ss)
-
-- [Testing workflow](#tw)
 
 ##<a name="gs"># </a>Getting started
 
@@ -130,22 +126,4 @@ Simple output example (data outputed, could be object/html or even binary):
 * `#1` - Validation error, entity could not be created.
 * `#2` - Authentication failure.
 
-[#top](#top)
-
-##<a name="tw"># </a>Testing workflow
-
-When you pull the repository no test page will be available.
-
-Test pages won't be committed since they are designed to test only and the best way to keep them updated is making sure that all developers will generate a fresh version.
-
-There is a grunt task designed to wrap everything:
-
-		grunt run-tests -reset=true
-		
-For more information about grunt tasks, check [this document]()
-
-After running this command you should be able to see the tests index page:
-
-		http://<YOUR-ENV>/examples
-		
 [#top](#top)
