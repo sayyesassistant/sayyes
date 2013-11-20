@@ -24,10 +24,10 @@ handlers:
   upload: static/img/(.*\.(gif|png|jpg))
 
 # dev and tests routes
-- url: /(examples|examples\/index.html)
+- url: /examples/(.*\.html)
   mime_type: text/html
-  static_files: static/examples/index.html
-  upload: static/examples/index.html
+  static_files: static/examples/\1
+  upload: static/examples/(.*\.html)
 
 - url: /tests
   static_dir: static/tests
