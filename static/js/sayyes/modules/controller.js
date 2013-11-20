@@ -144,7 +144,7 @@ define([
 				break;
 			}
 			if (!blob){
-				_notify(this,"controller => failed to find view: "+this.start_with,error)();
+				_notify(this,"controller => failed to find view: "+this.data.start_with,error)();
 				return;
 			}
 			this.create_view(blob);

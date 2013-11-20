@@ -1,31 +1,37 @@
 <div class="view">
 	<div class="alert"></div>
 	{{#title}}
-		<h1>{{{title}}}</h1>
+		<h1>{{title}}</h1>
 	{{/title}}
 	{{#description}}
-		<h2>{{{description}}}</h2>
+		<h2>{{description}}</h2>
 	{{/description}}
 	{{#has_nav}}
 		<nav>
 			<ul>
 			{{#nav}}
-				<a href="#{{{view}}}" data-role="nav">{{{label}}}</a>
+				<a href="#{{view}}" data-role="nav">{{label}}</a>
 			{{/nav}}
 			</ul>
 		</nav>
 	{{/has_nav}}
 	{{#form}}
-		<form id="{{{form.id}}}" action="{{{form.action}}}" method="{{{form.method}}}" data-on-success="{{{form.on_success}}}" data-on-error="{{{form.on_error}}}">
+		<form id="{{form.id}}" action="{{form.action}}" method="{{form.method}}" data-on-success="{{form.on_success}}" data-on-error="{{form.on_error}}">
 			{{#form.hiddens}}
-				<input type="hidden" name="{{{name}}}" value="{{{value}}}" />
+				<input type="hidden" name="{{name}}" value="{{value}}" />
 			{{/form.hiddens}}
 			{{#form.inputs}}
-				<input type="{{{type}}}" name="{{{name}}}" placeholder="{{{placeholder}}}" {{{required}}} />
+				<input type="{{type}}" name="{{name}}" placeholder="{{placeholder}}" {{required}} />
 			{{/form.inputs}}
+			{{#form.radios}}
+				<input type="radio" name="{{name}}" value="{{value}}" {{required}}>{{label}}</input>
+			{{/form.radios}}
+			{{#form.checkboxes}}
+				<input type="checkbox" name="{{name}}" value="{{value}}" {{required}}>{{label}}</input>
+			{{/form.checkboxes}}
 			<nav>
 			{{#form.buttons}}
-				<button value="{{{value}}}">{{{label}}}</button>
+				<button name="{{name}}" value="{{value}}">{{label}}</input>
 			{{/form.buttons}}
 			</nav>
 		</form>

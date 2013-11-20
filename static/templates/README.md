@@ -1,6 +1,6 @@
-#Say Yes! Templates
+#<a name="top"></a>Say Yes!
 
-##Following all available data models.
+##Following all available data models for rendering view templates.
 
 Table of contents
 
@@ -12,9 +12,11 @@ Table of contents
 - [nav_data](#nav_data)
 - [picture_data](#picture_data)
 - [form_data](#form_data)
-- [hidden_data](#hidden_data)
-- [form_button](#form_button)
-- [form_input](#form_input)
+	- [hidden_data](#hidden_data)
+	- [form_button](#form_button)
+	- [form_input](#form_input)
+	- [form_radio](#form_radio)
+	- [form_checkbox](#form_checkbox)
 
 The main wrapper is the [controller](#controller) model
 
@@ -117,31 +119,61 @@ The main wrapper is the [controller](#controller) model
 	- `buttons` **Array** of [form_button](#form_button)
 	
 	- `inputs` **Array** of [form_input](#form_input)
+	
+	- `radios` **Array** of [form_radio](#form_radio)
+	
+	- `checkboxes` **Array** of [form_radio](#form_radio)
 
-- ###<a name="hidden_data"># </a>hidden_data
+	- ####<a name="hidden_data"># </a>hidden_data
+	
+		Designed for rendering hidden informations
+		
+		- `name` **String**
+		
+		- `value` **String**
+	
+	- ####<a name="form_button"># </a>form_button
+	
+		Designed for rendering form buttons
+		
+		- `value` **String**
+		
+		- `name` **String** 
+		
+		- `label` **String**
+	
+	- ####<a name="form_input"># </a>form_input
+	
+		Designed for rendering **input text**
+		
+		- `name` **String**
+		
+		- `type` **String** ([full list](http://www.w3schools.com/html/html5_form_input_types.asp). take care with browser legacy)
+		
+		- `placeholder` **String
+		
+		- `required` **String** (value must be "required" or `null`)
 
-	Designed for rendering hidden informations
+	- ####<a name="form_radio"># </a>form_radio
 	
-	- `name` **String**
+		Designed for rendering **input type='radio'**
+		
+		- `value` **String**
+		
+		- `name` **String** 
+		
+		- `label` **String**
+		
+		- `required` **String** (value must be "required" or `null`)
+		
+	- ####<a name="form_checkbox"># </a>form_checkbox
 	
-	- `value` **String**
-
-- ###<a name="form_button"># </a>form_button
-
-	Designed for rendering form buttons
-	
-	- `value` **String**
-	
-	- `label` **String**
-
-- ###<a name="form_input"># </a>form_input
-
-	Designed for rendering **input text**
-	
-	- `name` **String**
-	
-	- `type` **String** ([full list](http://www.w3schools.com/html/html5_form_input_types.asp). take care with browser legacy)
-	
-	- `placeholder` **String**
-	
-	- `required` **String** (value must be "required" or `null`)
+		Designed for rendering **input type='checkbox'**
+		
+		- `value` **String**
+		
+		- `name` **String** 
+		
+		- `label` **String**
+		
+		- `required` **String** (value must be "required" or `null`)

@@ -22,11 +22,11 @@ define([
 	ClosureNav.prototype = {
 
 		click_handle : function (event){
-			event.preventDefault();
 			var nav_to = event.target.href.match(reg);
 			if (!!nav_to && !!nav_to[1]){
 				this.view.on.nav.dispatch(nav_to[1]);
 			} else {
+				event.preventDefault();
 				log.info("plugin-nav couldn't find nav value on:",event.target.href);
 			}
 		},

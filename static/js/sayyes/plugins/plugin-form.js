@@ -59,7 +59,7 @@ define([
 	};
 
 	ClosureFormBind.prototype = {
-		submit_handle : function (event){
+		submit_handle : function (event) {
 			event.preventDefault();
 			if (!this.service){
 				this.service = new ajax();

@@ -1,61 +1,90 @@
 {
-	"start_with":"a",
+	"start_with":"beginning",
 	"id":"ABC123",
 	"attendant":{
 		"id":"foo",
 		"name":"Attendant Name",
-		"email":"foo@sayyes.com",
-		"phone":null
+		"email":"sac@sayyes.cc",
+		"phone":"+55 11 98765 4321"
 	},
 	"client":null,
 	"views" : [{
-		"name":"a",
+		"name":"beginning",
 		"template_name":"mock_template",
 		"data":{
-		"title":"Mock View example",
-		"description":"Some description goes here",
-		"nav":[{
-			"label":"no forms please!",
-			"view":"b"
-		}],
-		"form" : {
-			"action" : "/mock-service/login.json",
-			"method" : "GET",
-			"id" : "sayyes",
-			"on_success" : "b",
-			"on_error" : "b",
-			"hiddens" : [{
-				"name":"expect",
-				"value":"false"
-			}],
-			"buttons" : [{
-				"label":"check...",
-				"value":"foo"
-			}],
-			"inputs" : [{
-				"name":"name",
-				"type":"text",
-				"placeholder":"your name",
-				"required" : "required"
+			"title":"O que você gostaria de fazer?",
+			"nav":[{
+				"label":"Quero comprar pacotes de viagem",
+				"view":"travell"
 			},{
-				"name":"email",
-				"type":"email",
-				"placeholder":"Type your email",
-				"required":"required"
+				"label":"Trabalhe com a gente",
+				"view":"career"
 			}]
 		}
-	}
-		} , {
-
-		"name":"b",
+	} ,{
+		"name":"career",
 		"template_name":"mock_template",
 		"data":{
-			"title":"I can't see your info!",
-			"description":"Seems that you don't like forms!",
+			"title":"Trabalhe com a gente",
 			"nav":[{
-				"label":"try again",
-				"view":"a"
+				"label":"voltar",
+				"view":"beginning"
 			}]
+		}
+	} , {
+		"name":"travell",
+		"template_name":"mock_template",
+		"data":{
+			"title":"Para qual destino?",
+			"form" : {
+				"action" : "/mock-service/destination.json",
+				"method" : "POST",
+				"id" : "get-destination",
+				"on_success" : "destination",
+				"on_error" : "error",
+				"radios" : [{
+						"required":"true",
+						"label":"africa",
+						"value":"africa",
+						"name":"destination"
+					} , {
+						"required":"true",
+						"label":"patagonia",
+						"value":"patagonia",
+						"name":"destination"
+				}],
+				"buttons":[{
+					"name":"submit",
+					"label":"fazer solicitação"
+				}]
+			}, "nav" : [{
+				"label":"voltar",
+				"view":"beginning"
+			}]
+		}
+	} , {
+		"name":"error",
+		"template_name":"mock_template",
+		"data":{
+			"title":"Ops!",
+			"description":"Ocorreu um erro durante sua navegação.",
+			"nav" : [{
+				"label":"tente novamente",
+				"view":"travell"
+			}]
+		}
+	} , {
+		"name" : "destination",
+		"template_name":"mock_template",
+		"data":{
+			"title":"You got it!",
+			"nav" : [{
+				"label":"ver mais destinos",
+				"view":"travell"
+			},{
+				"label":"voltar para o inicio",
+				"view":"beginning"
+			},]
 		}
 	}]
 }
