@@ -36,11 +36,11 @@ There are some files here that are related to the tasks we have:
 	This document defines the javascripts that will be used by the guideline, examples, tests, and the actual site. This json could be described like:
 
 		// the name you will use with "grunt comp-sass:my-page-name"
-		"my-page-name" : {	
-		
+		"my-page-name" : {
+
 			//src is the file path (don't use trailing .js on file's name)
 			"src":"sayyes/main/test-view",
-			
+
 			//the destination folder and file name
 			"dest":"{{{dest_js_folder}}}/test-view-min.js"
 		}
@@ -50,23 +50,23 @@ There are some files here that are related to the tasks we have:
 
 - ###<a name="pages.json"># </a>pages.json
 
-	This document defines the pages (examples or any other page) that will be created by the [task examples](#examples).
-	
+	This document defines the pages (examples or any other page) that will be created by the [task pages](#pages).
+
 		{
 			"dest" : "{{{static}}}/examples/example-name.html",
 			//destination file
 			//this prop can't be null
-		
+
 			"files" : ["{{{templates}}}/inc/header.mustache","{{{templates}}}/pages/tmplt-guideline.mustache","{{{templates}}}/inc/footer.mustache"],
 			//a list of files that will be concatenated to generate the 'dest'
 			//this prop can't be null
-		
+
 			"raw": {
 				"mock_template": "{{{templates}}}/views/view-mock.mustache"
 			},
 			//designed for data that will be printed on 'dest' but without performing the mustache render
 			//this prop can be null
-		
+
 			"data" : "{{{static}}}/mock/mock-guideline.json"
 			// data as String must be used when you want to provide a file's path that contains all the data you want.
 			// data as Object defines the data provider that will be used on 'dest' to render all the mustache values.
@@ -105,7 +105,7 @@ We have a few tasks that helps during the development/deployment.
 
 - `$: grunt` [sass-watch](#sass-watch)
 
-- `$: grunt` [examples](#examples)
+- `$: grunt` [pages](#pages)
 
 - `$: grunt` [run-tests](#run-tests)
 
@@ -121,7 +121,7 @@ We have a few tasks that helps during the development/deployment.
 
 - ###<a name="comp-js-all"># </a>comp-js-all
 
-	This is just an *alias task* to run [comp-js](#comp-js) through all [pages](#app.json) we have. Before running the comp-js for each app we also run jshint to make sure that all javascript won't fail. 
+	This is just an *alias task* to run [comp-js](#comp-js) through all [pages](#app.json) we have. Before running the comp-js for each app we also run jshint to make sure that all javascript won't fail.
 
 - ###<a name="comp-sass"># </a>comp-sass
 
@@ -132,12 +132,12 @@ We have a few tasks that helps during the development/deployment.
 	This task runs the *[sass watch](http://sass-lang.com/documentation/file.SASS_REFERENCE.html)* on the files defined by [this document](#sass.json)
 
 
-- ###<a name="run-tests"># </a>examples
+- ###<a name="pages"># </a>pages
 
 	This task will create all [pages](#pages.json) concatenating all fragments into a single file and then render this target page with all *data* you've defined.
 
 - ###<a name="run-tests"># </a>run-tests
 
-	This task combines **comp-js-all**, **examples**, **comp-sass**
+	This task combines **comp-js-all**, **pages**, **comp-sass**
 
 [#top](#top)

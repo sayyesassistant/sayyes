@@ -15,6 +15,7 @@
 	"www_css_folder"   : "/css-min",
 	"www_mock_service" : "/mock-service",
 	"www_mock_data"    : "/mock-data",
+	"www_examples"    : "/examples",
 
 	"sass_sources"     : "{{{static}}}/sass/sayyes/output",
 	"dest_css_folder"  : "{{{static}}}/css-min",

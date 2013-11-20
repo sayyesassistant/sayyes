@@ -48,6 +48,12 @@
 			"placeholder": "{{{www_mock_data}}}/mock-controller-service.json"
 		}
 	},
+	"register-response" : {
+		"dest" : "{{{examples}}}/register-response.html",
+		"files" : ["{{{templates}}}/inc/header.mustache","{{{templates}}}/pages/tmplt-register-response.mustache","{{{templates}}}/inc/footer.mustache"],
+		"raw": null,
+		"data" : null
+	},
 	"toc" : {
 		"dest" : "{{{examples}}}/index.html",
 		"files" : ["{{{templates}}}/inc/header.mustache","{{{templates}}}/pages/tmplt-tests-index.mustache","{{{templates}}}/inc/footer.mustache"],
@@ -55,7 +61,7 @@
 		"data" : {
 			"css" : "{{{www_css_folder}}}/guideline-min.css",
 			"test_title" : "Table of content:",
-			"tests" : ["controller-service.html","controller-local.html","simple-view.html","guideline.html"]
+			"tests" : ["{{www_examples}}/controller-service.html","{{www_examples}}/controller-local.html","{{www_examples}}/simple-view.html","{{www_examples}}/guideline.html","{{www_examples}}/register-response.html"]
 		}
 	}
 }

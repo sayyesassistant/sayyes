@@ -101,7 +101,7 @@ module.exports = function (grunt) {
 		grunt.task.run(tasks);
 	});
 
-	grunt.registerMultiTask('examples', "Create all examples\n@see .grunt/pages.json", function () {
+	grunt.registerMultiTask('pages', "Create all pages\n@see .grunt/pages.json", function () {
 		init();
 		var task = require("./.grunt/tasks/task-create-page");
 		task.run(grunt, this);
@@ -126,7 +126,7 @@ module.exports = function (grunt) {
 			grunt.log.warn("Cleaning all tests and generated files...");
 			bash(command,null,grunt);
 		}
-		grunt.task.run(["comp-js-all","examples","comp-sass"]);
+		grunt.task.run(["comp-js-all","pages","comp-sass"]);
 	});
 
 	grunt.registerTask('sass-watch', "Starts the sass -watch command", function () {
