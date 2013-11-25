@@ -8,11 +8,6 @@ indexes:
   - name: user
   - name: created
     direction: desc
-- kind: Template
-  properties:
-  - name: user
-  - name: created
-    direction: desc
 - kind: SessionResponse
   properties:
   - name: session

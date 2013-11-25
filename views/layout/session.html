@@ -26,10 +26,13 @@
     </head>
     <body>
         <div id="sayyes-assistant"></div>
-
-        <script id="mock_template" type="text/mustache-template" charset="utf-8">
-            {% block template %}{% endblock %}
+        {% block template %}
+        {% for template in templates %}
+        <script id="{{template.id}}" type="text/mustache-template" charset="utf-8">
+            {{template.html}}
         </script>
+        {% endfor %}
+        {% endblock %}
     </body>
 </html>
 {% endautoescape %}

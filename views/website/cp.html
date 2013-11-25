@@ -20,17 +20,6 @@
                         </td>
                     </tr>
                     <tr>
-                        <td><label>Template:</label></td>
-                        <td>
-                            <select name="template">
-                                <option value=""> --- </option>
-                                {% for template in templates %}
-                                <option  value="{{ template.key.urlsafe() }}">{{template.title}}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
                         <td><label>Json Instruction:</label></td>
                         <td>
                             <textarea name="instruction" required cols="40" rows="10">{{ json }}</textarea>
@@ -55,53 +44,6 @@
                     <a href="/session/start.py?key={{ session.key.urlsafe() }}" target="_blank">
                         {{ session.title }}
                     </a>
-                </li>
-                {% endfor %}
-            </ul>
-        </td>
-    </tr>
-</table>
-
-<table>
-    <tr>
-        <td>
-            <h3>New Template</h3>
-            <form action="/" method="post" id="templateForm">
-                <input type="hidden" name="accessKey" value="{{ auth.accessKey }}">
-                <input type="hidden" name="email" value="{{ auth.email }}">
-                <table>
-                    <tr>
-                        <td><label>Title:</label></td>
-                        <td>
-                            <input type="text" name="title" required placeholder="Fill out the title of your template">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><label>HTML:</label></td>
-                        <td>
-                            <textarea name="html" required placeholder="Fill out the HTML of your template" cols="40" rows="10">{{ html }}</textarea>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>
-                            <div class=submit>
-                                <input type="submit" value="Submit">
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-            </form>
-        </td>
-        <td>
-            <h3>Last 10 templates</h3>
-            <ul>
-                {% for template in templates %}
-                <li>
-                    {{ template.title }}<br>
-                    {% if template.bg %}
-                    <img src="/session/img.py?key={{ template.key.urlsafe() }}" width="200">
-                    {% endif %}
                 </li>
                 {% endfor %}
             </ul>

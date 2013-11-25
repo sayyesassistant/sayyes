@@ -29,12 +29,10 @@ class Start(AppHandler):
 
         # faz escape por double quote apenas, pois eh o unico permitido oficialmente pelo json
         instruction = session.instruction.replace('"', '\\"')
-        
-        template = None
-        if session.template:
-            template = session.template.get()
 
-        templateValues = {'session': session, 'instruction': instruction, 'template': template}
+        templates = Template.orderByTitle()
+
+        templateValues = {'session': session, 'instruction': instruction, 'templates': templates}
 
         self.render(Const.SESSION + 'start.html', templateValues)
 
@@ -62,13 +60,6 @@ class Create(AppHandler):
             session.title = self.util.stripTags(self.request.get('title'))
             session.instruction = self.request.get('instruction')
             session.user = user.key
-
-            if self.request.get('template'):
-                key = ndb.Key(urlsafe=self.request.get('template'))
-                template = key.get()
-                # testa de novo p/ ver se achou a entidade
-                if template is not None:
-                    session.template = template.key
             
             # salva e pega a key
             newKey = session.put()
@@ -86,44 +77,9 @@ class Create(AppHandler):
         except Exception as e:
             
             if len(e.args) > 0:
-                errors['app_exception'] = e.args
+                errors['appException'] = e.args
                 
             self.jsonError("Session could not be created", 1, errors)
-
-class TemplateCreate(AppHandler):
-
-    def post(self):
-
-        errors = {}
-
-        try:
-            user = User()
-            accessKey = self.request.get('accessKey')
-            email = self.request.get('email')
-
-            user = self.authKey(accessKey, email);
-
-            if user is None:
-                errors['authenticationFailed'] = "Invalid e-mail or access key"
-                errors['accessKeySent'] = accessKey
-                errors['emailSent'] = email
-                raise Exception()
-
-            template = Template()
-            template.title = self.util.stripTags(self.request.get('title'))
-            template.html = self.request.get('html')
-            template.user = user.key
-
-            template.put()
-
-            self.jsonSuccess()
-            
-        except Exception as e:
-
-            if len(e.args) > 0:
-                errors['app_exception'] = e.args
-                
-            self.jsonError("Template could not be created", 2, errors)
 
 class RegisterResponse(AppHandler):
 
@@ -159,7 +115,7 @@ class RegisterResponse(AppHandler):
         except Exception as e:
 
             if len(e.args) > 0:
-                errors['app_exception'] = e.args
+                errors['appException'] = e.args
 
             self.jsonError("Response could not be registered", 2, errors)
 
@@ -173,6 +129,5 @@ application = webapp2.WSGIApplication([
     ('/session/img.py', Image),
     ('/session/create.py', Create),
     ('/session/start.py', Start),
-    ('/session/template.py', TemplateCreate),
     ('/session/response.py', RegisterResponse),
 ], debug=True, config=config)
