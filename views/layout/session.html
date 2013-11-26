@@ -6,6 +6,7 @@
     <head>
         <meta charset="utf-8">
         <title>Sayyes :: Controller test</title>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         <script type="text/javascript">
             (function(d){ d.className = d.className.replace('no-js', 'js'); })(document.documentElement);
         </script>
@@ -21,10 +22,12 @@
                 s.src = "/js-min/test-controller-local-min.js";
                 h.appendChild(s);
             }(document.createElement('script'), document.documentElement));
+
         </script>
         <link rel="stylesheet" type="text/css" href="/css-min/guideline-min.css"></link>
     </head>
     <body>
+        <input type="hidden" id="sessionKey" value="{{sessionKey}}" />
         <div id="sayyes-assistant"></div>
         {% block template %}
         {% for template in templates %}
@@ -33,6 +36,13 @@
         </script>
         {% endfor %}
         {% endblock %}
+        <script type="text/javascript" charset="utf-8">
+            $(function(){
+                $.post('/session/response.py', {"sessionKey":$('#sessionKey').val(), "userResponse": {teste:"teste"}}, function(data){
+                    console.log(data);
+                }, 'json');
+            });
+        </script>
     </body>
 </html>
 {% endautoescape %}

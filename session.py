@@ -22,17 +22,23 @@ class Image(webapp2.RequestHandler):
 
 class Start(AppHandler):
     def get(self):
-        
-        key = ndb.Key(urlsafe=self.request.get('key'))
-        session = key.get()
-        logging.info(session)
+
+        urlSafeSessionKey = self.request.get('key')
+        sessionKey = ndb.Key(urlsafe=urlSafeSessionKey)
+        session = sessionKey.get()
+        #logging.info(session)
 
         # faz escape por double quote apenas, pois eh o unico permitido oficialmente pelo json
         instruction = session.instruction.replace('"', '\\"')
 
         templates = Template.orderByTitle()
 
-        templateValues = {'session': session, 'instruction': instruction, 'templates': templates}
+        templateValues = {
+            'session': session,
+            'instruction': instruction,
+            'templates': templates,
+            'sessionKey': urlSafeSessionKey,
+        }
 
         self.render(Const.SESSION + 'start.html', templateValues)
 
@@ -89,23 +95,18 @@ class RegisterResponse(AppHandler):
 
         try:
 
-            user = User()
-            accessKey = self.request.get('accessKey')
-            email = self.request.get('email')
+            if not self.isAjax():
+                errors['invalidRequest'] = "only ajax requests are allowed"
+                raise Exception()
 
-            user = self.authKey(accessKey, email);
-            logging.info(user)
+            sessionKey = ndb.Key(urlsafe=self.request.get('sessionKey'))
 
-            if user is None:
-                errors['authenticationFailed'] = "Invalid e-mail or access key"
-                errors['accessKeySent'] = accessKey
-                errors['emailSent'] = email
+            if sessionKey is None:
+                errors['sessionKey'] = "session not found"
                 raise Exception()
 
             sr = SessionResponse()
-            sr.response = self.request.get('response')
-
-            sessionKey = ndb.Key(urlsafe=self.request.get('sessionKey'))
+            sr.userResponse = self.request.get('userResponse')
             sr.session = sessionKey
 
             sr.put()
