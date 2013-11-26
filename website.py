@@ -4,13 +4,13 @@ import urllib
 import webapp2
 import json
 from app import AppHandler
-from google.appengine.api import mail
 from models import *
 from util import *
 from time import gmtime, strftime
 from google.appengine.ext import ndb
 
 class HomePage(AppHandler):
+    
     def get(self):
 
         templateValues = {'teste':'teste'}
@@ -26,7 +26,7 @@ class Profile(AppHandler):
 
         templateValues = {}
         templateValues['auth'] = self.auth
-        templateValues['user'] = User.get_by_id(self.auth['key'])
+        templateValues['user'] = User.get_by_id(self.auth['keyId'])
 
         self.render(Const.WEBSITE + 'profile.html', templateValues)
 
@@ -36,7 +36,7 @@ class Profile(AppHandler):
 
         try:
             self.logged()
-            user = User.get_by_id(self.auth['key'])
+            user = User.get_by_id(self.auth['keyId'])
             user.name = self.util.stripTags(self.request.get('name'))
             user.companyName = self.util.stripTags(self.request.get('companyName'))
 
@@ -46,16 +46,15 @@ class Profile(AppHandler):
             user.website = self.request.get('website')
 
             # save and get the key
-            newKey = user.put()
+            userKey = user.put()
 
-            if newKey is None:
+            if userKey is None:
                 errors['user'] = "User could not be updated"
                 raise Exception()
 
-            ss = newKey.get()
             # update the browser session
-            auth = {}
-            auth['key'] = user.key.id()
+            auth = self.session['auth']
+            auth['keyId'] = user.key.id()
             auth['name'] = user.name
 
             #logging.info(auth)
@@ -67,6 +66,7 @@ class Profile(AppHandler):
             self.jsonError(None, 1, errors)
 
 class SignUp(AppHandler):
+    
     def get(self):
         # check the browser session
         self.logged()
@@ -96,22 +96,14 @@ class SignUp(AppHandler):
             user.website = self.request.get('website')
             user.accessKey = user.pwdGenerator(12) + strftime("%y%m%d%H%M%S", gmtime())
             # save and get the key
-            newKey = user.put()
+            userKey = user.put()
 
-            if newKey is None:
+            if userKey is None:
                 errors['user'] = "User could not be created"
                 raise Exception()
 
-            ss = newKey.get()
             # create a browser session
-            auth = {}
-            auth['key'] = user.key.id()
-            auth['name'] = user.name
-            auth['email'] = user.email
-            auth['accessKey'] = user.accessKey
-
-            #logging.info(auth)
-            self.session['auth'] = auth
+            self.createBrowserSession(user.key.id(), user.name, user.email, user.accessKey)
 
             self.jsonSuccess("Account created")
         except Exception as e:
@@ -119,6 +111,7 @@ class SignUp(AppHandler):
             self.jsonError(None, 1, errors)
 
 class LogIn(AppHandler):
+    
     def get(self):
         # verifica a sessao
         self.logged()
@@ -133,26 +126,23 @@ class LogIn(AppHandler):
             self.jsonError("Wrong username or password")
         else:
             # cria a sessao
-            auth = {}
-            auth['key'] = logged.key.id()
-            auth['name'] = logged.name
-            auth['email'] = logged.email
-            auth['accessKey'] = logged.accessKey
-            logging.info(auth)
-            self.session['auth'] = auth
+            self.createBrowserSession(logged.key.id(), logged.name, logged.email, logged.accessKey)
             self.jsonSuccess()
 
 
 class LogOut(AppHandler):
+
     def get(self):
         del self.session['auth']
         self.redirect('/')
 
 class ForgotPassword(AppHandler):
+    
     def get(self):
         self.render(Const.WEBSITE + 'forgot_password.html', {})
 
     def post(self):
+        
         email = self.request.get('email').strip()
         userEmail = User.query(User.email == email).get()
         #logging.info(userEmail.email)
@@ -160,35 +150,19 @@ class ForgotPassword(AppHandler):
             # reset pwd
             newPwd = userEmail.pwdGenerator()
             userEmail.pwd = userEmail.hash(newPwd)
-            key = userEmail.put()
+            userKey = userEmail.put()
             # test entity
-            if key is None:
+            if userKey is None:
                 self.jsonError()
-            # send email
-            subject = "New password request"
-
-            html = "<p><b>*** " + subject + " ***</b></p>"
-            html = html + "<p>Hi " + userEmail.name + "!</p>"
-            html = html + "<p>Here it goes you new password: <b>" + newPwd + "</b></p>"
-            html = html + "<p>If you did not request a new password please contact our support team by replying to this e-mail.</p>"
-            html = html + "<p>Best regards from <b>" + Const.APP_SENDER_NAME + "</b>.</p>"
-
-            plainText = "*** " + subject + " ***\n"
-            plainText = plainText + "Hi " + userEmail.name + "!\n"
-            plainText = plainText + "Here it goes you new password: " + newPwd + "\n"
-            plainText = plainText + "If you did not request a new password please contact our support team by replying to this e-mail.\n"
-            plainText = plainText + "Best regards from " + Const.APP_SENDER_NAME + " .\n"
-
-            sender = Const.APP_SENDER_NAME + " <" + Const.APP_SENDER_EMAIL + ">"
-            message = mail.EmailMessage(sender=sender, subject=subject + " - Say Yes! Assistant")
-            message.to = userEmail.name + " <" + userEmail.email + ">"
-            message.body = plainText
-            message.html = html
-            message.send()
+            
+        mailSender = MailSender()
+        mailSender.forgotPwd(userEmail.name, userEmail.email, newPwd)
+        
         # returns success anyway as you cannot tell if email was found
         self.jsonSuccess()
 
 class CP(AppHandler):
+    
     def get(self):
 
         # check the browser session
@@ -199,9 +173,9 @@ class CP(AppHandler):
         templateValues = {}
         templateValues['auth'] = self.auth
 
-        key = ndb.Key(User, self.auth['key'])
+        userKey = ndb.Key(User, self.auth['keyId'])
 
-        query = Session.queryUser(key)
+        query = Session.queryUser(userKey)
         templateValues['sessions'] = query.fetch(10)
 
         templateValues['templates'] = Template.orderByTitle()

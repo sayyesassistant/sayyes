@@ -104,6 +104,15 @@ class AppHandler(webapp2.RequestHandler):
             return None
 
         return user
+
+    def createBrowserSession(self, keyId, name, email, accessKey):
+        auth = {}
+        auth['keyId'] = keyId
+        auth['name'] = name
+        auth['email'] = email
+        auth['accessKey'] = accessKey
+        logging.info(auth)
+        self.session['auth'] = auth
         
         
         

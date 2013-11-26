@@ -67,12 +67,12 @@ class Create(AppHandler):
             if newKey is None:
                 raise Exception()
 
-            ss = newKey.get()
+            sessionKey = newKey.get()
             # cria a sessao
-            cs = {}
-            cs['url'] = Const.APP_URL + 'session/start/?key=' + str(ss.key.id())
+            returnObj = {}
+            returnObj['url'] = Const.APP_URL + 'session/start/?key=' + str(sessionKey.key.id())
 
-            self.jsonSuccess("Session created", cs)
+            self.jsonSuccess("Session created", returnObj)
 
         except Exception as e:
             
@@ -105,8 +105,8 @@ class RegisterResponse(AppHandler):
             sr = SessionResponse()
             sr.response = self.request.get('response')
 
-            key = ndb.Key(urlsafe=self.request.get('sessionKey'))
-            sr.session = key
+            sessionKey = ndb.Key(urlsafe=self.request.get('sessionKey'))
+            sr.session = sessionKey
 
             sr.put()
 
