@@ -14,10 +14,10 @@ handlers:
   static_files: static/css-min/\1
   upload: static/css-min/(.*\.css)
 
-- url: /js-min/(.*\.js)
+- url: /js-min/(.*\.js.*)
   mime_type: text/javascript
   static_files: static/js-min/\1
-  upload: static/js-min/(.*\.js)
+  upload: static/js-min/(.*\.js.*)
 
 - url: /img/(.*\.(gif|png|jpg))
   static_files: static/img/\1
