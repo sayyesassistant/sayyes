@@ -51,16 +51,17 @@ define([
 	};
 
 	function __init (instance, scope) {
-		instance.queued = null;
-		instance.current = null;
-		instance.previous = null;
+		instance.queued_view = null;
+		instance.current_view = null;
+		instance.previous_view = null;
 		instance.data = {};
 		instance.scope = $(scope);
 		instance.pooling = {};
 		instance.on = {
 			warn : new signals(),
 			info : new signals(),
-			error : new signals()
+			error : new signals(),
+			nav : new signals()
 		};
 	}
 
@@ -74,26 +75,27 @@ define([
 	}
 
 	function _on_close () {
-		if (this.current){
-			this.current.html.remove();
-			this.current.dispose();
-			_notify(this,"controller view '"+this.current.name+"' disposed.")();
-			this.previous = this.current;
+		if (this.current_view){
+			this.current_view.html.remove();
+			this.current_view.dispose();
+			_notify(this,"controller view '"+this.current_view.name+"' disposed.")();
+			this.previous_view = this.current_view;
 		}
-		this.current = null;
+		this.current_view = null;
 		this.open();
 	}
 
 	function _on_open () {
-		this.current = this.queued;
-		this.queued = null;
-		this.current.enable_ux();
-		this.current.on.nav.add(_on_nav,this);
-		_notify(this,"controller => view '"+this.current.name+"' opened.")();
+		this.current_view = this.queued_view;
+		this.queued_view = null;
+		this.current_view.enable_ux();
+		this.current_view.on.nav.add(_on_nav,this);
+		_notify(this,"controller => view '"+this.current_view.name+"' opened.")();
+		this.on.nav.dispatch(this.current_view);
 	}
 
 	function _on_nav (name) {
-		if (this.current && this.current.name === name){
+		if (this.current_view && this.current_view.name === name){
 			_notify(this,"controller => view '"+name+"' already opened opened.",warn)();
 			return;
 		}
@@ -129,7 +131,7 @@ define([
 
 		define : function (data) {
 			if (!_controller_vo.implements(data)){
-				_notify(this,"controller got invalid data initialize!",error)();
+				_notify(this,"controller got invalid data to initialize. check for missing properties!",error)(data);
 				return;
 			}
 			this.data = data;
@@ -154,53 +156,53 @@ define([
 				_notify(this,"controller => malformed view template",error)(config);
 				return;
 			}
-			this.queued = this.pooling[config.name];
-			if(!this.queued){
+			this.queued_view = this.pooling[config.name];
+			if(!this.queued_view){
 				try {
-					this.queued = view(config);
+					this.queued_view = view(config);
 				} catch (err) {
 					_notify(this,"controller => view '"+config.name+"' failed to create.",error)(err);
 					return;
 				}
 			}
-			_notify(this,"controller => view '"+this.queued.name+"' created.")();
-			var merged_data = mix_in({}, config.data, this.current ? this.current.form_result : {});
+			_notify(this,"controller => view '"+this.queued_view.name+"' created.")();
+			var merged_data = mix_in({}, config.data, this.current_view ? this.current_view.form_result : {});
 			this.render_view(merged_data);
 		},
 		render_view : function (data) {
-			if (!this.queued) {
+			if (!this.queued_view) {
 				_notify(this,"controller => no queued view to render",error)();
 				return;
 			}
 			data = data || {};
-			this.queued.on.render.failed.addOnce(_notify(this,"controller => view '"+this.queued.name+"' failed to render.",error));
-			this.queued.on.render.passed.addOnce(this.close,this);
-			this.queued.render(mix_in(data,helper_nav));
+			this.queued_view.on.render.failed.addOnce(_notify(this,"controller => view '"+this.queued_view.name+"' failed to render.",error));
+			this.queued_view.on.render.passed.addOnce(this.close,this);
+			this.queued_view.render(mix_in(data,helper_nav));
 		},
 		open : function () {
-			if (!this.queued) {
+			if (!this.queued_view) {
 				_notify(this,"controller => no queued view to open!",error)();
 				return;
 			}
-			if (!this.queued.html || !this.queued.html.length) {
+			if (!this.queued_view.html || !this.queued_view.html.length) {
 				_notify(this,"controller => queued view has no html.",error)();
 				return;
 			}
-			this.scope.append(this.queued.html);
-			this.queued.on.open.passed.addOnce(_on_open,this);
-			this.queued.on.open.failed.addOnce(_on_fail,this);
-			this.queued.open();
+			this.scope.append(this.queued_view.html);
+			this.queued_view.on.open.passed.addOnce(_on_open,this);
+			this.queued_view.on.open.failed.addOnce(_on_fail,this);
+			this.queued_view.open();
 		},
 		close: function () {
-			if (!this.current) {
+			if (!this.current_view) {
 				_notify(this,"controller => no current view to close, open queued.",warn)();
 				this.open();
 				return;
 			}
-			this.current.on.close.passed.addOnce(_on_close,this);
-			this.current.on.close.failed.addOnce(_on_fail,this);
-			this.current.disable_ux();
-			this.current.close();
+			this.current_view.on.close.passed.addOnce(_on_close,this);
+			this.current_view.on.close.failed.addOnce(_on_fail,this);
+			this.current_view.disable_ux();
+			this.current_view.close();
 		}
 	};
 	return function(scope){

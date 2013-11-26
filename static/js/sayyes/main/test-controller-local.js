@@ -5,15 +5,17 @@ require([
 	"sayyes/util/log",
 	"sayyes/modules/core",
 	"lib/domReady",
-	"sayyes/modules/controller"
+	"sayyes/modules/controller",
+	"sayyes/modules/tracker"
 ], function (
 	log,
 	core,
 	domReady,
-	controller
+	controller,
+	tracker
 ){
 
-	var instance;
+	var instance, track;
 
 	function init(){
 
@@ -24,9 +26,13 @@ require([
 
 		try {
 			instance = controller(document.getElementById("sayyes-assistant"));
+
+			track  = new tracker(instance);
+			track.start();
+
 			instance.define(window.mock);
 		} catch (error) {
-			log.error("error to create controller",error);
+			log.error("error to create controller:",error.message);
 			return;
 		}
 	}
