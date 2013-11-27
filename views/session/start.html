@@ -1,3 +1,15 @@
 {% extends "views/layout/session.html" %}
 <!-- show all templates needed for the session -->
-{% block template %}{{templates}}{% endblock %}
+{% block body %}
+<div id="sayyes-session">
+    <div id="sayyes-assistant"></div>
+    {% for tpl in tpls %}
+    <script id="{{tpl.id}}" type="text/mustache-template" charset="utf-8">
+        {{tpl.html}}
+    </script>
+    {% endfor %}
+</div>
+<div id="sayyes-500" style="display:none">
+    It looks like we are having problems, please restart your session.
+</div>
+{% endblock %}

@@ -6,11 +6,11 @@
     <head>
         <meta charset="utf-8">
         <title>Sayyes :: Controller test</title>
+        <!--
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-        <script type="text/javascript">
-            (function(d){ d.className = d.className.replace('no-js', 'js'); })(document.documentElement);
-        </script>
+        -->
         <script type="text/javascript" charset="utf-8">
+            (function(d){ d.className = d.className.replace('no-js', 'js'); })(document.documentElement);
             //foo
             var j = "{{instruction}}";
             var mock = JSON.parse(j);
@@ -22,27 +22,39 @@
                 s.src = "/js-min/test-controller-local-min.js";
                 h.appendChild(s);
             }(document.createElement('script'), document.documentElement));
-
+            /*
+            $(function(){
+                // register session response
+                $.post($('.session-tracker').attr('action'), $('.session-tracker').serialize(), function(data){
+                    if(data.status == "success" && data.value.responseKey) {
+                        // update responseKey
+                        $('#responseKey').val(data.value.responseKey);
+                    } else {
+                        $('#sayyes-session').hide();
+                        $('#sayyes-500').show();
+                    }
+                }, 'json');
+            });
+             */
         </script>
         <link rel="stylesheet" type="text/css" href="/css-min/guideline-min.css"></link>
     </head>
     <body>
-        <input type="hidden" id="sessionKey" value="{{sessionKey}}" />
-        <div id="sayyes-assistant"></div>
-        {% block template %}
-        {% for template in templates %}
-        <script id="{{template.id}}" type="text/mustache-template" charset="utf-8">
-            {{template.html}}
-        </script>
-        {% endfor %}
-        {% endblock %}
-        <script type="text/javascript" charset="utf-8">
-            $(function(){
-                $.post('/session/response.py', {"sessionKey":$('#sessionKey').val(), "userResponse": {teste:"teste"}}, function(data){
-                    console.log(data);
-                }, 'json');
-            });
-        </script>
+        {% block body %}{% endblock %}
     </body>
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-46025907-1', 'sayyes.cc');
+        ga('send', 'pageview');
+    </script>
+    <form class="session-tracker" action="/session/response.py" method="POST">
+        <input type="hidden" name="sessionKey" value="{{sessionKey}}" />
+        <input type="hidden" name="responseKey" id="responseKey" value="" />
+        <input type="hidden" name="viewName" value="#filled-by-javascript#" />
+    </form>
 </html>
 {% endautoescape %}

@@ -31,12 +31,12 @@ class Start(AppHandler):
         # faz escape por double quote apenas, pois eh o unico permitido oficialmente pelo json
         instruction = session.instruction.replace('"', '\\"')
 
-        templates = Template.orderByTitle()
+        templates = Template.getSessionTemplates(session.instruction)
 
         templateValues = {
             'session': session,
             'instruction': instruction,
-            'templates': templates,
+            'tpls': templates,
             'sessionKey': urlSafeSessionKey,
         }
 
@@ -88,7 +88,7 @@ class Create(AppHandler):
             self.jsonError("Session could not be created", 1, errors)
 
 class RegisterResponse(AppHandler):
-
+    
     def post(self):
 
         errors = {}
@@ -104,14 +104,25 @@ class RegisterResponse(AppHandler):
             if sessionKey is None:
                 errors['sessionKey'] = "session not found"
                 raise Exception()
-
-            sr = SessionResponse()
+            
+            # check if response has already been created
+            if self.request.get('responseKey'):
+                urlSafeResponseKey = self.request.get('responseKey')
+                responseKey = ndb.Key(urlsafe=urlSafeResponseKey)
+                sr = responseKey.get()
+                logging.info("response exists")
+            else:
+                sr = SessionResponse()
+                
             sr.userResponse = self.request.get('userResponse')
             sr.session = sessionKey
 
-            sr.put()
+            responseKey = sr.put()
 
-            self.jsonSuccess()
+            responseObj = {}
+            responseObj['responseKey'] = responseKey.urlsafe()
+
+            self.jsonSuccess('Response registered', responseObj)
 
         except Exception as e:
 

@@ -1,4 +1,7 @@
+import json
+
 import hashlib
+import logging
 import random
 import string
 from google.appengine.ext import ndb
@@ -37,6 +40,15 @@ class Template(ndb.Model):
     @classmethod
     def orderByTitle(self):
         q = self.query().order(self.title)
+        return q.fetch()
+
+    @classmethod
+    def getSessionTemplates(self, instruction):
+        j = json.loads(instruction)
+        tpls = []
+        for view in j['views']:
+            tpls.append(view['template_name'])
+        q = self.query().order(self.title).filter(self.id.IN(tpls))
         return q.fetch()
     
 class Session(ndb.Model):
