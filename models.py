@@ -48,6 +48,9 @@ class Template(ndb.Model):
         tpls = []
         for view in j['views']:
             tpls.append(view['template_name'])
+        # turn it into a set
+        tpls = list(set(tpls))
+        #logging.info(tpls)
         q = self.query().order(self.title).filter(self.id.IN(tpls))
         return q.fetch()
     
