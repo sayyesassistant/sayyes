@@ -13,17 +13,16 @@ define([
 	ajax
 ){
 
-	var ClosureFormBind, blob, submit_event,
-		__parseError, __parseSuccess, reg_action;
+	var ClosureFormBind, blob, submit_event, reg_action;
 
 	reg_action = /^[\w]+$/;
 
 	submit_event = "submit";
 
-	__fireAction = function (value) {
+	function _fireAction (value) {
 
 		if (!value){
-			log.warn("plugin-form.__fireAction got no action to take!");
+			log.warn("plugin-form._fireAction got no action to take!");
 			return null;
 		}
 
@@ -39,17 +38,33 @@ define([
 				this.view.on.nav.dispatch(target ? target[0] : null);
 				break;
 		}
-	};
+	}
 
-	__parseError = function (result){
+	function _parseError (result){
 		this.view.form_result = result.value;
 		this.view.on.nav.dispatch(this.on_error);
-	};
+	}
 
-	__parseSuccess = function (result){
+	function _parseSuccess (result){
 		this.view.form_result = result.value;
 		this.view.on.nav.dispatch(this.on_success);
-	};
+	}
+
+	function _submit_handle (event) {
+		event.preventDefault();
+		if (!this.service){
+			this.service = new ajax();
+			this.service
+				.success(_parseSuccess.bind(this))
+				.error(_parseError.bind(this))
+				.expect("status",function(value){
+					return value !== "error";
+				});
+		}
+		this.service
+			.method(this.form.attr("method"))
+			.request(this.form.attr("action"), this.form.serialize());
+	}
 
 	ClosureFormBind = function(config){
 		mix_in(this,config);
@@ -59,26 +74,11 @@ define([
 	};
 
 	ClosureFormBind.prototype = {
-		submit_handle : function (event) {
-			event.preventDefault();
-			if (!this.service){
-				this.service = new ajax();
-				this.service
-					.success(__parseSuccess.bind(this))
-					.error(__parseError.bind(this))
-					.expect("status",function(value){
-						return value !== "error";
-					});
-			}
-			this.service
-				.method(this.form.attr("method"))
-				.request(this.form.attr("action"), this.form.serialize());
-		},
 		enable_ux : function (){
-			this.form.on(submit_event,this.submit_handle.bind(this));
+			this.form.on(submit_event, _submit_handle.bind(this));
 		},
 		dispose : function(){
-			this.form.off(submit_event,this.submit_handle.bind(this));
+			this.form.off(submit_event, _submit_handle.bind(this));
 			this.form = null;
 		}
 	};

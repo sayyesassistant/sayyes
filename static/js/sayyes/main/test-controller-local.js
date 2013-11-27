@@ -30,7 +30,7 @@ require([
 			track  = new tracker(instance);
 			track.start();
 
-			instance.define(window.mock);
+			instance.create(window.mock);
 		} catch (error) {
 			log.error("error to create controller:",error.message);
 			return;

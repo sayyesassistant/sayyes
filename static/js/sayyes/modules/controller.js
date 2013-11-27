@@ -115,21 +115,20 @@ define([
 
 		load_config : function (url, on_success, on_error) {
 			var service = new ajax();
-
 			service.method("get")
 				.expect("status","output")
 				.expect("value",_controller_vo.implements)
-				.error(_notify(this,"controller got invalid config!",error))
 				.error(on_error)
+				.error(_notify(this,"controller got invalid config!",error))
 				.success(on_success)
 				.success(function(result){
 					service.dispose();
-					this.define(result.value);
+					this.create(result.value);
 				}.bind(this))
 				.request(url);
 		},
 
-		define : function (data) {
+		create : function (data) {
 			if (!_controller_vo.implements(data)){
 				_notify(this,"controller got invalid data to initialize. check for missing properties!",error)(data);
 				return;
@@ -151,6 +150,7 @@ define([
 			}
 			this.create_view(blob);
 		},
+
 		create_view : function (config) {
 			if (!_view_vo.implements(config)) {
 				_notify(this,"controller => malformed view template",error)(config);
@@ -166,19 +166,16 @@ define([
 				}
 			}
 			_notify(this,"controller => view '"+this.queued_view.name+"' created.")();
-			var merged_data = mix_in({}, config.data, this.current_view ? this.current_view.form_result : {});
-			this.render_view(merged_data);
+			var merged_data =  this.current_view ? this.current_view.form_result : {};
+			this.render_view(this.queued_view, mix_in({}, config.data, merged_data));
 		},
-		render_view : function (data) {
-			if (!this.queued_view) {
-				_notify(this,"controller => no queued view to render",error)();
-				return;
-			}
-			data = data || {};
-			this.queued_view.on.render.failed.addOnce(_notify(this,"controller => view '"+this.queued_view.name+"' failed to render.",error));
-			this.queued_view.on.render.passed.addOnce(this.close,this);
-			this.queued_view.render(mix_in(data,helper_nav));
+
+		render_view : function (view, data) {
+			view.on.render.failed.addOnce(_notify(this,"controller => view '"+view.name+"' failed to render.",error));
+			view.on.render.passed.addOnce(this.close,this);
+			view.render(mix_in(data,helper_nav));
 		},
+
 		open : function () {
 			if (!this.queued_view) {
 				_notify(this,"controller => no queued view to open!",error)();
@@ -193,6 +190,7 @@ define([
 			this.queued_view.on.open.failed.addOnce(_on_fail,this);
 			this.queued_view.open();
 		},
+
 		close: function () {
 			if (!this.current_view) {
 				_notify(this,"controller => no current view to close, open queued.",warn)();

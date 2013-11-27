@@ -13,6 +13,17 @@ define([
 
 	reg = /([\w-]+)$/;
 
+
+	function _click_handle (event){
+		var nav_to = event.target.href.match(reg);
+		if (!!nav_to && !!nav_to[1]){
+			this.view.on.nav.dispatch(nav_to[1]);
+		} else {
+			event.preventDefault();
+			log.info("plugin-nav couldn't find nav value on:",event.target.href);
+		}
+	}
+
 	ClosureNav = function (node,view) {
 		this.node = $(node);
 		this.view = view;
@@ -21,22 +32,12 @@ define([
 
 	ClosureNav.prototype = {
 
-		click_handle : function (event){
-			var nav_to = event.target.href.match(reg);
-			if (!!nav_to && !!nav_to[1]){
-				this.view.on.nav.dispatch(nav_to[1]);
-			} else {
-				event.preventDefault();
-				log.info("plugin-nav couldn't find nav value on:",event.target.href);
-			}
-		},
-
 		enable_ux : function (){
-			this.node.on(click_event,this.click_handle.bind(this));
+			this.node.on(click_event,_click_handle.bind(this));
 		},
 
 		dispose : function(){
-			this.node.off(click_event,this.click_handle.bind(this));
+			this.node.off(click_event,_click_handle.bind(this));
 			this.node = null;
 			this.view = null;
 		}
