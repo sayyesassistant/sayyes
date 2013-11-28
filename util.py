@@ -28,7 +28,7 @@ class MailSender(object):
     def send(self):
 
         message = mail.EmailMessage(sender=self.sender, subject=self.subject + " - Say Yes! Assistant")
-        message.to = self.toName + " <" + self.email + ">"
+        message.to = self.toName + " <" + self.toEmail + ">"
         message.body = self.msgTXT
         message.html = self.msgHTML
         r = message.send()
