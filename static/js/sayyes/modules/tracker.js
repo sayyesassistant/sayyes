@@ -3,58 +3,97 @@
 */
 define([
 	"sayyes/util/ajax",
-	"sayyes/util/log"
+	"sayyes/util/log",
+	"mout/object/forOwn",
+	"mout/array/forEach",
+	"mustache/mustache",
+	"signals/signals"
 ], function (
 	ajax,
-	log
+	log,
+	for_own,
+	for_each,
+	mustache,
+	signals
 ) {
 
-	var AppTracker, form;
+	var AppTracker, input_render;
 
-	AppTracker = function(controller){
+	input_render = mustache.compile("<input type='hidden' name='{{name}}' value='{{value}}' />");
 
-		form = document.getElementsByClassName("session-tracker");
-
-		if (!form){
+	function _init (instance) {
+		instance.form = document.getElementsByClassName("session-tracker");
+		if (!instance.form){
 			log.error("AppTracker failed to find 'session-tracker' form");
 			return;
 		}
+		instance.on ={
+			success : new signals(),
+			error : new signals()
+		};
+		instance.form = $(instance.form[0]);
+		instance.service = new ajax();
+	}
 
-		form = $(form[0]);
-
-		this.controller = controller;
-		this.service = new ajax();
+	AppTracker = function(){
+		_init(this);
 	};
 
-	function _on_nav (view) {
-
-		var hiddeName = form.find("input[name=viewName]"),
-			data;
-
-		if (!!hiddeName.length){
-			hiddeName.attr("value",view.name);
-		}
-
-		data = form.serialize();
-
-		if (!data || (!!data && !data.length)) {
-			log.error("AppTracker._on_nav failed to track. for has no data");
+	function _updateHidden (key, value, form) {
+		if (!form || !key || !value){
+			log.error("tracker._updateHidden => got invalid arguments to udpate.");
 			return;
 		}
+		var input = form.find("input[name="+key+"]");
+		if (!!input.length){
+			input.attr("value",value);
+			return;
+		}
+		form.append(input_render({'name':key,'value':value}));
+	}
 
-		this.service
-			.method(form.attr("method"))
-			.request(form.attr("action"),data);
+	function _parse_success (result) {
+		var form = this.form;
+		function each_hidden (value, key) {_updateHidden(key, value, form); }
+		function each_item (data, index) {for_own(data,each_hidden); }
+		if (!!result.value.hiddens) {
+			for_each(result.value.hiddens, each_item);
+		}
+		this.on.success.dispatch(result);
+	}
+
+	function _notify_error (result){
+		log.error("tracker._notify_error => failed to request next view",result);
+		this.on.error.dispatch(result.value);
 	}
 
 	AppTracker.prototype = {
-		start : function (){
-			if (!!this.service){
-				this.controller.on.nav.add( _on_nav.bind(this) );
+		request_view : function (view_name) {
+			if (!this.form){
+				log.error("impossible to request view, no form found");
+				return;
 			}
-		},
-		stop : function () {
-			this.controller.on.nav.remove( _on_nav.bind(this) );
+
+			_updateHidden("viewName",view_name,this.form);
+
+			var data = this.form.serialize();
+
+			if (!data || (!!data && !data.length)) {
+				log.error("AppTracker._on_nav failed to track. for has no data");
+				return;
+			}
+
+			this.service.on.success.removeAll();
+			this.service.on.error.removeAll();
+
+			this.service.on.success.addOnce(_parse_success.bind(this));
+			this.service.on.error.addOnce(_notify_error.bind(this));
+
+			this.service
+				.expect("status",function(value){return value!=="error";})
+				.expect("value",function(value){return !!value;})
+				.method(this.form.attr("method"))
+				.request(this.form.attr("action"),data);
 		}
 	};
 

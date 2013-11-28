@@ -5,18 +5,18 @@
 Table of contents
 
 - [controller](#controller)
-- [attendant_data](#attendant_data)
-- [client_data](#client_data)
-- [view](#view)
-- [view_data](#view_data)
-- [nav_data](#nav_data)
-- [picture_data](#picture_data)
-- [form_data](#form_data)
-	- [hidden_data](#hidden_data)
-	- [form_button](#form_button)
-	- [form_input](#form_input)
-	- [form_radio](#form_radio)
-	- [form_checkbox](#form_checkbox)
+	- [attendant_data](#attendant_data)
+	- [client_data](#client_data)
+	- [view](#view)
+		- [view_data](#view_data)
+		- [nav_data](#nav_data)
+		- [picture_data](#picture_data)
+		- [form_data](#form_data)
+			- [hidden_data](#hidden_data)
+			- [form_button](#form_button)
+			- [form_input](#form_input)
+			- [form_radio](#form_radio)
+			- [form_checkbox](#form_checkbox)
 
 The main wrapper is the [controller](#controller) model
 

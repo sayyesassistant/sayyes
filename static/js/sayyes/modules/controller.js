@@ -3,20 +3,26 @@
 */
 define([
 	"sayyes/util/log",
-	"sayyes/modules/view",
 	"sayyes/util/vo/view-vo",
 	"sayyes/util/vo/controller-vo",
 	"sayyes/util/ajax",
+
+	"sayyes/modules/view",
+	"sayyes/modules/tracker",
+
 	"sayyes/helpers/helper-nav",
+
 	"mout/object/mixIn",
 	"mout/array/find",
+
 	"signals/signals"
 ], function (
 	log,
-	view,
 	view_vo,
 	controller_vo,
 	ajax,
+	view,
+	tracker,
 	helper_nav,
 	mix_in,
 	find,
@@ -54,9 +60,12 @@ define([
 		instance.queued_view = null;
 		instance.current_view = null;
 		instance.previous_view = null;
+		instance.save_nav = true;
 		instance.data = {};
 		instance.scope = $(scope);
 		instance.pooling = {};
+		instance.tracker = new tracker();
+		instance.tracker.on.error.addOnce(_show_error.bind());
 		instance.on = {
 			warn : new signals(),
 			info : new signals(),
@@ -89,20 +98,32 @@ define([
 		this.current_view = this.queued_view;
 		this.queued_view = null;
 		this.current_view.enable_ux();
-		this.current_view.on.nav.add(_on_nav,this);
+		this.current_view.on.nav.add(_request_name.bind(this));
 		_notify(this,"controller => view '"+this.current_view.name+"' opened.")();
 		this.on.nav.dispatch(this.current_view);
 	}
 
-	function _on_nav (name) {
+	function _show_error (result) {
+		alert("Deu errado! fim da linha. ainda preciso fazer o fallback para mostrar o erro na tela");
+	}
+
+	function _request_name (name) {
 		if (this.current_view && this.current_view.name === name){
 			_notify(this,"controller => view '"+name+"' already opened opened.",warn)();
 			return;
 		}
 		var view_data = _get_view(name,this.data.views);
-		if (!!view_data) {
+		function tracker_handler (result) {
 			this.create_view(view_data);
-		} else {
+		}
+		if (!!view_data && !!this.save_nav) {
+			this.tracker.on.success.addOnce(tracker_handler.bind(this));
+			this.tracker.request_view(view_data.name);
+		}
+		else if (!!view_data && !!this.save_nav) {
+			this.create_view(view_data);
+		}
+		else {
 			_notify(this,"controller => view '"+name+"' not found.",warn)();
 		}
 	}

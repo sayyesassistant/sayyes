@@ -36,7 +36,8 @@ define([
 					result = new result_vo();
 					result.set("status","error");
 					result.set("exception" , this.NOT_MATCH);
-					result.set("message", "'"+prop+"' doesn't match expected value");
+					result.set("message", "'"+prop+"' doesn't match expected values");
+					result.set("value", xhr);
 					this.result = result.data();
 					this.on.error.dispatch(this.result);
 					return;

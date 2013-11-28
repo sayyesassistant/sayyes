@@ -1,6 +1,8 @@
  # -*- coding: utf-8 -*-
 import webapp2
 import json
+import random
+import string
 
 class LoginForm(webapp2.RequestHandler):
     def validate(self, *args):
@@ -62,6 +64,27 @@ class DestiniationForm(webapp2.RequestHandler):
     def post(self):
         self.validate(self)
 
+class ViewAuthForm(webapp2.RequestHandler):
+    def validate(self, *args):
+        self.response.headers['Content-Type'] = 'application/json'
+        self.response.headers['Access-Control-Allow-Methods'] = 'POST, GET'
+        char_set = string.ascii_uppercase + string.digits
+        obj = {
+            "status" : "error",
+            "exception" : None,
+            "message" : None,
+            "value" : {
+                "hiddens" : [{"responseKey":''.join(random.sample(char_set*6,25))}]
+            }
+        }
+        self.response.out.write(json.dumps(obj))
+
+    def get(self):
+        self.validate(self)
+
+    def post(self):
+        self.validate(self)
+
 class Foo(webapp2.RequestHandler):
 
     def default_response(self, *args):
@@ -80,6 +103,8 @@ class Foo(webapp2.RequestHandler):
     def post(self):
         self.default_response(self)
 
-application = webapp2.WSGIApplication([(r'/mock-service/login.json', LoginForm),(r'/mock-service/destination.json', DestiniationForm),
-    (r'/mock-service/foo.json', Foo)],
-    debug=True)
+application = webapp2.WSGIApplication([
+    (r'/mock-service/login.json', LoginForm)
+    ,(r'/mock-service/destination.json', DestiniationForm)
+    ,(r'/mock-service/request-view.json', ViewAuthForm)
+    , (r'/mock-service/foo.json', Foo)], debug=True)
