@@ -70,7 +70,7 @@ class ViewAuthForm(webapp2.RequestHandler):
         self.response.headers['Access-Control-Allow-Methods'] = 'POST, GET'
         char_set = string.ascii_uppercase + string.digits
         obj = {
-            "status" : "error",
+            "status" : "success",
             "exception" : None,
             "message" : None,
             "value" : {
