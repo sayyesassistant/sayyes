@@ -10,7 +10,7 @@ from time import gmtime, strftime
 from google.appengine.ext import ndb
 
 class HomePage(AppHandler):
-    
+
     def get(self):
 
         templateValues = {'teste':'teste'}
@@ -66,7 +66,7 @@ class Profile(AppHandler):
             self.jsonError(None, 1, errors)
 
 class SignUp(AppHandler):
-    
+
     def get(self):
         # check the browser session
         self.logged()
@@ -111,7 +111,7 @@ class SignUp(AppHandler):
             self.jsonError(None, 1, errors)
 
 class LogIn(AppHandler):
-    
+
     def get(self):
         # verifica a sessao
         self.logged()
@@ -137,12 +137,12 @@ class LogOut(AppHandler):
         self.redirect('/')
 
 class ForgotPassword(AppHandler):
-    
+
     def get(self):
         self.render(Const.WEBSITE + 'forgot_password.html', {})
 
     def post(self):
-        
+
         email = self.request.get('email').strip()
         userEmail = User.query(User.email == email).get()
         #logging.info(userEmail.email)
@@ -154,15 +154,17 @@ class ForgotPassword(AppHandler):
             # test entity
             if userKey is None:
                 self.jsonError()
-            
-        mailSender = MailSender()
-        mailSender.forgotPwd(userEmail.name, userEmail.email, newPwd)
-        
+            #send new pwd
+            nps = NewPasswordSender(newPwd)
+            nps.toName = userEmail.name
+            nps.toEmail = userEmail.email
+            nps.sendNewPassword()
+
         # returns success anyway as you cannot tell if email was found
         self.jsonSuccess()
 
 class CP(AppHandler):
-    
+
     def get(self):
 
         # check the browser session
@@ -265,7 +267,7 @@ class CP(AppHandler):
                     }, {
                         "label":"voltar para o inicio",
                         "view":"beginning"
-                    }, ]
+                    },]
                 }
             }]
         }

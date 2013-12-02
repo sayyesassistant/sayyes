@@ -20,28 +20,49 @@ class MailSender(object):
 
     msgHTML = None
     msgTXT = None
+    toName = None
+    toEmail = None
+    subject = None
+    sender = Const.APP_SENDER_NAME + " <" + Const.APP_SENDER_EMAIL + ">"
 
-    def forgotPwd(self, name, email, newPwd):
-        # send email
-        subject = "New password request"
+    def send(self):
 
-        self.msgHTML = "<p><b>*** " + subject + " ***</b></p>"
-        self.msgHTML = self.msgHTML + "<p>Hi " + name + "!</p>"
-        self.msgHTML = self.msgHTML + "<p>Here it goes you new password: <b>" + newPwd + "</b></p>"
-        self.msgHTML = self.msgHTML + "<p>If you did not request a new password please contact our support team by replying to this e-mail.</p>"
-        self.msgHTML = self.msgHTML + "<p>Best regards from <b>" + Const.APP_SENDER_NAME + "</b>.</p>"
-
-        self.msgTXT = "*** " + subject + " ***\n"
-        self.msgTXT = self.msgTXT + "Hi " + name + "!\n"
-        self.msgTXT = self.msgTXT + "Here it goes you new password: " + newPwd + "\n"
-        self.msgTXT = self.msgTXT + "If you did not request a new password please contact our support team by replying to this e-mail.\n"
-        self.msgTXT = self.msgTXT + "Best regards from " + Const.APP_SENDER_NAME + " .\n"
-
-        sender = Const.APP_SENDER_NAME + " <" + Const.APP_SENDER_EMAIL + ">"
-        message = mail.EmailMessage(sender=sender, subject=subject + " - Say Yes! Assistant")
-        message.to = name + " <" + email + ">"
+        message = mail.EmailMessage(sender=self.sender, subject=self.subject + " - Say Yes! Assistant")
+        message.to = self.toName + " <" + self.toEmail + ">"
         message.body = self.msgTXT
         message.html = self.msgHTML
         r = message.send()
-        logging.info("New e-mail sent (" + subject + ") to " + message.to)
+        logging.info("New e-mail sent (" + self.subject + ") to " + message.to)
         return r
+
+class NewPasswordSender(MailSender):
+
+    newPwd = None
+
+    def __init__(self, newPwd):
+        self.newPwd = newPwd
+        self.subject = "New password request"
+        MailSender.__init__(self)
+
+    def buildMsgHTML(self):
+
+        self.msgHTML = "<p><b>*** " + self.subject + " ***</b></p>"
+        self.msgHTML = self.msgHTML + "<p>Hi " + self.toName + "!</p>"
+        self.msgHTML = self.msgHTML + "<p>Here it goes you new password: <b>" + self.newPwd + "</b></p>"
+        self.msgHTML = self.msgHTML + "<p>If you did not request a new password please contact our support team by replying to this e-mail.</p>"
+        self.msgHTML = self.msgHTML + "<p>Best regards from <b>" + Const.APP_SENDER_NAME + "</b>.</p>"
+
+    def buildMsgTXT(self):
+
+        self.msgTXT = "*** " + self.subject + " ***\n"
+        self.msgTXT = self.msgTXT + "Hi " + self.toName + "!\n"
+        self.msgTXT = self.msgTXT + "Here it goes you new password: " + self.newPwd + "\n"
+        self.msgTXT = self.msgTXT + "If you did not request a new password please contact our support team by replying to this e-mail.\n"
+        self.msgTXT = self.msgTXT + "Best regards from " + Const.APP_SENDER_NAME + " .\n"
+
+    def sendNewPassword(self):
+
+        self.buildMsgHTML()
+        self.buildMsgTXT()
+
+        return self.send()
