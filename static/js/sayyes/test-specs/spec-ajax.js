@@ -1,3 +1,6 @@
+/*
+@grunt -task=comp-js -app=test-specs -env=final
+*/
 define(["sayyes/util/ajax"], function(ajax) {
 	var xhr;
 	describe("testing sayyes/utils/ajax", function() {
@@ -136,7 +139,7 @@ define(["sayyes/util/ajax"], function(ajax) {
 
 			waitsFor(function(){
 				return !!result;
-			},"error callback to be trigged", 1500);
+			},"error callback to be trigged", 2000);
 
 			runs(function(){
 				expect(result.exception).toEqual(0);
@@ -177,7 +180,7 @@ define(["sayyes/util/ajax"], function(ajax) {
 
 			waitsFor(function(){
 				return !!result;
-			},"error callback to be trigged", 1500);
+			},"error callback to be trigged", 2000);
 
 			runs(function(){
 				expect(result).toEqual(jasmine.any(Object));
@@ -198,7 +201,7 @@ define(["sayyes/util/ajax"], function(ajax) {
 
 			waitsFor(function(){
 				return !!result;
-			},"error callback to be trigged", 1500);
+			},"error callback to be trigged", 3000);
 
 			runs(function(){
 				expect(result).toEqual(jasmine.any(Object));
