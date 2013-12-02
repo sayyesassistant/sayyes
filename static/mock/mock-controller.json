@@ -26,6 +26,7 @@
 		"template_name":"mock_template",
 		"data":{
 			"title":"Trabalhe com a gente",
+			"description":"Alguma descrição aqui...",
 			"nav":[{
 				"label":"voltar",
 				"view":"beginning"
@@ -77,14 +78,26 @@
 		"name" : "destination",
 		"template_name":"mock_template",
 		"data":{
-			"title":"You got it!",
 			"nav" : [{
 				"label":"ver mais destinos",
 				"view":"travell"
 			},{
 				"label":"voltar para o inicio",
 				"view":"beginning"
-			},]
+			}]
+		}
+	} ,  {
+		"name" : "result",
+		"template_name":"mock_template",
+		"data":{
+			"title" : "Obrigado!",
+			"nav" : [{
+				"label":"ver mais destinos",
+				"view":"travell"
+			},{
+				"label":"voltar para o inicio",
+				"view":"beginning"
+			}]
 		}
 	}]
 }
