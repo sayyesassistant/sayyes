@@ -120,6 +120,18 @@ Simple output example (data outputed, could be object/html or even binary):
 			"last_name" : "bar"
 		}
 	}
+        
+###Authentication examples:
+
+For requests from outside the app:
+
+Param #1 accessKey => "user access key"
+Param #2 email => "user e-mail"
+
+For requests from inside the app:
+
+Param #1 request type => "ajax"
+Param #2 key => "some entity key in tune with the service consumed"
 
 ###Exception Index:
 
