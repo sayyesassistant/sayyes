@@ -69,6 +69,7 @@ class Session(ndb.Model):
 class SessionResponse(ndb.Model):
 
     userResponse = ndb.JsonProperty(compressed=True)
+    breadcrumb = ndb.StringProperty(indexed=False)
     session = ndb.KeyProperty(kind=Session)
     created = ndb.DateTimeProperty(auto_now_add=True)
     modified = ndb.DateTimeProperty(auto_now_add=True)

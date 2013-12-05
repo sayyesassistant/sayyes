@@ -144,20 +144,20 @@ class ForgotPassword(AppHandler):
     def post(self):
 
         email = self.request.get('email').strip()
-        userEmail = User.query(User.email == email).get()
-        #logging.info(userEmail.email)
-        if userEmail is not None:
+        user = User.query(User.email == email).get()
+        #logging.info(user.email)
+        if user is not None:
             # reset pwd
-            newPwd = userEmail.pwdGenerator()
-            userEmail.pwd = userEmail.hash(newPwd)
-            userKey = userEmail.put()
+            newPwd = user.pwdGenerator()
+            user.pwd = user.hash(newPwd)
+            userKey = user.put()
             # test entity
             if userKey is None:
                 self.jsonError()
             #send new pwd
             nps = NewPasswordSender(newPwd)
-            nps.toName = userEmail.name
-            nps.toEmail = userEmail.email
+            nps.toName = user.name
+            nps.toEmail = user.email
             nps.sendNewPassword()
 
         # returns success anyway as you cannot tell if email was found

@@ -110,11 +110,12 @@ class RegisterResponse(AppHandler):
                 urlSafeResponseKey = self.request.get('responseKey')
                 responseKey = ndb.Key(urlsafe=urlSafeResponseKey)
                 sr = responseKey.get()
+                sr.breadcrumb += ',"' + self.request.get('viewName') + '"'
                 logging.info("response exists")
             else:
                 sr = SessionResponse()
+                sr.breadcrumb = '"' + self.request.get('viewName') + '"'
                 
-            sr.userResponse = self.request.get('userResponse')
             sr.session = sessionKey
 
             responseKey = sr.put()
