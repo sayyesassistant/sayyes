@@ -8,7 +8,7 @@
 		"files": [{
 			"expand": true,
 			"cwd": "{{{sass_sources}}}",
-			"src": ["*.scss"],
+			"src": ["**/*.scss"],
 			"dest": "{{{dest_css_folder}}}",
 			"ext": "-min.css"
 		}]
@@ -22,7 +22,7 @@
 		"files": [{
 			"expand": true,
 			"cwd": "{{{sass_sources}}}",
-			"src": ["*.scss"],
+			"src": ["**/*.scss"],
 			"dest": "{{{dest_css_folder}}}",
 			"ext": "-min.css"
 		}]
