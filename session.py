@@ -120,8 +120,9 @@ class RegisterResponse(AppHandler):
 
             responseKey = sr.put()
 
-            responseObj = {}
-            responseObj['responseKey'] = responseKey.urlsafe()
+            responseObj = {
+                "hiddens" : [{"responseKey":responseKey.urlsafe()}]
+            }
 
             self.jsonSuccess('Response registered', responseObj)
 
