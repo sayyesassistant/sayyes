@@ -60,6 +60,7 @@ define([
 	}
 
 	function on_success (xhr) {
+		this.status = this.status_idle;
 		if (!!this._xpect){
 			validate.bind(this)(xhr);
 			return;
@@ -78,13 +79,17 @@ define([
 	}
 
 	function on_error(xhr, type){
+		this.status = this.status_idle;
 		this.result = new result_vo();
 		this.result.set("exception", xhr.status);
 		this.result.set("message", xhr.responseText);
 		this.on.error.dispatch(this.result.data());
 	}
 
-	function __init(instance){
+	function __init (instance) {
+		instance.status_idle = 0;
+		instance.status_running = 1;
+		instance.status = instance.status_idle;
 		instance.on = {
 			success : new signals(),
 			error : new signals()
@@ -172,10 +177,15 @@ define([
 		},
 
 		request : function (url, data) {
+			if (this.status!==this.status_idle){
+				log.error("ajax.request :: alredy running...");
+				return null;
+			}
 			if (!url){
 				log.error("ajax.request can't be done without url.");
 				return null;
 			}
+			this.status = this.status_running;
 			if (!!this.mock_data){
 				this.options.success(this.mock_data);
 				this.mock_data = undefined;

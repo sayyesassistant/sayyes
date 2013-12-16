@@ -21,7 +21,6 @@ define(["sayyes/util/ajax"], function(ajax) {
 			xhr = new ajax();
 			xhr.type("text");
 			expect(xhr.options.dataType).toEqual("text");
-			expect(function(){xhr.type(null);}).toThrow();
 		});
 		it("should not be able to set unsupported types (ie: json, jsonp, xml, html, text)", function() {
 			xhr = new ajax();
@@ -57,6 +56,11 @@ define(["sayyes/util/ajax"], function(ajax) {
 			})
 			.mock({"foo":"bar"})
 			.request("foo/url");
+		});
+		it("shouldn't request while a pending request still running.", function() {
+			xhr = new ajax();
+			xhr.request("/mock-data/mock-view.json");
+			expect(xhr.request("/mock-data/mock-view.json")).toEqual(null);
 		});
 		it("should be able to match expected JSON result", function() {
 			var result;

@@ -19,6 +19,7 @@ define([
 
 	submit_event = "submit";
 
+	//TO-DO: candidate to be removed
 	function _fireAction (value) {
 
 		if (!value){
