@@ -19,49 +19,33 @@ define([
 
 	submit_event = "submit";
 
-	//TO-DO: candidate to be removed
-	function _fireAction (value) {
-
-		if (!value){
-			log.warn("plugin-form._fireAction got no action to take!");
-			return null;
-		}
-
-		var blob = value.split("="),
-			target = blob[1] || "";
-			target = target.match(reg_action);
-
-		switch (blob[0]) {
-			case "alert":
-				this.view.show_alert();
-				break;
-			case "nav":
-				this.view.on.nav.dispatch(target ? target[0] : null);
-				break;
-		}
-	}
-
-	function _parseError (result){
+	function _parseResult(result){
+		this.form.removeClass("loading");
 		this.view.form_result = result.value;
-		this.view.on.nav.dispatch(this.on_error);
-	}
-
-	function _parseSuccess (result){
-		this.view.form_result = result.value;
-		this.view.on.nav.dispatch(this.on_success);
+		var passed = (!!result.value.status && result.value.status!=="error");
+			fn = passed ? this.on_success : this.on_error;
+		this.view.on.nav.dispatch(fn);
 	}
 
 	function _submit_handle (event) {
 		event.preventDefault();
+
+		if(!!this.service && this.service.status !== this.service.status_idle){
+			log.warn("plugin-form._submit_handle => service running...");
+			return;
+		}
+
 		if (!this.service){
 			this.service = new ajax();
 			this.service
-				.success(_parseSuccess.bind(this))
-				.error(_parseError.bind(this))
+				.success(_parseResult.bind(this))
+				.error(_parseResult.bind(this))
 				.expect("status",function(value){
 					return value !== "error";
 				});
 		}
+
+		this.form.addClass("loading");
 		this.service
 			.method(this.form.attr("method"))
 			.request(this.form.attr("action"), this.form.serialize());
