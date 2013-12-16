@@ -6,6 +6,7 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-sass');
+	grunt.loadNpmTasks('grunt-contrib-watch');
 
 	var config   = {
 		arguments : {
@@ -30,7 +31,15 @@ module.exports = function (grunt) {
 			}
 		}
 	},	ready = false;
-
+	config.watch = {
+		scripts : {
+			files : ['static/sass/**/*.scss'],
+			tasks: ['comp-sass'],
+			options: {
+				spawn: false,
+			}
+		}
+	};
 	config.requirejs = grunt.file.readJSON("./.grunt/requirejs-config.json");
 	config.tasks = grunt.file.readJSON("./.grunt/tasks.json");
 	config.app = grunt.file.readJSON("./.grunt/app.json");
@@ -127,11 +136,5 @@ module.exports = function (grunt) {
 			bash(command,null,grunt);
 		}
 		grunt.task.run(["comp-js-all","pages","comp-sass"]);
-	});
-
-	grunt.registerTask('sass-watch', "Starts the sass -watch command", function () {
-		init();
-		grunt.log.ok("to-do!!");
-		// require("./.grunt/tasks/task-sass-watch").run( grunt, this );
 	});
 };
