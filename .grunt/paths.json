@@ -11,14 +11,14 @@
 	"js_sources"       : "{{{static}}}/js",
 	"dest_js_folder"   : "{{{static}}}/js-min",
 
+	"sass_sources"     : "{{{static}}}/sass/output",
+	"dest_css_folder"  : "{{{static}}}/css-min",
+
 	"www_js_folder"    : "/js-min",
 	"www_css_folder"   : "/css-min",
 	"www_mock_service" : "/mock-service",
 	"www_mock_data"    : "/mock-data",
 	"www_examples"    : "/examples",
-
-	"sass_sources"     : "{{{static}}}/sass/sayyes/output",
-	"dest_css_folder"  : "{{{static}}}/css-min",
 
 	"bower_path"       : "bower_components"
 }

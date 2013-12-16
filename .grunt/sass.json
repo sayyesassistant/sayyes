@@ -3,7 +3,9 @@
 		"options" : {
 			"style": "expanded",
 			"trace":true,
-			"quiet" : false
+			"quiet" : false,
+			"loadPath" : "bower_components",
+			"debugInfo" : true
 		},
 		"files": [{
 			"expand": true,
@@ -17,7 +19,8 @@
 		"options" : {
 			"style": "compressed",
 			"trace":true,
-			"quiet" : false
+			"quiet" : false,
+			"loadPath" : "bower_components"
 		},
 		"files": [{
 			"expand": true,
