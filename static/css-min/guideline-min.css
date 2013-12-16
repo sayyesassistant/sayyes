@@ -1,3 +1,6 @@
+/*
+@grunt -task=comp-sass -env=dev
+*/
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ialmeida\/Dropbox\/exchange\/sayyesassistant\/static\/sass\/layout\/_guideline\.scss}line{font-family:\000031}}
 code {
   display: block;
@@ -42,4 +45,13 @@ div.alert {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ialmeida\/Dropbox\/exchange\/sayyesassistant\/static\/sass\/layout\/_guideline\.scss}line{font-family:\0000330}}
 div.show {
   display: block;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ialmeida\/Dropbox\/exchange\/sayyesassistant\/static\/sass\/output\/guideline\.scss}line{font-family:\000038}}
+.view-holder {
+  background: white;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/ialmeida\/Dropbox\/exchange\/sayyesassistant\/static\/sass\/output\/guideline\.scss}line{font-family:\000039}}
+.view-holder.loading {
+  background: gray;
 }

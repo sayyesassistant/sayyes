@@ -1,5 +1,5 @@
 /*
-@grunt -task=comp-js-all
+@grunt -task=comp-js-all -env=final
 */
 define([
 	"sayyes/util/log",
@@ -8,7 +8,6 @@ define([
 	"sayyes/util/ajax",
 	"sayyes/modules/view",
 	"sayyes/modules/tracker",
-	"sayyes/helpers/helper-nav",
 	"mout/object/mixIn",
 	"mout/array/find",
 	"signals/signals"
@@ -19,7 +18,6 @@ define([
 	ajax,
 	view,
 	tracker,
-	helper_nav,
 	mix_in,
 	find,
 	signals
@@ -56,7 +54,7 @@ define([
 		instance.queued_view = null;
 		instance.current_view = null;
 		instance.previous_view = null;
-		instance.save_nav = true;
+		instance.safe_nav = true;
 		instance.data = {};
 		instance.scope = $(scope);
 		instance.pooling = {};
@@ -94,29 +92,32 @@ define([
 		this.current_view = this.queued_view;
 		this.queued_view = null;
 		this.current_view.enable_ux();
-		this.current_view.on.nav.add(_request_name.bind(this));
+		this.current_view.on.nav.add(_request_next.bind(this));
 		_notify(this,"controller => view '"+this.current_view.name+"' opened.")();
 		this.on.nav.dispatch(this.current_view);
 	}
 
 	function _show_error (result) {
+		this.scope.removeClass("loading");
 		alert("Deu errado! fim da linha. ainda preciso fazer o fallback para mostrar o erro na tela");
 	}
 
-	function _request_name (name) {
+	function _request_next (name) {
 		if (this.current_view && this.current_view.name === name){
 			_notify(this,"controller => view '"+name+"' already opened opened.",warn)();
 			return;
 		}
 		var view_data = _get_view(name,this.data.views);
 		function tracker_handler (result) {
+			this.scope.removeClass("loading");
 			this.create_view(view_data);
 		}
-		if (!!view_data && !!this.save_nav) {
+		if (!!view_data && !!this.safe_nav) {
+			this.scope.addClass("loading");
 			this.tracker.on.success.addOnce(tracker_handler.bind(this));
 			this.tracker.request_view(view_data.name);
 		}
-		else if (!!view_data && !!this.save_nav) {
+		else if (!!view_data && !!this.safe_nav) {
 			this.create_view(view_data);
 		}
 		else {
@@ -190,7 +191,8 @@ define([
 		render_view : function (view, data) {
 			view.on.render.failed.addOnce(_notify(this,"controller => view '"+view.name+"' failed to render.",error));
 			view.on.render.passed.addOnce(this.close,this);
-			view.render(mix_in(data,helper_nav));
+			// apply new helpers here!
+			view.render(data);
 		},
 
 		open : function () {

@@ -37,7 +37,11 @@
 		"template_name":"mock_template",
 		"data":{
 			"title":"Trabalhe com a gente",
-			"description":"Alguma descrição aqui..."
+			"description":"Alguma descrição aqui...",
+			"nav":[{
+				"label":"voltar",
+				"view":"beginning"
+			}]
 		}
 	} , {
 		"name":"travell",
@@ -121,7 +125,7 @@
 <body>
 	<h1>-- Controller test ---</h1>
 	<hr/>
-	<div id="sayyes-assistant"></div>
+	<div id="sayyes-assistant" class="view-holder"></div>
 
 	<script id="mock_template" type="text/mustache-template" charset="utf-8">
 		<div class="view">

@@ -1,3 +1,13 @@
+/*
+@grunt -task=comp-sass -env=dev
+*/
 @import "bourbon/app/assets/stylesheets/bourbon",
 		"gs/sass/gs",
 		"../layout/guideline";
+
+.view-holder {
+	&.loading {
+		background: gray;
+	}
+	background: white;
+}
