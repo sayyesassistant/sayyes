@@ -6,15 +6,11 @@ define([
 	"sayyes/util/vo/view-vo",
 	"sayyes/util/vo/controller-vo",
 	"sayyes/util/ajax",
-
 	"sayyes/modules/view",
 	"sayyes/modules/tracker",
-
 	"sayyes/helpers/helper-nav",
-
 	"mout/object/mixIn",
 	"mout/array/find",
-
 	"signals/signals"
 ], function (
 	log,

@@ -70,7 +70,7 @@
 	{{#description}}
 		<h2>{{description}}</h2>
 	{{/description}}
-	{{#has_nav}}
+	{{#nav.length}}
 		<nav>
 			<ul>
 			{{#nav}}
@@ -78,7 +78,7 @@
 			{{/nav}}
 			</ul>
 		</nav>
-	{{/has_nav}}
+	{{/nav.length}}
 	{{#form}}
 		<form id="{{form.id}}" action="{{form.action}}" method="{{form.method}}" data-on-success="{{form.on_success}}" data-on-error="{{form.on_error}}">
 			{{#form.hiddens}}
