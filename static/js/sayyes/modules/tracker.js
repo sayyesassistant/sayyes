@@ -59,7 +59,7 @@ define([
 		if (!!result.value.hiddens) {
 			for_each(result.value.hiddens, each_item);
 		}
-		this.on.success.dispatch(result);
+		this.on.success.dispatch(result.value);
 	}
 
 	function _notify_error (result){

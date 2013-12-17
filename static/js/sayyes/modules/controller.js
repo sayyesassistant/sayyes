@@ -110,6 +110,7 @@ define([
 		var view_data = _get_view(name,this.data.views);
 		function tracker_handler (result) {
 			this.scope.removeClass("loading");
+			view_data.data = mix_in({},view_data.data,result.view_data);
 			this.create_view(view_data);
 		}
 		if (!!view_data && !!this.safe_nav) {

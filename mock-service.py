@@ -134,7 +134,10 @@ class ViewAuthForm(webapp2.RequestHandler):
             "exception" : None,
             "message" : None,
             "value" : {
-                "hiddens" : [{"responseKey":''.join(random.sample(char_set*6,25))}]
+                "hiddens" : [{"responseKey":''.join(random.sample(char_set*6,25))}],
+                "view_data" : {
+                    "title" : "View's title set by mock-service.py"
+                }
             }
         }
         self.response.out.write(json.dumps(obj))
