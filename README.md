@@ -89,37 +89,43 @@ Every single service must be a json object with the following properties:
 
 Simple success example:
 
-	{
-		"status" : "success",
-		"exception" : null,
-		"message" : null,
-		"value" : null
-	}
+```json
+{
+	"status" : "success",
+	"exception" : null,
+	"message" : null,
+	"value" : null
+}
+```
 
 ###Fail example:
 
 Simple fail example:
 
-	{
-		"status" : "error",
-		"exception" : 123,
-		"message" : "Sorry! something wrong happend. Try again later",
-		"value" : null
-	}
+```json
+{
+	"status" : "error",
+	"exception" : 123,
+	"message" : "Sorry! something wrong happend. Try again later",
+	"value" : null
+}
+```
 
 ###Output example:
 
 Simple output example (data outputed, could be object/html or even binary):
 
-	{
-		"status" : "output",
-		"exception" : null,
-		"message" : null,
-		"value" : {
-			"first_name" : "foo"
-			"last_name" : "bar"
-		}
+```json
+{
+	"status" : "output",
+	"exception" : null,
+	"message" : null,
+	"value" : {
+		"first_name" : "foo"
+		"last_name" : "bar"
 	}
+}
+````
 
 ###Authentication examples:
 
@@ -139,17 +145,21 @@ Param #2 key => "some entity key in tune with the service consumed"
 
 The expected result for authenticated navigation follows this model:
 
-'''json
+```json
 {
-		"status" : "output",
-		"exception" : null,
-		"message" : null,
-		"value" : {
-			"hiddens" : Array of [hidden_data](https://github.com/sayyesassistant/sayyes/blob/master/static/templates/README.md#hidden_data)
-			"view_data" : Object  of [view_data](https://github.com/sayyesassistant/sayyes/blob/master/static/templates/README.md#-view)
-		}
+	"status" : "output",
+	"exception" : null,
+	"message" : null,
+	"value" : {
+		"hiddens" : hidden_data,
+		"view_data" : view_data
 	}
-'''
+}
+```
+
+Where:
+- [hidden_data](https://github.com/sayyesassistant/sayyes/blob/master/static/templates/README.md#hidden_data)
+- [view_data](https://github.com/sayyesassistant/sayyes/blob/master/static/templates/README.md#-view)
 
 ###Exception Index:
 
