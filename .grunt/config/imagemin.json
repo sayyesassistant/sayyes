@@ -1,0 +1,13 @@
+{
+	"static": {
+		"options": {
+			"optimizationLevel": 3
+		},
+		"files": [{
+				"expand": true,
+				"cwd": "static/",
+				"src": ["**/*.{png,jpg,gif}"],
+				"dest": "image-min/"
+			}]
+	}
+}

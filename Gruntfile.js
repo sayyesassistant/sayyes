@@ -7,46 +7,28 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-sass');
 	grunt.loadNpmTasks('grunt-contrib-watch');
+	grunt.loadNpmTasks('grunt-contrib-imagemin');
 
-	var config   = {
+	var ready, config;
+
+	ready = false;
+
+	config = {
 		arguments : {
-			"__warn":"don't change! this object will be auto-filled",
-			"env" : "dev",
+			env : "dev",
+			__warn : "don't change! this object will be auto-filled"
 		},
-		concat:{},
-		jshint: {
-			options: {
-				curly: true,
-				eqeqeq: true,
-				eqnull: true,
-				browser: true,
-				globals: {
-					jQuery: true,
-					require:true,
-					define:true
-				}
-			},
-			all: {
-				src: ['./**/js/sayyes/**/*.js','./**/test/spec/*.js']
-			}
-		}
-	},	ready = false;
-	config.watch = {
-		scripts : {
-			files : ['static/sass/**/*.scss'],
-			tasks: ['comp-sass'],
-			options: {
-				spawn: false,
-			}
-		}
+		concat : {},
+		jshint : grunt.file.readJSON("./.grunt/config/jshint.json"),
+		watch : grunt.file.readJSON("./.grunt/config/watch.json"),
+		requirejs : grunt.file.readJSON("./.grunt/config/requirejs.json"),
+		tasks : grunt.file.readJSON("./.grunt/config/tasks.json"),
+		app : grunt.file.readJSON("./.grunt/config/app.json"),
+		paths : grunt.file.readJSON("./.grunt/config/paths.json"),
+		sass : grunt.file.readJSON("./.grunt/config/sass.json"),
+		pages : grunt.file.readJSON("./.grunt/config/pages.json"),
+		imagemin : grunt.file.readJSON("./.grunt/config/imagemin.json"),
 	};
-	config.requirejs = grunt.file.readJSON("./.grunt/requirejs-config.json");
-	config.tasks = grunt.file.readJSON("./.grunt/tasks.json");
-	config.app = grunt.file.readJSON("./.grunt/app.json");
-	config.paths = grunt.file.readJSON("./.grunt/paths.json");
-	config.sass = grunt.file.readJSON("./.grunt/sass.json");
-	config.pages = grunt.file.readJSON("./.grunt/pages.json");
-
 	grunt.initConfig(config);
 
 	//file String file path (not required)
@@ -62,8 +44,6 @@ module.exports = function (grunt) {
 			jshint = grunt.config.get("jshint");
 
 		paths = render(paths);
-		jshint = render(jshint,paths);
-		grunt.config.set("jshint",jshint);
 
 		delete args.__warn;
 		grunt.config.set("arguments",args);

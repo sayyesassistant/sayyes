@@ -1,0 +1,16 @@
+{
+	"options": {
+		"curly": true,
+		"eqeqeq": true,
+		"eqnull": true,
+		"browser": true,
+		"globals": {
+			"jQuery": true,
+			"require":true,
+			"define":true
+		}
+	},
+	"all": {
+		"src": ["./**/js/sayyes/**/*.js"]
+	}
+}

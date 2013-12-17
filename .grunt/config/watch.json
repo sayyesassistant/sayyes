@@ -1,0 +1,16 @@
+{
+	"scripts" : {
+		"files" : ["static/sass/**/*.scss"],
+		"tasks": ["comp-sass"],
+		"options": {
+			"spawn": false
+		}
+	},
+	"images" : {
+		"files" : ["static/images/**/*.jpg","static/images/**/*.png"],
+		"tasks": ["imagemin"],
+		"options": {
+			"spawn": false
+		}
+	}
+}
