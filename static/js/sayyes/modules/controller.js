@@ -23,10 +23,11 @@ define([
 	signals
 ) {
 
-	var Controller, _view_vo, _controller_vo, _notify, error, warn;
+	var Controller, _view_vo, _controller_vo, _notify,
+		log_error, log_warn, _fail_view;
 
-	error = "error";
-	warn = "warn";
+	log_error = "error";
+	log_warn = "warn";
 
 	_view_vo = new view_vo();
 	_controller_vo = new controller_vo();
@@ -74,7 +75,7 @@ define([
 
 	function _on_fail (args) {
 		log.error("fatal error, show alert box");
-		_notify(this,"controller fail =>",error)(args);
+		_notify(this,"controller fail =>",log_error)(args);
 	}
 
 	function _on_close () {
@@ -104,7 +105,7 @@ define([
 
 	function _request_next (name) {
 		if (this.current_view && this.current_view.name === name){
-			_notify(this,"controller => view '"+name+"' already opened opened.",warn)();
+			_notify(this,"controller => view '"+name+"' already opened opened.",log_warn)();
 			return;
 		}
 		var view_data = _get_view(name,this.data.views);
@@ -122,7 +123,7 @@ define([
 			this.create_view(view_data);
 		}
 		else {
-			_notify(this,"controller => view '"+name+"' not found.",warn)();
+			_notify(this,"controller => view '"+name+"' not found.",log_warn)();
 		}
 	}
 
@@ -138,7 +139,7 @@ define([
 				.expect("status","output")
 				.expect("value",_controller_vo.implements)
 				.error(on_error)
-				.error(_notify(this,"controller got invalid config!",error))
+				.error(_notify(this,"controller got invalid config!",log_error))
 				.success(on_success)
 				.success(function(result){
 					service.dispose();
@@ -149,7 +150,7 @@ define([
 
 		create : function (data) {
 			if (!_controller_vo.implements(data)){
-				_notify(this,"controller got invalid data to initialize. check for missing properties!",error)(data);
+				_notify(this,"controller got invalid data to initialize. check for missing properties!",log_error)(data);
 				return;
 			}
 			this.data = data;
@@ -164,7 +165,7 @@ define([
 				break;
 			}
 			if (!blob){
-				_notify(this,"controller => failed to find view: "+this.data.start_with,error)();
+				_notify(this,"controller => failed to find view: "+this.data.start_with,log_error)();
 				return;
 			}
 			this.create_view(blob);
@@ -172,7 +173,7 @@ define([
 
 		create_view : function (config) {
 			if (!_view_vo.implements(config)) {
-				_notify(this,"controller => malformed view template",error)(config);
+				_notify(this,"controller => malformed view template",log_error)(config);
 				return;
 			}
 			this.queued_view = this.pooling[config.name];
@@ -180,7 +181,7 @@ define([
 				try {
 					this.queued_view = view(config);
 				} catch (err) {
-					_notify(this,"controller => view '"+config.name+"' failed to create.",error)(err);
+					_notify(this,"controller => view '"+config.name+"' failed to create.",log_error)(err);
 					return;
 				}
 			}
@@ -190,7 +191,7 @@ define([
 		},
 
 		render_view : function (view, data) {
-			view.on.render.failed.addOnce(_notify(this,"controller => view '"+view.name+"' failed to render.",error));
+			view.on.render.failed.addOnce(_notify(this,"controller => view '"+view.name+"' failed to render.",log_error));
 			view.on.render.passed.addOnce(this.close,this);
 			// apply new helpers here!
 			view.render(data);
@@ -198,11 +199,11 @@ define([
 
 		open : function () {
 			if (!this.queued_view) {
-				_notify(this,"controller => no queued view to open!",error)();
+				_notify(this,"controller => no queued view to open!",log_error)();
 				return;
 			}
 			if (!this.queued_view.html || !this.queued_view.html.length) {
-				_notify(this,"controller => queued view has no html.",error)();
+				_notify(this,"controller => queued view has no html.",log_error)();
 				return;
 			}
 			this.scope.append(this.queued_view.html);
@@ -213,7 +214,7 @@ define([
 
 		close: function () {
 			if (!this.current_view) {
-				_notify(this,"controller => no current view to close, open queued.",warn)();
+				_notify(this,"controller => no current view to close, open queued.",log_warn)();
 				this.open();
 				return;
 			}
