@@ -132,14 +132,6 @@ define([
 			this.on.close.passed.dispatch(this);
 		},
 
-		show_alert : function (value){
-			console.log("show alert",value);
-		},
-
-		close_alert : function (){
-			console.log(value);
-		},
-
 		dispose : function () {
 			this.html.removeClass(class_close);
 			this.html = null;
