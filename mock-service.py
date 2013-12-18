@@ -128,18 +128,27 @@ class ViewAuthForm(webapp2.RequestHandler):
     def validate(self, *args):
         self.response.headers['Content-Type'] = 'application/json'
         self.response.headers['Access-Control-Allow-Methods'] = 'POST, GET'
+        mock_error = self.request.get('error')
         char_set = string.ascii_uppercase + string.digits
-        obj = {
-            "status" : "success",
+        if mock_error == "true" :
+            obj = {
+            "status" : "error",
             "exception" : None,
-            "message" : None,
-            "value" : {
-                "hiddens" : [{"responseKey":''.join(random.sample(char_set*6,25))}],
-                "view_data" : {
-                    "title" : "View's title set by mock-service.py"
+            "message" : "Failed during auth process!",
+            "value" : None
+        }
+        else :
+            obj = {
+                "status" : "success",
+                "exception" : mock_error,
+                "message" : None,
+                "value" : {
+                    "hiddens" : [{"responseKey":''.join(random.sample(char_set*6,25))}],
+                    "view_data" : {
+                        "title" : "View's title set by mock-service.py"
+                    }
                 }
             }
-        }
         self.response.out.write(json.dumps(obj))
 
     def get(self):

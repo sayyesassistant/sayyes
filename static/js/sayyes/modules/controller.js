@@ -30,16 +30,25 @@ define([
 	log_warn = "warn";
 
 	_view_vo = new view_vo();
+
+	_fail_view = {
+		"name":"__fail_view__",
+		"template_name":"fail_template",
+		"data":{}
+	};
+
+	window.m = new view_vo();
+
 	_controller_vo = new controller_vo();
 
 	_notify  = function (self, message, severity) {
 		return function (value) {
 			switch (severity) {
-				case warn :
+				case log_warn :
 					log.warn(message,value);
 					self.on.warn.dispatch(message, value);
 				break;
-				case error :
+				case log_error :
 					log.error(message,value);
 					self.on.error.dispatch(message, value);
 				break;
@@ -60,7 +69,7 @@ define([
 		instance.scope = $(scope);
 		instance.pooling = {};
 		instance.tracker = new tracker();
-		instance.tracker.on.error.addOnce(_show_error.bind());
+		instance.tracker.on.error.addOnce(_auth_fail.bind(instance));
 		instance.on = {
 			warn : new signals(),
 			info : new signals(),
@@ -98,9 +107,17 @@ define([
 		this.on.nav.dispatch(this.current_view);
 	}
 
-	function _show_error (result) {
+	function _auth_fail(result) {
 		this.scope.removeClass("loading");
-		alert("Deu errado! fim da linha. ainda preciso fazer o fallback para mostrar o erro na tela");
+		_fail_view.data = result.value;
+		this.create_view(_fail_view);
+		_fail_view.data = {};
+	}
+
+	function _auth_success (result) {
+		this.scope.removeClass("loading");
+		view_data.data = mix_in({},view_data.data,result.view_data);
+		this.create_view(view_data);
 	}
 
 	function _request_next (name) {
@@ -109,14 +126,10 @@ define([
 			return;
 		}
 		var view_data = _get_view(name,this.data.views);
-		function tracker_handler (result) {
-			this.scope.removeClass("loading");
-			view_data.data = mix_in({},view_data.data,result.view_data);
-			this.create_view(view_data);
-		}
 		if (!!view_data && !!this.safe_nav) {
 			this.scope.addClass("loading");
-			this.tracker.on.success.addOnce(tracker_handler.bind(this));
+			// this.tracker.on.success.addOnce(_auth_success.bind(this));
+			this.tracker.on.success.addOnce(_auth_fail.bind(this));
 			this.tracker.request_view(view_data.name);
 		}
 		else if (!!view_data && !!this.safe_nav) {
@@ -173,7 +186,7 @@ define([
 
 		create_view : function (config) {
 			if (!_view_vo.implements(config)) {
-				_notify(this,"controller => malformed view template",log_error)(config);
+				_notify(this,"controller => malformed view template.",log_error)(config);
 				return;
 			}
 			this.queued_view = this.pooling[config.name];

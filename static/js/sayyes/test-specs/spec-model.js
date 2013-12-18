@@ -7,6 +7,13 @@ define(["sayyes/util/model"], function(model) {
 		it("should be an object", function() {
 			expect(new model()).toEqual(jasmine.any(Object));
 		});
+		it("should be to check if a model implements another model", function() {
+			var foo = new model("a","b");
+				blob = new model("a","b");
+				bar = new model("a","c");
+			expect(foo.implements(blob)).toBe(true);
+			expect(foo.implements(bar)).toBe(false);
+		});
 		it("should be able to create a new model from keys' list", function() {
 			blob = new model("foo","bar");
 			expect(blob.implements({"foo":null})).not.toBeTruthy();

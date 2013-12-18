@@ -129,7 +129,6 @@
 
 	<script id="mock_template" type="text/mustache-template" charset="utf-8">
 		<div class="view">
-	<div class="alert"></div>
 	{{#title}}
 		<h1>{{title}}</h1>
 	{{/title}}
@@ -166,6 +165,13 @@
 			</nav>
 		</form>
 	{{/form}}
+</div>
+	</script>
+	<script id="fail_template" type="text/mustache-template" charset="utf-8">
+		<div class="view fail">
+	<h1>Ops! Parece que tivemos algum problema em nossos servidores.</h1>
+	{{#message}}<h2>{{message}}</h2>{{/message}}
+	{{^message}}<h2>Por favor, tente novamente mais tarde</h2>{{/message}}
 </div>
 	</script>
 </body>
