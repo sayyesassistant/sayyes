@@ -38,16 +38,19 @@ define([
 		}
 
 		this.implements = function () {
-
 			if (!arguments.length) {
 				return false;
 			}
+
 			var dna = keys(value),
 				props = null,
 				diff = null;
-			if (!!arguments.length){
-				if (arguments.length===1 && typeof arguments[0] === "object") {
-					props = keys( (arguments[0] instanceof model) ? arguments[0].data() : arguments[0]);
+
+			if (!!arguments.length) {
+				if (arguments.length===1 && arguments[0]  instanceof model) {
+					props = arguments[0].keys();
+				} else if (arguments.length===1 && typeof arguments[0] === "object") {
+					props = keys(arguments[0]);
 				} else {
 					props = Array.prototype.slice.call(arguments);
 				}
