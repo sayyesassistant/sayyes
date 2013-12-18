@@ -19,7 +19,12 @@ define([
 
 	function validate (xhr) {
 
-		var result, passed, prop, val, prop_fail;
+		var result, passed, prop, val, prop_fail,
+			STATUS_MALFORMED_JSON, STATUS_NOT_MATCH, STATUS_REQUEST_FAILED;
+
+		STATUS_MALFORMED_JSON = -100;
+		STATUS_NOT_MATCH = -101;
+		STATUS_REQUEST_FAILED = -102;
 
 		if (this.options.dataType === "json"){
 			if (kindOf(xhr) === "Object"){
@@ -35,7 +40,7 @@ define([
 				if (passed===false){
 					result = new result_vo();
 					result.set("status","error");
-					result.set("exception" , this.NOT_MATCH);
+					result.set("exception" , STATUS_NOT_MATCH);
 					result.set("message", "'"+prop+"' doesn't match expected values");
 					result.set("value", xhr);
 					this.result = result.data();
@@ -47,7 +52,7 @@ define([
 			} else {
 				result = new result_vo();
 				result.set("status", "error");
-				result.set("exception", this.MALFORMED_JSON);
+				result.set("exception", STATUS_MALFORMED_JSON);
 				result.set("message", "result isn't a valid JSON");
 				this.result = result.data();
 				this.on.error.dispatch(this.result);
@@ -68,7 +73,7 @@ define([
 		if (xhr===null){
 			var vo = new result_vo();
 			vo.set("status","error");
-			vo.set("exception",this.REQUEST_FAILED);
+			vo.set("exception",STATUS_REQUEST_FAILED);
 			vo.set("message","XHR couldn't complete the resquest");
 			this.result = vo.data();
 			this.on.error.dispatch(this.result);
@@ -106,9 +111,6 @@ define([
 			success : on_success.bind(instance),
 			error : on_error.bind(instance)
 		};
-		instance.MALFORMED_JSON = -100;
-		instance.NOT_MATCH = -101;
-		instance.REQUEST_FAILED = -102;
 		instance.ALLOWED_TYPES = ["json", "jsonp", "xml", "html", "text"];
 	}
 
