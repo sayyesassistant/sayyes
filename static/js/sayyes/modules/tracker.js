@@ -64,7 +64,7 @@ define([
 
 	function _notify_error (result){
 		log.error("tracker._notify_error => failed to request next view",result);
-		this.on.error.dispatch(result.value);
+		this.on.error.dispatch(result);
 	}
 
 	AppTracker.prototype = {
