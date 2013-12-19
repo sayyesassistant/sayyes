@@ -1,0 +1,34 @@
+{
+	"title":"Mock View example",
+	"description":"Some description goes here",
+	"nav":[{
+		"label":"nav to <view>",
+		"view":"foo"
+	}],
+	"form" : {
+		"action" : "/mock-service/foo.json",
+		"method" : "post",
+		"id" : "sayyes",
+		"on_success" : "nav=a",
+		"on_error" : "alert",
+		"hiddens" : [{
+			"name":"expect",
+			"value":"false"
+		}],
+		"buttons" : [{
+			"label":"send",
+			"value":"foo"
+		}],
+		"inputs" : [{
+			"name":"name",
+			"type":"text",
+			"placeholder":"Type your name",
+			"required" : "required"
+		},{
+			"name":"email",
+			"type":"email",
+			"placeholder":"Type your email",
+			"required":"required"
+		}]
+	}
+}
