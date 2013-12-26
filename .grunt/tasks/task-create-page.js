@@ -20,20 +20,22 @@ exports.run = function (grunt, task) {
 	value = task.data;
 
 	if (!!value.data && !!value.data.indexOf && !!value.data.indexOf("file!"===0)) {
-		if (grunt.file.exists(value.data)){
-			value.data = grunt.file.readJSON(value.data);
+		var file_name = value.data.replace(/^file\!/,"");
+		if (grunt.file.exists(file_name)){
+			value.data = grunt.file.readJSON(file_name);
 		} else {
-			grunt.fail.fatal("attempt to load file:"+value.data+" failed!");
+			grunt.fail.fatal("[page.data]: attempt failed to  file:"+file_name+" failed!");
 		}
 	}
 
 	if(!!value.raw && value.raw.constructor.name === "Object"){
 		value.raw = map(value.raw,function(value){
 			if (value.indexOf("file!")===0){
+				value = value.replace(/^file\!/,"");
 				if (grunt.file.exists(value)){
 					return grunt.file.read(value);
 				} else {
-					grunt.fail.fatal("attempt to load file:"+value.data+" failed!");
+					grunt.fail.fatal("[page.raw]: attempt failed to  file:"+file_name+" failed!");
 				}
 			}
 			return value;

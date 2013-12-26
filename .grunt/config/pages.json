@@ -26,9 +26,9 @@
 		"dest" : "<%=paths.examples%>/controller-local.html",
 		"files" : ["<%=paths.templates%>/inc/header.mustache","<%=paths.templates%>/pages/tmplt-test-controller.mustache","<%=paths.templates%>/inc/footer.mustache"],
 		"raw": {
-			"mock_template": "<%=paths.templates%>/views/view-mock.mustache",
-			"fail_template": "<%=paths.templates%>/views/view-auth-fail.mustache",
-			"mock_data": "<%=env.static%>/mock/mock-controller-local.json"
+			"mock_template": "file!<%=paths.templates%>/views/view-mock.mustache",
+			"fail_template": "file!<%=paths.templates%>/views/view-auth-fail.mustache",
+			"mock_data": "file!<%=env.static%>/mock/mock-controller-local.json"
 		},
 		"data" : {
 			"js" : "<%=paths.www_js_folder%>/test-controller-local-min.js",
@@ -42,8 +42,8 @@
 		"dest" : "<%=paths.examples%>/controller-service.html",
 		"files" : ["<%=paths.templates%>/inc/header.mustache","<%=paths.templates%>/pages/tmplt-test-controller.mustache","<%=paths.templates%>/inc/footer.mustache"],
 		"raw": {
-			"mock_template": "<%=paths.templates%>/views/view-mock.mustache",
-			"fail_template": "<%=paths.templates%>/views/view-auth-fail.mustache"
+			"mock_template": "file!<%=paths.templates%>/views/view-mock.mustache",
+			"fail_template": "file!<%=paths.templates%>/views/view-auth-fail.mustache"
 		},
 		"data" : {
 			"js" : "<%=paths.www_js_folder%>/test-controller-service-min.js",

@@ -13,7 +13,109 @@
 		(function(d){ d.className = d.className.replace('no-js', 'js'); })(document.documentElement);
 	</script>
 	<script type="text/javascript" charset="utf-8">
-		var mock = static/mock/mock-controller-local.json;
+		var mock = {
+	"start_with":"beginning",
+	"id":"ABC123",
+	"attendant":{
+		"id":"foo",
+		"name":"Attendant Name",
+		"email":"sac@sayyes.cc",
+		"phone":"+55 11 98765 4321"
+	},
+	"client":null,
+	"views" : [{
+		"name":"beginning",
+		"template_name":"mock_template",
+		"data":{
+			"title":"O que você gostaria de fazer?",
+			"nav":[{
+				"label":"Quero comprar pacotes de viagem",
+				"view":"travell"
+			},{
+				"label":"Trabalhe com a gente",
+				"view":"career"
+			}]
+		}
+	} ,{
+		"name":"career",
+		"template_name":"mock_template",
+		"data":{
+			"title":"Trabalhe com a gente",
+			"description":"Alguma descrição aqui...",
+			"nav":[{
+				"label":"voltar",
+				"view":"beginning"
+			}]
+		}
+	} , {
+		"name":"travell",
+		"template_name":"mock_template",
+		"data":{
+			"title":"Para qual destino?",
+			"form" : {
+				"action" : "/mock-service/destination.json",
+				"method" : "POST",
+				"id" : "get-destination",
+				"on_success" : "destination",
+				"on_error" : "error",
+				"radios" : [{
+						"required":"true",
+						"label":"africa",
+						"value":"africa",
+						"name":"destination"
+					} , {
+						"required":"true",
+						"label":"patagonia",
+						"value":"patagonia",
+						"name":"destination"
+				}],
+				"buttons":[{
+					"name":"submit",
+					"label":"fazer solicitação"
+				}]
+			}, "nav" : [{
+				"label":"voltar",
+				"view":"beginning"
+			}]
+		}
+	} , {
+		"name":"error",
+		"template_name":"mock_template",
+		"data":{
+			"title":"Ops!",
+			"description":"Ocorreu um erro durante sua navegação.",
+			"nav" : [{
+				"label":"tente novamente",
+				"view":"travell"
+			}]
+		}
+	} , {
+		"name" : "destination",
+		"template_name":"mock_template",
+		"data":{
+			"nav" : [{
+				"label":"ver mais destinos",
+				"view":"travell"
+			},{
+				"label":"voltar para o inicio",
+				"view":"beginning"
+			}]
+		}
+	} ,  {
+		"name" : "result",
+		"template_name":"mock_template",
+		"data":{
+			"title" : "Obrigado!",
+			"nav" : [{
+				"label":"ver mais destinos",
+				"view":"travell"
+			},{
+				"label":"voltar para o inicio",
+				"view":"beginning"
+			}]
+		}
+	}]
+};
 	</script>
 		<link rel="stylesheet" type="text/css" href="&#x2F;css-min&#x2F;guideline-min.css" /></link>
 		<script src="&#x2F;js-min&#x2F;test-controller-local-min.js" charset="utf-8" async defer></script>
@@ -25,10 +127,51 @@
 <div id="sayyes-assistant" class="view-holder"></div>
 
 <script id="mock_template" type="text/mustache-template" charset="utf-8">
-	./static/templates/views/view-mock.mustache
+	<div class="view">
+	{{#title}}
+		<h1>{{title}}</h1>
+	{{/title}}
+	{{#description}}
+		<h2>{{description}}</h2>
+	{{/description}}
+	{{#nav.length}}
+		<nav>
+			<ul>
+			{{#nav}}
+				<a href="#{{view}}" data-role="nav">{{label}}</a>
+			{{/nav}}
+			</ul>
+		</nav>
+	{{/nav.length}}
+	{{#form}}
+		<form id="{{form.id}}" action="{{form.action}}" method="{{form.method}}" data-on-success="{{form.on_success}}" data-on-error="{{form.on_error}}">
+			{{#form.hiddens}}
+				<input type="hidden" name="{{name}}" value="{{value}}" />
+			{{/form.hiddens}}
+			{{#form.inputs}}
+				<input type="{{type}}" name="{{name}}" placeholder="{{placeholder}}" {{required}} />
+			{{/form.inputs}}
+			{{#form.radios}}
+				<input type="radio" name="{{name}}" value="{{value}}" {{required}}>{{label}}</input>
+			{{/form.radios}}
+			{{#form.checkboxes}}
+				<input type="checkbox" name="{{name}}" value="{{value}}" {{required}}>{{label}}</input>
+			{{/form.checkboxes}}
+			<nav>
+			{{#form.buttons}}
+				<button name="{{name}}" value="{{value}}">{{label}}</input>
+			{{/form.buttons}}
+			</nav>
+		</form>
+	{{/form}}
+</div>
 </script>
 <script id="fail_template" type="text/mustache-template" charset="utf-8">
-	./static/templates/views/view-auth-fail.mustache
+	<div class="view fail">
+	<h1>Ops! Parece que tivemos algum problema em nossos servidores.</h1>
+	{{#message}}<h2>{{message}}</h2>{{/message}}
+	{{^message}}<h2>Por favor, tente novamente mais tarde</h2>{{/message}}
+</div>
 </script>
 <form class="session-tracker" action="/mock-service/request-view.json" method="POST">
 	<input type="hidden" name="sessionKey" value="abc-123-def-456" />
