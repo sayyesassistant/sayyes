@@ -1,20 +1,22 @@
-<body>
-	<h1>-- {{{data.test_title}}} ---</h1>
-	<hr/>
-	<div id="sayyes-assistant" class="view-holder"></div>
-	{{#data.form}}
-	<form id="load-config" method="GET" action="#">
-		<label for="service">
-			Load controller data:
-			<input id="service" name="service" type="text" value="{{{data.placeholder}}}" required/>
-		</label>
-		<button type="submit">load config</button>
-	</form>
-	{{/data.form}}
+<h1>-- {{{data.test_title}}} ---</h1>
+<hr/>
+<div id="sayyes-assistant" class="view-holder"></div>
+{{#data.form}}
+<form id="load-config" method="GET" action="#">
+	<label for="service">
+		Load controller data:
+		<input id="service" name="service" type="text" value="{{{data.placeholder}}}" required/>
+	</label>
+	<button type="submit">load config</button>
+</form>
+{{/data.form}}
 
-	{{#data.templates}}
-	<script id="{{.}}" type="text/mustache-template" charset="utf-8">
-		{{#get_raw}}{{.}}{{/get_raw}}
-	</script>
-	{{/data.templates}}
-</body>
+{{#data.templates}}
+<script id="{{.}}" type="text/mustache-template" charset="utf-8">
+	{{#get_raw}}{{.}}{{/get_raw}}
+</script>
+{{/data.templates}}
+<form class="session-tracker" action="/mock-service/request-view.json" method="POST">
+	<input type="hidden" name="sessionKey" value="abc-123-def-456" />
+	<input type="hidden" name="viewName" value="#filled-by-javascript#" />
+</form>

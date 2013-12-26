@@ -1,25 +1,28 @@
 <!doctype html>
-<!--[if lt IE 8]><html class="no-js ie lt-ie8 lt-ie9"><![endif]-->
-<!--[if lt IE 9]><html class="no-js ie lt-ie9"><![endif]-->
-<!--[if gte IE 9]><!--><html class="no-js"><!--<![endif]-->
+<!--[if IE 9]><html class="no-js ie lt-ie10"><![endif]-->
+<!--[if IE 10]><html class="no-js ie lt-ie11"><![endif]-->
+<!--[if IE 11]><html class="no-js ie"><![endif]-->
+<!--[if gte IE 11]><!--><html class="no-js"><!--<![endif]-->
 <head>
+	<!--[if IE]>
+		<meta http-equiv="X-UA-Compatible" content="IE=100,chrome=1"/>
+	<![endif]-->
 	<meta charset="utf-8">
 	<title>Sayyes :: {{{data.test_title}}}</title>
 	<script type="text/javascript">
 		(function(d){ d.className = d.className.replace('no-js', 'js'); })(document.documentElement);
 	</script>
+	{{#raw.mock_data}}
 	<script type="text/javascript" charset="utf-8">
-		{{#raw.mock_view}}
-			var mock = {{{raw.mock_view}}};
-		{{/raw.mock_view}}
-		{{#data.js}}
-			(function (s, h) {
-				s.async = true;
-				s.type = 'text/javascript';
-				s.src = "{{{data.js}}}";
-				h.appendChild(s);
-			}(document.createElement('script'), document.documentElement));
-		{{/data.js}}
+		var mock = {{{raw.mock_data}}};
 	</script>
-	<link rel="stylesheet" type="text/css" href="{{{data.css}}}" /></link>
+	{{/raw.mock_data}}
+	{{#data.css}}
+		<link rel="stylesheet" type="text/css" href="{{data.css}}" /></link>
+	{{/data.css}}
+	{{#data.js}}
+		<script src="{{data.js}}" charset="utf-8" async defer></script>
+	{{/data.js}}
+	<script src="/js-min/third-party/html5shiv.js" charset="utf-8" async defer></script>
 </head>
+<body>

@@ -1,10 +1,5 @@
-<body>
-	<h1>-- {{{data.test_title}}} ---</h1>
-	<hr/>
-	<div id="sayyes-assistant" class="view-holder"></div>
-	{{#data.templates}}
-	<script id="{{.}}" type="text/mustache-template" charset="utf-8">
-		{{#get_raw}}{{.}}{{/get_raw}}
-	</script>
-	{{/data.templates}}
-</body>
+{{#data}}
+	{{#get_raw}}views{{/get_raw}}
+	<hr />
+	<h1>{{title}}</h1>
+{{/data}}

@@ -1,37 +1,40 @@
 exports.run = function (grunt, task) {
 
-	var render = require("../modules/mod-render").render,
+	var
 		diff = require("mout/array/difference"),
 		keys = require("mout/object/keys"),
 		map = require("mout/object/map"),
-		path = grunt.config.get("paths"),
 		blob, value;
-
-	path = render(path);
 
 	if(!task.data){
 		grunt.fail.fatal("Test failed.\nNo test found!'");
 		return;
 	}
 
-	var diff_result = diff(["dest", "files", "data", "raw"], keys(task.data));
+	var diff_result = diff(["dest", "files"], keys(task.data));
 	if (!!diff_result.length) {
 		grunt.fail.fatal("Test failed.\nMissing properties: '"+diff_result.join("','")+"'.");
 		return;
 	}
 
-	value = render(task.data,path);
+	value = task.data;
 
-	if (!!value.data && value.data.constructor.name === "String") {
+	if (!!value.data && !!value.data.indexOf && !!value.data.indexOf("file!"===0)) {
 		if (grunt.file.exists(value.data)){
 			value.data = grunt.file.readJSON(value.data);
+		} else {
+			grunt.fail.fatal("attempt to load file:"+value.data+" failed!");
 		}
 	}
 
 	if(!!value.raw && value.raw.constructor.name === "Object"){
 		value.raw = map(value.raw,function(value){
-			if (grunt.file.exists(value)){
-				return grunt.file.read(value);
+			if (value.indexOf("file!")===0){
+				if (grunt.file.exists(value)){
+					return grunt.file.read(value);
+				} else {
+					grunt.fail.fatal("attempt to load file:"+value.data+" failed!");
+				}
 			}
 			return value;
 		});
@@ -40,10 +43,15 @@ exports.run = function (grunt, task) {
 	blob = grunt.config.get("concat");
 	blob[task.target] = {
 		src : task.data.files,
-		dest :task.data.dest
+		dest : task.data.dest,
+		options : task.data.concat_options
 	};
 
 	grunt.config.set("concat",blob);
-	grunt.config.set("blob-"+task.target,value);
-	grunt.task.run(["concat:"+task.target,"render-template:"+task.target]);
+	var to_run = ["concat:"+task.target];
+	if (!!task.data.data){
+		grunt.config.set("blob-"+task.target,value);
+		to_run.push("render-template:"+task.target);
+	}
+	grunt.task.run(to_run);
 };

@@ -1,75 +1,75 @@
 {
 
 	"guideline" : {
-		"dest" : "{{{static}}}/examples/guideline.html",
-		"files" : ["{{{templates}}}/inc/header.mustache","{{{templates}}}/pages/tmplt-guideline.mustache","{{{templates}}}/inc/footer.mustache"],
+		"dest" : "<%=env.static%>/examples/guideline.html",
+		"files" : ["<%=paths.templates%>/inc/header.mustache","<%=paths.templates%>/pages/tmplt-guideline.mustache","<%=paths.templates%>/inc/footer.mustache"],
 		"raw": null,
-		"data" : "{{{static}}}/mock/mock-guideline.json"
+		"data" : "<%=env.static%>/mock/mock-guideline.json"
 	},
 
-	"simple-view" : {
-		"dest" : "{{{examples}}}/simple-view.html",
-		"files" : ["{{{templates}}}/inc/header.mustache","{{{templates}}}/pages/tmplt-test-view.mustache","{{{templates}}}/inc/footer.mustache"],
-		"raw": {
-			"mock_template": "{{{templates}}}/views/view-mock.mustache",
-			"mock_view": "{{{static}}}/mock/mock-view.json"
-		},
-		"data" : {
-			"js" : "{{{www_js_folder}}}/test-view-min.js",
-			"css" : "{{{www_css_folder}}}/guideline-min.css",
-			"templates" : ["mock_template"],
-			"test_title" : "Simple View test"
+	"concat-views" : {
+		"dest" : "<%=paths.examples%>/concat-views.html",
+		"files" : ["<%=paths.templates%>/views/view-mock.mustache","<%=paths.templates%>/views/view-auth-fail.mustache"],
+		"concat_options" : {
+			"banner" : "{{#data}}",
+			"footer" : "{{/data}}"
 		}
 	},
 
+	"views" : {
+		"dest" : "<%=paths.examples%>/views.html",
+		"files" : ["<%=paths.templates%>/inc/header.mustache","<%=paths.examples%>/concat-views.html","<%=paths.templates%>/inc/footer.mustache"],
+		"data" : "<%=env.static%>/mock/mock-view-data.json"
+	},
+
 	"controller-local" : {
-		"dest" : "{{{examples}}}/controller-local.html",
-		"files" : ["{{{templates}}}/inc/header.mustache","{{{templates}}}/pages/tmplt-test-controller.mustache","{{{templates}}}/inc/footer.mustache"],
+		"dest" : "<%=paths.examples%>/controller-local.html",
+		"files" : ["<%=paths.templates%>/inc/header.mustache","<%=paths.templates%>/pages/tmplt-test-controller.mustache","<%=paths.templates%>/inc/footer.mustache"],
 		"raw": {
-			"mock_template": "{{{templates}}}/views/view-mock.mustache",
-			"fail_template": "{{{templates}}}/views/view-auth-fail.mustache",
-			"mock_view": "{{{static}}}/mock/mock-controller.json"
+			"mock_template": "<%=paths.templates%>/views/view-mock.mustache",
+			"fail_template": "<%=paths.templates%>/views/view-auth-fail.mustache",
+			"mock_data": "<%=env.static%>/mock/mock-controller-local.json"
 		},
 		"data" : {
-			"js" : "{{{www_js_folder}}}/test-controller-local-min.js",
-			"css" : "{{{www_css_folder}}}/guideline-min.css",
+			"js" : "<%=paths.www_js_folder%>/test-controller-local-min.js",
+			"css" : "<%=paths.www_css_folder%>/guideline-min.css",
 			"templates" : ["mock_template","fail_template"],
 			"test_title" : "Controller test"
 		}
 	},
 
 	"controller-service" : {
-		"dest" : "{{{examples}}}/controller-service.html",
-		"files" : ["{{{templates}}}/inc/header.mustache","{{{templates}}}/pages/tmplt-test-controller.mustache","{{{templates}}}/inc/footer.mustache"],
+		"dest" : "<%=paths.examples%>/controller-service.html",
+		"files" : ["<%=paths.templates%>/inc/header.mustache","<%=paths.templates%>/pages/tmplt-test-controller.mustache","<%=paths.templates%>/inc/footer.mustache"],
 		"raw": {
-			"mock_template": "{{{templates}}}/views/view-mock.mustache",
-			"fail_template": "{{{templates}}}/views/view-auth-fail.mustache"
+			"mock_template": "<%=paths.templates%>/views/view-mock.mustache",
+			"fail_template": "<%=paths.templates%>/views/view-auth-fail.mustache"
 		},
 		"data" : {
-			"js" : "{{{www_js_folder}}}/test-controller-service-min.js",
-			"css" : "{{{www_css_folder}}}/guideline-min.css",
+			"js" : "<%=paths.www_js_folder%>/test-controller-service-min.js",
+			"css" : "<%=paths.www_css_folder%>/guideline-min.css",
 			"templates" : ["mock_template","fail_template"],
 			"test_title" : "Controller test",
 			"form":true,
-			"placeholder": "{{{www_mock_data}}}/mock-controller-service.json"
+			"placeholder": "<%=paths.www_mock_data%>/mock-controller-service.json"
 		}
 	},
 
 	"register-response" : {
-		"dest" : "{{{examples}}}/register-response.html",
-		"files" : ["{{{templates}}}/inc/header.mustache","{{{templates}}}/pages/tmplt-register-response.mustache","{{{templates}}}/inc/footer.mustache"],
+		"dest" : "<%=paths.examples%>/register-response.html",
+		"files" : ["<%=paths.templates%>/inc/header.mustache","<%=paths.templates%>/pages/tmplt-register-response.mustache","<%=paths.templates%>/inc/footer.mustache"],
 		"raw": null,
 		"data" : null
 	},
 
 	"toc" : {
-		"dest" : "{{{examples}}}/index.html",
-		"files" : ["{{{templates}}}/inc/header.mustache","{{{templates}}}/pages/tmplt-tests-index.mustache","{{{templates}}}/inc/footer.mustache"],
+		"dest" : "<%=paths.examples%>/index.html",
+		"files" : ["<%=paths.templates%>/inc/header.mustache","<%=paths.templates%>/pages/tmplt-test-index.mustache","<%=paths.templates%>/inc/footer.mustache"],
 		"raw" : null,
 		"data" : {
-			"css" : "{{{www_css_folder}}}/guideline-min.css",
+			"css" : "<%=paths.www_css_folder%>/guideline-min.css",
 			"test_title" : "Table of content:",
-			"tests" : ["{{www_examples}}/controller-service.html","{{www_examples}}/controller-local.html","{{www_examples}}/simple-view.html","{{www_examples}}/guideline.html","{{www_examples}}/register-response.html"]
+			"tests" : ["<%=paths.www_examples%>/controller-service.html","<%=paths.www_examples%>/controller-local.html","<%=paths.www_examples%>/views.html","<%=paths.www_examples%>/guideline.html","<%=paths.www_examples%>/register-response.html"]
 		}
 	}
 }
