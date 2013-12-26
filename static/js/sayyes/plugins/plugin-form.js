@@ -22,7 +22,7 @@ define([
 	function _parseResult(result){
 		this.form.removeClass("loading");
 		this.view.form_result = result.value;
-		var passed = (!!result.value.status && result.value.status!=="error");
+		var passed = (!!result.status && result.status!=="error");
 			fn = passed ? this.on_success : this.on_error;
 		this.view.on.nav.dispatch(fn);
 	}
