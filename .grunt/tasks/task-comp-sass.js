@@ -1,8 +1,6 @@
 exports.run = function(grunt, scope) {
 
 	var args = grunt.config.get("arguments"),
-		path = grunt.config.get("paths"),
-		render = require("../modules/mod-render").render,
 		bash = require("../modules/mod-run").bash,
 		sass = grunt.config.get("sass"),
 		command;
@@ -19,8 +17,6 @@ exports.run = function(grunt, scope) {
 		return;
 	}
 
-	path = render(path);
-	command = render(command,path);
 	sass[args.env] = command;
 	grunt.config.set("sass",sass);
 	grunt.task.run("sass:"+args.env);
