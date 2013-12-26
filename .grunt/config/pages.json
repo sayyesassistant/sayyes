@@ -59,7 +59,9 @@
 		"dest" : "<%=paths.examples%>/register-response.html",
 		"files" : ["<%=paths.templates%>/inc/header.mustache","<%=paths.templates%>/pages/tmplt-register-response.mustache","<%=paths.templates%>/inc/footer.mustache"],
 		"raw": null,
-		"data" : null
+		"data" : {
+
+		}
 	},
 
 	"toc" : {

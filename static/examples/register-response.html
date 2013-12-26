@@ -8,21 +8,10 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=100,chrome=1"/>
 	<![endif]-->
 	<meta charset="utf-8">
-	<title>Sayyes :: {{{data.test_title}}}</title>
+	<title>Sayyes :: </title>
 	<script type="text/javascript">
 		(function(d){ d.className = d.className.replace('no-js', 'js'); })(document.documentElement);
 	</script>
-	{{#raw.mock_data}}
-	<script type="text/javascript" charset="utf-8">
-		var mock = {{{raw.mock_data}}};
-	</script>
-	{{/raw.mock_data}}
-	{{#data.css}}
-		<link rel="stylesheet" type="text/css" href="{{data.css}}" /></link>
-	{{/data.css}}
-	{{#data.js}}
-		<script src="{{data.js}}" charset="utf-8" async defer></script>
-	{{/data.js}}
 	<script src="/js-min/third-party/html5shiv.js" charset="utf-8" async defer></script>
 </head>
 <body>
