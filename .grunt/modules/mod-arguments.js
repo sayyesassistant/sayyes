@@ -4,7 +4,7 @@ exports.splitValue = function (value) {
 	argName = value.match(/^-(\w+=)[\w-_]+/gi);
 	if (!!argName){
 		argValue = argName[0].match(/[\w-_]+/gi);
-		if (argValue.length==2){
+		if (argValue.length===2){
 			result[argValue[0].replace(/^-/,"")] = argValue[1];
 		}
 	}

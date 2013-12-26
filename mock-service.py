@@ -134,8 +134,12 @@ class ViewAuthForm(webapp2.RequestHandler):
             obj = {
             "status" : "error",
             "exception" : None,
-            "message" : "Failed during auth process!",
-            "value" : None
+            "message" : "Failed during session auth process!",
+            "value" : {
+                "view_data" : {
+                    "title" : "Auth Failed!"
+                }
+            }
         }
         else :
             obj = {

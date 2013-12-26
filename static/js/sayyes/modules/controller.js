@@ -64,6 +64,7 @@ define([
 		instance.queued_view = null;
 		instance.current_view = null;
 		instance.previous_view = null;
+		instance.view_data = null;
 		instance.safe_nav = true;
 		instance.data = {};
 		instance.scope = $(scope);
@@ -116,8 +117,8 @@ define([
 
 	function _auth_success (result) {
 		this.scope.removeClass("loading");
-		view_data.data = mix_in({},view_data.data,result.view_data);
-		this.create_view(view_data);
+		this.view_data.data = mix_in({}, this.view_data.data, result.view_data);
+		this.create_view(this.view_data);
 	}
 
 	function _request_next (name) {
@@ -125,15 +126,14 @@ define([
 			_notify(this,"controller => view '"+name+"' already opened opened.",log_warn)();
 			return;
 		}
-		var view_data = _get_view(name,this.data.views);
-		if (!!view_data && !!this.safe_nav) {
+		this.view_data = _get_view(name,this.data.views);
+		if (!!this.view_data && !!this.safe_nav) {
 			this.scope.addClass("loading");
-			// this.tracker.on.success.addOnce(_auth_success.bind(this));
-			this.tracker.on.success.addOnce(_auth_fail.bind(this));
-			this.tracker.request_view(view_data.name);
+			this.tracker.on.success.addOnce(_auth_success.bind(this));
+			this.tracker.request_view(this.view_data.name);
 		}
-		else if (!!view_data && !!this.safe_nav) {
-			this.create_view(view_data);
+		else if (!!this.view_data && !!this.safe_nav) {
+			this.create_view(this.view_data);
 		}
 		else {
 			_notify(this,"controller => view '"+name+"' not found.",log_warn)();

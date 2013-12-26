@@ -11,6 +11,6 @@
 		}
 	},
 	"all": {
-		"src": ["./**/js/sayyes/**/*.js"]
+		"src": ["./**/js/sayyes/**/*.js","./.grunt/**/*.js"]
 	}
 }
