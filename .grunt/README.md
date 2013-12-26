@@ -107,7 +107,7 @@ We have a few tasks that helps during the development/deployment.
 
 - `$: grunt` [pages](#pages)
 
-- `$: grunt` [run-tests](#run-tests)
+- `$: grunt` [build](#build)
 
 - `$: grunt -h` to see all available tasks
 
@@ -136,7 +136,7 @@ We have a few tasks that helps during the development/deployment.
 
 	This task will create all [pages](#pages.json) concatenating all fragments into a single file and then render this target page with all *data* you've defined.
 
-- ###<a name="run-tests"># </a>run-tests
+- ###<a name="build"># </a>build
 
 	This task combines **comp-js-all**, **pages**, **comp-sass**
 

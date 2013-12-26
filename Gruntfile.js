@@ -14,6 +14,11 @@ module.exports = function (grunt) {
 	ready = false;
 
 	config = {
+		env : {
+			src : ".",
+			static : "static",
+			bower_path : "bower_components",
+		},
 		arguments : {
 			env : "dev",
 			__warn : "don't change! this object will be auto-filled"
@@ -33,19 +38,18 @@ module.exports = function (grunt) {
 
 	//file String file path (not required)
 	function init(file) {
-		if (!!ready){return;}
-		require("./.grunt/modules/mod-arguments").fromCommandLine(grunt);
+		if (!!ready){
+			return;
+		}
 		if (!!file) {
 			require("./.grunt/modules/mod-arguments").fromFile(file, grunt);
+		} else {
+			require("./.grunt/modules/mod-arguments").fromCommandLine(grunt);
 		}
-		var args = grunt.config.get("arguments"),
-			paths = grunt.config.get("paths"),
-			render = require("./.grunt/modules/mod-render").render,
-			jshint = grunt.config.get("jshint");
 
-		paths = render(paths);
-
+		var args = grunt.config.get("arguments");
 		delete args.__warn;
+
 		grunt.config.set("arguments",args);
 		grunt.log.writeflags(grunt.config.get("arguments"));
 
@@ -102,16 +106,12 @@ module.exports = function (grunt) {
 		task.run(grunt, this);
 	});
 
-	grunt.task.registerTask('run-tests', "Combines 'comp-js-all' and 'pages'\nThere is an argument '-reset=true' that removes all tests made before\n", function () {
+	grunt.task.registerTask('build', "Combines 'comp-js-all' and 'pages'\nThere is an argument '-reset=true' that removes all tests made before\n", function () {
 		init();
 		var args = grunt.config.get("arguments");
 		if (!!args && args.reset === "true"){
 			var bash = require("./.grunt/modules/mod-run").bash,
-				command = grunt.config.get("tasks")["clear-tests"],
-				render = require("./.grunt/modules/mod-render").render,
-				paths = grunt.config.get("paths");
-			paths = render(paths);
-			command = render(command,paths);
+				command = grunt.config.get("tasks")["clear-tests"];
 			grunt.log.warn("Cleaning all tests and generated files...");
 			bash(command,null,grunt);
 		}

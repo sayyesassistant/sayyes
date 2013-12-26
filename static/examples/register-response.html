@@ -1,58 +1,69 @@
 <!doctype html>
-<!--[if lt IE 8]><html class="no-js ie lt-ie8 lt-ie9"><![endif]-->
-<!--[if lt IE 9]><html class="no-js ie lt-ie9"><![endif]-->
-<!--[if gte IE 9]><!--><html class="no-js"><!--<![endif]-->
+<!--[if IE 9]><html class="no-js ie lt-ie10"><![endif]-->
+<!--[if IE 10]><html class="no-js ie lt-ie11"><![endif]-->
+<!--[if IE 11]><html class="no-js ie"><![endif]-->
+<!--[if gte IE 11]><!--><html class="no-js"><!--<![endif]-->
 <head>
+	<!--[if IE]>
+		<meta http-equiv="X-UA-Compatible" content="IE=100,chrome=1"/>
+	<![endif]-->
 	<meta charset="utf-8">
-	<title>Sayyes :: </title>
+	<title>Sayyes :: {{{data.test_title}}}</title>
 	<script type="text/javascript">
 		(function(d){ d.className = d.className.replace('no-js', 'js'); })(document.documentElement);
 	</script>
+	{{#raw.mock_data}}
 	<script type="text/javascript" charset="utf-8">
+		var mock = {{{raw.mock_data}}};
 	</script>
-	<link rel="stylesheet" type="text/css" href="" /></link>
+	{{/raw.mock_data}}
+	{{#data.css}}
+		<link rel="stylesheet" type="text/css" href="{{data.css}}" /></link>
+	{{/data.css}}
+	{{#data.js}}
+		<script src="{{data.js}}" charset="utf-8" async defer></script>
+	{{/data.js}}
+	<script src="/js-min/third-party/html5shiv.js" charset="utf-8" async defer></script>
 </head>
-
 <body>
-    <h1>-- Register Response Test ---</h1>
-    <hr/>
-    <form action="/session/response.py" method="post" id="templateForm">
-        <table>
-            <tr>
-                <td><label>User E-mail:</label></td>
-                <td>
-                    <input type="text" name="email" required placeholder="Fill out your e-mail">
-                </td>
-            </tr>
-            <tr>
-                <td><label>Access Key:</label></td>
-                <td>
-                    <input type="text" name="accessKey" required placeholder="Fill out you access key">
-                </td>
-            </tr>
-            <tr>
-                <td><label>Session Key:</label></td>
-                <td>
-                    <input type="text" name="sessionKey" required placeholder="Fill out the session key">
-                </td>
-            </tr>
-            <tr>
-                <td><label>Json response:</label></td>
-                <td>
-                    <textarea name="response" required placeholder="Fill out the json response" cols="40" rows="10"></textarea>
-                </td>
-            </tr>
-            <tr>
-                <td></td>
-                <td>
-                    <div class=submit>
-                        <input type="submit" value="Submit">
-                    </div>
-                </td>
-            </tr>
-        </table>
-    </form>
-</body>
+<h1>-- Register Response Test ---</h1>
+<hr/>
+<form action="/session/response.py" method="post" id="templateForm">
+    <table>
+        <tr>
+            <td><label>User E-mail:</label></td>
+            <td>
+                <input type="text" name="email" required placeholder="Fill out your e-mail">
+            </td>
+        </tr>
+        <tr>
+            <td><label>Access Key:</label></td>
+            <td>
+                <input type="text" name="accessKey" required placeholder="Fill out you access key">
+            </td>
+        </tr>
+        <tr>
+            <td><label>Session Key:</label></td>
+            <td>
+                <input type="text" name="sessionKey" required placeholder="Fill out the session key">
+            </td>
+        </tr>
+        <tr>
+            <td><label>Json response:</label></td>
+            <td>
+                <textarea name="response" required placeholder="Fill out the json response" cols="40" rows="10"></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <div class=submit>
+                    <input type="submit" value="Submit">
+                </div>
+            </td>
+        </tr>
+    </table>
+</form>
 <script>
 	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -62,10 +73,5 @@
 	ga('create', 'UA-46025907-1', 'sayyes.cc');
 	ga('send', 'pageview');
 </script>
-
-<form class="session-tracker" action="/mock-service/request-view.json" method="POST">
-	<input type="hidden" name="sessionKey" value="abc-123-def-456" />
-	<input type="hidden" name="viewName" value="#filled-by-javascript#" />
-</form>
-
+<body>
 </html>
