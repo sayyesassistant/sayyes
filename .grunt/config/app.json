@@ -1,18 +1,18 @@
 {
 	"test-view":{
 		"src":"sayyes/main/test-view",
-		"dest":"{{{dest_js_folder}}}/test-view-min.js"
+		"dest":"<%=paths.dest_js_folder%>/test-view-min.js"
 	},
 	"test-controller-local":{
 		"src":"sayyes/main/test-controller-local",
-		"dest":"{{{dest_js_folder}}}/test-controller-local-min.js"
+		"dest":"<%=paths.dest_js_folder%>/test-controller-local-min.js"
 	},
 	"test-controller-service":{
 		"src":"sayyes/main/test-controller-service",
-		"dest":"{{{dest_js_folder}}}/test-controller-service-min.js"
+		"dest":"<%=paths.dest_js_folder%>/test-controller-service-min.js"
 	},
 	"test-specs":{
 		"src":"sayyes/test-specs/specs",
-		"dest":"{{{tests}}}/test-spec-min.js"
+		"dest":"<%=paths.tests%>/test-spec-min.js"
 	}
 }

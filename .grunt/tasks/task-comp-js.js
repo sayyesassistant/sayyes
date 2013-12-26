@@ -1,22 +1,21 @@
 exports.run = function (grunt, scope) {
 
 	var args = grunt.config.get("arguments"),
-		pages = grunt.config.get("app"),
+		mustache = require("mustache"),
 		task = grunt.config.get("tasks")["comp-js"],
-		path = grunt.config.get("paths"),
 		requirejs = grunt.config.get("requirejs"),
-		render = require("../modules/mod-render").render,
 		bash = require("../modules/mod-run").bash,
-		app, command, blob;
+		mix_in = require("mout/object/mixIn"),
+		app_name, command;
 
 	if(!args.app){
 		grunt.fail.fatal("No app set on config.");
 		return;
 	}
 
-	app = pages[args.app];
+	app_name = grunt.config.get("app")[args.app];
 
-	if (!app){
+	if (!app_name){
 		grunt.fail.fatal("Couldn't find target main:'"+args.app+"'");
 		return;
 	}
@@ -27,13 +26,18 @@ exports.run = function (grunt, scope) {
 		grunt.fail.fatal("Couldn't find command for env:'"+args.env+"'");
 		return;
 	}
-	path = render(path);
-	app = render(app,path);
-	requirejs = render(requirejs,path);
-	blob = require("mout/object/mixIn")({},path,app,requirejs);
-	command = render(command, blob);
-	require("mout/object/map")(requirejs.paths,function(value, prop){
-		command.args.push("paths."+prop+"="+value);
-	});
+
+	command.args = require("mout/array/map")(
+		command.args,function(value, prop){
+			return mustache.render(value,mix_in(requirejs,app_name));
+		}
+	);
+
+	require("mout/object/map")(
+		requirejs.paths,function(value, prop){
+			command.args.push("paths."+prop+"="+value);
+		}
+	);
+
 	bash(command, scope.async(), grunt);
 };

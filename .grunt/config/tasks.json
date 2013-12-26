@@ -2,7 +2,7 @@
 	"comp-js" : {
 		"dev" : {
 			"cmd"  : "node",
-			"args" : ["bower_components/r.js/dist/r.js","-o","baseUrl={{{baseUrl}}}","optimize=none","skipModuleInsertion=false","generateSourceMaps=true","name={{{src}}}","out={{{dest}}}"]
+			"args" : ["bower_components/r.js/dist/r.js","-o","baseUrl={{{baseUrl}}}","optimize=none","skipModuleInsertion=false","generateSourceMaps=true","name={{{src}}}","out={{dest}}}"]
 		},
 		"final" : {
 			"cmd"  : "node",
@@ -12,8 +12,5 @@
 	"clear-tests" : {
 		"cmd" : "rm",
 		"args" : ["-f","{{{examples}}}/*.html","{{{dest_js_folder}}}/*.{js,map}","{{{dest_css_folder}}}/*.css"]
-	},
-	"sass-watch" : {
-
 	}
 }

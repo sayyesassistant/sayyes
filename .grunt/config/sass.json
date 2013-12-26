@@ -9,9 +9,9 @@
 		},
 		"files": [{
 			"expand": true,
-			"cwd": "{{{sass_sources}}}",
+			"cwd": "<%=paths.sass_sources%>",
 			"src": ["**/*.scss"],
-			"dest": "{{{dest_css_folder}}}",
+			"dest": "<%=paths.dest_css_folder%>",
 			"ext": "-min.css"
 		}]
 	},
@@ -24,9 +24,9 @@
 		},
 		"files": [{
 			"expand": true,
-			"cwd": "{{{sass_sources}}}",
+			"cwd": "<%=paths.sass_sources%>",
 			"src": ["**/*.scss"],
-			"dest": "{{{dest_css_folder}}}",
+			"dest": "<%=paths.dest_css_folder%>",
 			"ext": "-min.css"
 		}]
 	}
