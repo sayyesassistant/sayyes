@@ -121,7 +121,8 @@ class RegisterResponse(AppHandler):
             responseKey = sr.put()
 
             responseObj = {
-                "hiddens" : [{"responseKey":responseKey.urlsafe()}]
+                "hiddens" : [{"responseKey":responseKey.urlsafe()}],
+                "view_data" : {"title" : "View's title set by mock-service.py"} # TESTE APENAS
             }
 
             self.jsonSuccess('Response registered', responseObj)

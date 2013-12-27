@@ -6,9 +6,6 @@
     <head>
         <meta charset="utf-8">
         <title>Sayyes :: Controller test</title>
-        <!--
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-        -->
         <script type="text/javascript" charset="utf-8">
             (function(d){ d.className = d.className.replace('no-js', 'js'); })(document.documentElement);
             //foo
@@ -22,20 +19,6 @@
                 s.src = "/js-min/test-controller-local-min.js";
                 h.appendChild(s);
             }(document.createElement('script'), document.documentElement));
-            /*
-            $(function(){
-                // register session response
-                $.post($('.session-tracker').attr('action'), $('.session-tracker').serialize(), function(data){
-                    if(data.status == "success" && data.value.responseKey) {
-                        // update responseKey
-                        $('#responseKey').val(data.value.responseKey);
-                    } else {
-                        $('#sayyes-session').hide();
-                        $('#sayyes-500').show();
-                    }
-                }, 'json');
-            });
-             */
         </script>
         <link rel="stylesheet" type="text/css" href="/css-min/guideline-min.css"></link>
     </head>

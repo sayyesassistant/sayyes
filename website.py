@@ -182,95 +182,108 @@ class CP(AppHandler):
 
             # um exemplo do json p/ testes
         j = {
-            "start_with":"beginning",
-            "id":"ABC123",
-            "attendant":{
-                "id":"foo",
-                "name":"Attendant Name",
-                "email":"sac@sayyes.cc",
-                "phone":"+55 11 98765 4321"
-            },
-            "client":None,
-            "views": [{
-                "name":"beginning",
-                "template_name":"mock_template",
-                "data":{
-                    "title":"O que voce gostaria de fazer?",
-                    "nav":[{
-                        "label":"Quero comprar pacotes de viagem",
-                        "view":"travell"
-                    }, {
-                        "label":"Trabalhe com a gente",
-                        "view":"career"
-                    }]
-                }
-            }, {
-                "name":"career",
-                "template_name":"mock_template",
-                "data":{
-                    "title":"Trabalhe com a gente",
-                    "nav":[{
-                        "label":"voltar",
-                        "view":"beginning"
-                    }]
-                }
-            }, {
-                "name":"travell",
-                "template_name":"mock_template",
-                "data":{
-                    "title":"Para qual destino?",
-                    "form": {
-                        "action": "/mock-service/destination.json",
-                        "method": "POST",
-                        "id": "get-destination",
-                        "on_success": "destination",
-                        "on_error": "error",
-                        "radios": [{
-                            "required":"true",
-                            "label":"africa",
-                            "value":"africa",
-                            "name":"destination"
-                        }, {
-                            "required":"true",
-                            "label":"patagonia",
-                            "value":"patagonia",
-                            "name":"destination"
-                        }],
-                        "buttons":[{
-                            "name":"submit",
-                            "label":"fazer solicitacao"
-                        }]
-                    }, "nav": [{
-                        "label":"voltar",
-                        "view":"beginning"
-                    }]
-                }
-            }, {
-                "name":"error",
-                "template_name":"mock_template",
-                "data":{
-                    "title":"Ops!",
-                    "description":"Ocorreu um erro durante sua navegacao.",
-                    "nav": [{
-                        "label":"tente novamente",
-                        "view":"travell"
-                    }]
-                }
-            }, {
-                "name": "destination",
-                "template_name":"mock_template",
-                "data":{
-                    "title":"You got it!",
-                    "nav": [{
-                        "label":"ver mais destinos",
-                        "view":"travell"
-                    }, {
-                        "label":"voltar para o inicio",
-                        "view":"beginning"
-                    },]
-                }
-            }]
-        }
+                "start_with":"beginning",
+                "id":"ABC123",
+                "attendant":{
+                        "id":"foo",
+                        "name":"Attendant Name",
+                        "email":"sac@sayyes.cc",
+                        "phone":"+55 11 98765 4321"
+                },
+                "client":None,
+                "views" : [{
+                        "name":"beginning",
+                        "template_name":"mock_template",
+                        "data":{
+                                "title":"O que voce gostaria de fazer?",
+                                "nav":[{
+                                        "label":"Quero comprar pacotes de viagem",
+                                        "view":"travell"
+                                },{
+                                        "label":"Trabalhe com a gente",
+                                        "view":"career"
+                                }]
+                        }
+                } ,{
+                        "name":"career",
+                        "template_name":"mock_template",
+                        "data":{
+                                "title":"Trabalhe com a gente",
+                                "description":"Alguma descricao aqui...",
+                                "nav":[{
+                                        "label":"voltar",
+                                        "view":"beginning"
+                                }]
+                        }
+                } , {
+                        "name":"travell",
+                        "template_name":"mock_template",
+                        "data":{
+                                "title":"Para qual destino?",
+                                "form" : {
+                                        "action" : "/mock-service/destination.json",
+                                        "method" : "POST",
+                                        "id" : "get-destination",
+                                        "on_success" : "destination",
+                                        "on_error" : "error",
+                                        "radios" : [{
+                                                        "required":"true",
+                                                        "label":"africa",
+                                                        "value":"africa",
+                                                        "name":"destination"
+                                                } , {
+                                                        "required":"true",
+                                                        "label":"patagonia",
+                                                        "value":"patagonia",
+                                                        "name":"destination"
+                                        }],
+                                        "buttons":[{
+                                                "name":"submit",
+                                                "label":"fazer solicitacao"
+                                        }]
+                                }, "nav" : [{
+                                        "label":"voltar",
+                                        "view":"beginning"
+                                }]
+                        }
+                } , {
+                        "name":"error",
+                        "template_name":"mock_template",
+                        "data":{
+                                "title":"Ops!",
+                                "description":"Ocorreu um erro durante sua navegacao.",
+                                "nav" : [{
+                                        "label":"tente novamente",
+                                        "view":"travell"
+                                }]
+                        }
+                } , {
+                        "name" : "destination",
+                        "template_name":"mock_template",
+                        "data":{
+                                "nav" : [{
+                                        "label":"ver mais destinos",
+                                        "view":"travell"
+                                },{
+                                        "label":"voltar para o inicio",
+                                        "view":"beginning"
+                                }]
+                        }
+                } ,  {
+                        "name" : "result",
+                        "template_name":"mock_template",
+                        "data":{
+                                "title" : "Obrigado!",
+                                "nav" : [{
+                                        "label":"ver mais destinos",
+                                        "view":"travell"
+                                },{
+                                        "label":"voltar para o inicio",
+                                        "view":"beginning"
+                                }]
+                        }
+                }]
+            }
 
         templateValues['json'] = json.dumps(j)
 
@@ -285,43 +298,42 @@ class TplPut(AppHandler):
         tpl.title = 'Mock Template'
         tpl.html = """
         <div class="view">
-            <div class="alert"></div>
-            {{#title}}
-                <h1>{{title}}</h1>
-            {{/title}}
-            {{#description}}
-                <h2>{{description}}</h2>
-            {{/description}}
-            {{#has_nav}}
-                <nav>
-                    <ul>
-                    {{#nav}}
-                        <a href="#{{view}}" data-role="nav">{{label}}</a>
-                    {{/nav}}
-                    </ul>
-                </nav>
-            {{/has_nav}}
-            {{#form}}
-                <form id="{{form.id}}" action="{{form.action}}" method="{{form.method}}" data-on-success="{{form.on_success}}" data-on-error="{{form.on_error}}">
-                    {{#form.hiddens}}
-                        <input type="hidden" name="{{name}}" value="{{value}}" />
-                    {{/form.hiddens}}
-                    {{#form.inputs}}
-                        <input type="{{type}}" name="{{name}}" placeholder="{{placeholder}}" {{required}} />
-                    {{/form.inputs}}
-                    {{#form.radios}}
-                        <input type="radio" name="{{name}}" value="{{value}}" {{required}}>{{label}}</input>
-                    {{/form.radios}}
-                    {{#form.checkboxes}}
-                        <input type="checkbox" name="{{name}}" value="{{value}}" {{required}}>{{label}}</input>
-                    {{/form.checkboxes}}
-                    <nav>
-                    {{#form.buttons}}
-                        <button name="{{name}}" value="{{value}}">{{label}}</input>
-                    {{/form.buttons}}
-                    </nav>
-                </form>
-            {{/form}}
+                {{#title}}
+                        <h1>{{title}}</h1>
+                {{/title}}
+                {{#description}}
+                        <h2>{{description}}</h2>
+                {{/description}}
+                {{#nav.length}}
+                        <nav>
+                                <ul>
+                                {{#nav}}
+                                        <a href="#{{view}}" data-role="nav">{{label}}</a>
+                                {{/nav}}
+                                </ul>
+                        </nav>
+                {{/nav.length}}
+                {{#form}}
+                        <form id="{{form.id}}" action="{{form.action}}" method="{{form.method}}" data-on-success="{{form.on_success}}" data-on-error="{{form.on_error}}">
+                                {{#form.hiddens}}
+                                        <input type="hidden" name="{{name}}" value="{{value}}" />
+                                {{/form.hiddens}}
+                                {{#form.inputs}}
+                                        <input type="{{type}}" name="{{name}}" placeholder="{{placeholder}}" {{required}} />
+                                {{/form.inputs}}
+                                {{#form.radios}}
+                                        <input type="radio" name="{{name}}" value="{{value}}" {{required}}>{{label}}</input>
+                                {{/form.radios}}
+                                {{#form.checkboxes}}
+                                        <input type="checkbox" name="{{name}}" value="{{value}}" {{required}}>{{label}}</input>
+                                {{/form.checkboxes}}
+                                <nav>
+                                {{#form.buttons}}
+                                        <button name="{{name}}" value="{{value}}">{{label}}</input>
+                                {{/form.buttons}}
+                                </nav>
+                        </form>
+                {{/form}}
         </div>
         """
         tpl.put()
