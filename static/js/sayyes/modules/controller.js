@@ -1,5 +1,5 @@
 /*
-@grunt -task=comp-js-all -env=final
+@grunt -task=comp-js-all
 */
 define([
 	"sayyes/util/log",
@@ -9,6 +9,7 @@ define([
 	"sayyes/modules/view",
 	"sayyes/modules/tracker",
 	"mout/object/mixIn",
+	"mout/object/keys",
 	"mout/array/find",
 	"signals/signals"
 ], function (
@@ -19,6 +20,7 @@ define([
 	view,
 	tracker,
 	mix_in,
+	keys,
 	find,
 	signals
 ) {
@@ -36,8 +38,6 @@ define([
 		"template_name":"fail_template",
 		"data":{}
 	};
-
-	window.m = new view_vo();
 
 	_controller_vo = new controller_vo();
 
@@ -68,14 +68,15 @@ define([
 		instance.safe_nav = true;
 		instance.data = {};
 		instance.scope = $(scope);
-		instance.pooling = {};
 		instance.tracker = new tracker();
 		instance.tracker.on.error.addOnce(_auth_fail.bind(instance));
+		instance.history = [];
 		instance.on = {
 			warn : new signals(),
 			info : new signals(),
 			error : new signals(),
-			nav : new signals()
+			nav : new signals(),
+			eol : new signals()
 		};
 	}
 
@@ -88,12 +89,29 @@ define([
 		_notify(this,"controller fail =>",log_error)(args);
 	}
 
+	function _get_history_from_view (view) {
+		if (!view_vo) {
+			return;
+		}
+
+		var fd = view.form_data || {},
+			fr = view.form_result || {};
+
+		return {
+			name : view.name,
+			form_data : (!!keys(fd).length) ? fd : null,
+			form_result : (!!keys(fr).length) ? fr : null
+		};
+	}
+
 	function _on_close () {
 		if (this.current_view){
 			this.current_view.html.remove();
 			this.current_view.dispose();
 			_notify(this,"controller view '"+this.current_view.name+"' disposed.")();
+
 			this.previous_view = this.current_view;
+			this.history.push(_get_history_from_view(this.previous_view));
 		}
 		this.current_view = null;
 		this.open();
@@ -104,8 +122,18 @@ define([
 		this.queued_view = null;
 		this.current_view.enable_ux();
 		this.current_view.on.nav.add(_request_next.bind(this));
+
 		_notify(this,"controller => view '"+this.current_view.name+"' opened.")();
 		this.on.nav.dispatch(this.current_view);
+
+		if (!!this.previous_view && this.previous_view.eol === true) {
+			this.history = [];
+		}
+
+		if (this.current_view.eol===true){
+			this.history.push(_get_history_from_view(this.current_view));
+			this.on.eol.dispatch(this.current_view);
+		}
 	}
 
 	function _auth_fail(result) {
@@ -127,17 +155,19 @@ define([
 			return;
 		}
 		this.view_data = _get_view(name,this.data.views);
-		if (!!this.view_data && !!this.safe_nav) {
+		if (!this.view_data) {
+			_notify(this,"controller => view '"+name+"' not found.",log_warn)();
+			return;
+		}
+		if (!!this.safe_nav) {
+			// nav WITH auth
 			this.scope.addClass("loading");
 			this.tracker.on.success.addOnce(_auth_success.bind(this));
 			this.tracker.request_view(this.view_data.name);
+			return;
 		}
-		else if (!!this.view_data && !!this.safe_nav) {
-			this.create_view(this.view_data);
-		}
-		else {
-			_notify(this,"controller => view '"+name+"' not found.",log_warn)();
-		}
+		// nav WITHOU auth
+		this.create_view(this.view_data);
 	}
 
 	Controller = function(scope){
@@ -169,12 +199,10 @@ define([
 			this.data = data;
 			this.data.start_with = this.data.start_with || 0;
 			var blob;
-			switch (this.data.start_with.constructor.name){
-				case "Number" :
-					blob = this.data.views[this.data.start_with];
+			switch (this.data.start_with.constructor.name) {
+				case "Number" : blob = this.data.views[this.data.start_with];
 				break;
-				case "String" :
-					blob = _get_view(this.data.start_with,this.data.views);
+				case "String" : blob = _get_view(this.data.start_with,this.data.views);
 				break;
 			}
 			if (!blob){
@@ -189,22 +217,21 @@ define([
 				_notify(this,"controller => malformed view template.",log_error)(config);
 				return;
 			}
-			this.queued_view = this.pooling[config.name];
-			if(!this.queued_view){
-				try {
-					this.queued_view = view(config);
-				} catch (err) {
-					_notify(this,"controller => view '"+config.name+"' failed to create.",log_error)(err);
-					return;
-				}
+
+			try {
+				this.queued_view = view(config);
+			} catch (err) {
+				_notify(this,"controller => view '"+config.name+"' failed to create.",log_error)(err);
+				return;
 			}
-			_notify(this,"controller => view '"+this.queued_view.name+"' created.")();
+
 			var blob_view = this.current_view || {},
 				merged_data =  mix_in( {},
 					config.data,
 					(blob_view.form_result||{}),
 					(blob_view.form_data||{})
 				);
+			_notify(this,"controller => view '"+this.queued_view.name+"' created.")();
 			this.render_view(this.queued_view, merged_data);
 		},
 
