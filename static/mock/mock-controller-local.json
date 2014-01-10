@@ -124,7 +124,7 @@
 	} ,  {
 		"name" : "result",
 		"template_name":"mock_template",
-		"eol" : false,
+		"eol" : true,
 		"data":{
 			"title" : "Obrigado!",
 			"nav" : [{
