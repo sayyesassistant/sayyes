@@ -17,7 +17,7 @@ define([
 	signals
 ) {
 
-	var AppTracker, input_render;
+	var FormTracker, input_render;
 
 	input_render = mustache.compile("<input type='hidden' name='{{name}}' value='{{value}}' />");
 
@@ -25,7 +25,7 @@ define([
 		instance.form = document.getElementsByClassName(query);
 
 		if (!instance.form || instance.form.length>1){
-			log.error("AppTracker failed to find '"+query+"' or many items were found.");
+			log.error("FormTracker failed to find '"+query+"' or many items were found.");
 			return;
 		}
 
@@ -38,7 +38,7 @@ define([
 		instance.service = new ajax();
 	}
 
-	AppTracker = function (form_query) {
+	FormTracker = function (form_query) {
 		_init(this,form_query);
 	};
 
@@ -76,7 +76,7 @@ define([
 		this.on.error.dispatch(result);
 	}
 
-	AppTracker.prototype = {
+	FormTracker.prototype = {
 		run : function (init_data) {
 			if (!this.form){
 				log.error("impossible to request view, no form found");
@@ -90,7 +90,7 @@ define([
 			var data = this.form.serialize();
 
 			if (!data || (!!data && !data.length)) {
-				log.warn("AppTracker._on_nav failed to track. for has no data");
+				log.warn("FormTracker._on_nav failed to track. for has no data");
 				return;
 			}
 
@@ -108,5 +108,5 @@ define([
 		}
 	};
 
-	return AppTracker;
+	return FormTracker;
 });

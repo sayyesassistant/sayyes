@@ -39,9 +39,9 @@ define([
 		it("should be an object", function() {
 			expect(new view_vo()).toEqual(jasmine.any(Object));
 		});
-		it("should be an object that implements: 'name','template_name','data'", function() {
+		it("should be an object that implements: 'name','template_name','data','eol'", function() {
 			blob = new view_vo();
-			expect(blob.implements("name","template_name","data")).toBeTruthy();
+			expect(blob.implements("name","template_name","data","eol")).toBeTruthy();
 		});
 	});
 });
