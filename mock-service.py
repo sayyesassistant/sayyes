@@ -149,7 +149,7 @@ class ViewAuthForm(webapp2.RequestHandler):
                 "value" : {
                     "hiddens" : [{"responseKey":''.join(random.sample(char_set*6,25))}],
                     "view_data" : {
-                        "title" : "View's title set by mock-service.py"
+                        "service_title" : "View's title set by mock-service.py"
                     }
                 }
             }

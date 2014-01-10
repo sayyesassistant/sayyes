@@ -11,6 +11,7 @@
 	"views" : [{
 		"name":"beginning",
 		"template_name":"mock_template",
+		"eol" : false,
 		"data":{
 			"title":"O que você gostaria de fazer?",
 			"nav":[{
@@ -24,9 +25,39 @@
 	} ,{
 		"name":"career",
 		"template_name":"mock_template",
+		"eol" : false,
 		"data":{
 			"title":"Trabalhe com a gente",
-			"description":"Alguma descrição aqui...",
+			"description":"Receba oportunidades de vagas",
+			"nav":[{
+				"label":"voltar",
+				"view":"beginning"
+			}],
+			"form" : {
+				"action" : null,
+				"method" : null,
+				"id" : "get-cv",
+				"on_success" : "career-feedback",
+				"on_error" : "error",
+				"inputs" : [{
+						"required":"true",
+						"placeholder":"your email address",
+						"type":"email",
+						"name":"applicant"
+					}],
+				"buttons":[{
+					"name":"submit",
+					"label":"Enviar"
+				}]
+			}
+		}
+	} ,{
+		"name":"career-feedback",
+		"template_name":"mock_template",
+		"eol" : true,
+		"data":{
+			"title":"Obrigado!",
+			"description":"Assim que alguma vaga aparecer vc será avisado.",
 			"nav":[{
 				"label":"voltar",
 				"view":"beginning"
@@ -35,6 +66,7 @@
 	} , {
 		"name":"travell",
 		"template_name":"mock_template",
+		"eol" : false,
 		"data":{
 			"title":"Para qual destino?",
 			"form" : {
@@ -66,6 +98,7 @@
 	} , {
 		"name":"error",
 		"template_name":"mock_template",
+		"eol" : false,
 		"data":{
 			"title":"Ops!",
 			"description":"Ocorreu um erro durante sua navegação.",
@@ -77,7 +110,9 @@
 	} , {
 		"name" : "destination",
 		"template_name":"mock_template",
+		"eol" : false,
 		"data":{
+			"description" : "Seems that you didn't used the service. this is a static content.",
 			"nav" : [{
 				"label":"ver mais destinos",
 				"view":"travell"
@@ -89,6 +124,7 @@
 	} ,  {
 		"name" : "result",
 		"template_name":"mock_template",
+		"eol" : false,
 		"data":{
 			"title" : "Obrigado!",
 			"nav" : [{

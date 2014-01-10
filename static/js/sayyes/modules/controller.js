@@ -199,14 +199,21 @@ define([
 				}
 			}
 			_notify(this,"controller => view '"+this.queued_view.name+"' created.")();
-			var merged_data =  this.current_view ? this.current_view.form_result : {};
-			this.render_view(this.queued_view, mix_in({}, config.data, merged_data));
+			var blob_view = this.current_view || {},
+				merged_data =  mix_in( {},
+					config.data,
+					(blob_view.form_result||{}),
+					(blob_view.form_data||{})
+				);
+			this.render_view(this.queued_view, merged_data);
 		},
 
 		render_view : function (view, data) {
 			view.on.render.failed.addOnce(_notify(this,"controller => view '"+view.name+"' failed to render.",log_error));
 			view.on.render.passed.addOnce(this.close,this);
-			// apply new helpers here!
+			// apply mustache helpers here!
+			// ---
+			//
 			view.render(data);
 		},
 
