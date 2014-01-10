@@ -161,6 +161,27 @@ class ViewAuthForm(webapp2.RequestHandler):
     def post(self):
         self.validate(self)
 
+class ViewReportForm(webapp2.RequestHandler):
+    def validate(self, *args):
+        self.response.headers['Content-Type'] = 'application/json'
+        self.response.headers['Access-Control-Allow-Methods'] = 'POST, GET'
+        char_set = string.ascii_uppercase + string.digits
+        obj = {
+            "status" : "success",
+            "exception" : None,
+            "message" : None,
+            "value" : {
+                "hiddens" : [{"responseKey":''.join(random.sample(char_set*6,25))}]
+            }
+        }
+        self.response.out.write(json.dumps(obj))
+
+    def get(self):
+        self.validate(self)
+
+    def post(self):
+        self.validate(self)
+
 class Foo(webapp2.RequestHandler):
 
     def default_response(self, *args):
@@ -184,5 +205,5 @@ application = webapp2.WSGIApplication([
     ,(r'/mock-service/destination.json', DestiniationForm)
     ,(r'/mock-service/destination-result.json', DestiniationResultForm)
     ,(r'/mock-service/request-view.json', ViewAuthForm)
-    ,(r'/mock-service/reporter.json', ViewAuthForm)
+    ,(r'/mock-service/reporter.json', ViewReportForm)
     , (r'/mock-service/foo.json', Foo)], debug=True)
