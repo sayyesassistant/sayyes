@@ -3,7 +3,7 @@
 	"exception" : null,
 	"message" : null,
 	"value" : {
-		"start_with":"a",
+		"start_with":"begin",
 		"id":"ABC123",
 		"attendant":{
 			"id":"foo",
@@ -12,55 +12,58 @@
 			"phone":null
 		},
 		"client":null,
-		"views" : [{
-			"name":"a",
-			"template_name":"mock_template",
-			"data":{
-			"title":"Mock View example",
-			"description":"Some description goes here",
-			"nav":[{
-				"label":"no forms please!",
-				"view":"b"
-			}],
-			"form" : {
-				"action" : "/mock-service/login.json",
-				"method" : "GET",
-				"id" : "sayyes",
-				"on_success" : "b",
-				"on_error" : "b",
-				"hiddens" : [{
-					"name":"expect",
-					"value":"false"
-				}],
-				"buttons" : [{
-					"label":"check...",
-					"value":"foo"
-				}],
-				"inputs" : [{
-					"name":"name",
-					"type":"text",
-					"placeholder":"your name",
-					"required" : "required"
-				},{
-					"name":"email",
-					"type":"email",
-					"placeholder":"Type your email",
-					"required":"required"
-				}]
-			}
-		}
+		"views" : [
+			{
+				"name":"begin",
+				"eol":false,
+				"template_name":"mock_template",
+				"data":{
+					"title":"Mock View example",
+					"description":"Some description goes here",
+					"nav":[{
+						"label":"no forms please!",
+						"view":"result"
+					}],
+					"form" : {
+						"action" : null,
+						"method" : "GET",
+						"id" : "sayyes",
+						"on_success" : "result",
+						"on_error" : "result",
+						"hiddens" : [{
+							"name":"expect",
+							"value":"false"
+						}],
+						"buttons" : [{
+							"label":"check",
+							"value":"foo"
+						}],
+						"inputs" : [{
+							"name":"name",
+							"type":"text",
+							"placeholder":"your name",
+							"required" : "required"
+						},{
+							"name":"email",
+							"type":"email",
+							"placeholder":"Type your email",
+							"required":"required"
+						}]
+					}
+				}
 			} , {
-
-			"name":"b",
-			"template_name":"mock_template",
-			"data":{
-				"title":"I can't see your info!",
-				"description":"Seems that you don't like forms!",
-				"nav":[{
-					"label":"try again",
-					"view":"a"
-				}]
+				"name":"result",
+				"template_name":"mock_template",
+				"eol":true,
+				"data":{
+					"title":"I can't see your info!",
+					"description":"Seems that you don't like forms!",
+					"nav":[{
+						"label":"try again",
+						"view":"begin"
+					}]
+				}
 			}
-		}]
+		]
 	}
 }
