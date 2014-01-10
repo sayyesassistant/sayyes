@@ -64,7 +64,7 @@ define([
 
 		this.service
 			.method(this.form.attr("method"))
-			.request(this.form.attr("action"), this.view.form_data);
+			.request(this.form.attr("action"), form_data);
 	}
 
 	ClosureFormBind = function(config){
