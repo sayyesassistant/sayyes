@@ -25,8 +25,8 @@ define([
 		this.form.removeClass("loading");
 		this.view.form_result = result.value;
 		var passed = (!!result.status && result.status!=="error");
-			fn = passed ? this.on_success : this.on_error;
-		this.view.on.nav.dispatch(fn);
+			target_view = passed ? this.on_success : this.on_error;
+		this.view.on.nav.dispatch(target_view);
 	}
 
 	function _submit_handle (event) {
@@ -34,6 +34,21 @@ define([
 
 		if(!!this.service && this.service.status !== this.service.status_idle){
 			log.warn("plugin-form._submit_handle => service running...");
+			return;
+		}
+
+		var form_data = this.form.serialize(),
+			service_url = this.form.attr("action");
+
+		if (form_data!==null && form_data!==undefined){
+			this.view.form_data = decode(form_data);
+		}
+
+		this.form.addClass("loading");
+
+		if (service_url === "#"){
+			log.info("plugin-form._submit_handle => no service to call, go to:"+this.on_success);
+			this.view.on.nav.dispatch(this.on_success);
 			return;
 		}
 
@@ -47,12 +62,6 @@ define([
 				});
 		}
 
-		var form_data = this.form.serialize();
-		if (form_data!==null && form_data!==undefined){
-			this.view.form_data = decode(form_data);
-		}
-
-		this.form.addClass("loading");
 		this.service
 			.method(this.form.attr("method"))
 			.request(this.form.attr("action"), this.view.form_data);
@@ -79,14 +88,14 @@ define([
 
 		function each_form (index,node) {
 			if (!!node){
-				var on_success = node.getAttribute("data-on-success"),
-					on_error = node.getAttribute("data-on-error");
-				if (!!on_success && !!on_error){
+				var view_on_success = node.getAttribute("data-on-success"),
+					view_on_error = node.getAttribute("data-on-error");
+				if (!!view_on_success && !!view_on_error){
 					blob = new ClosureFormBind({
 						"node":node,
 						"view":view,
-						"on_success":on_success,
-						"on_error":on_error
+						"on_success":view_on_success,
+						"on_error":view_on_error
 					});
 					view.plugin_closures.push(blob);
 				} else {
