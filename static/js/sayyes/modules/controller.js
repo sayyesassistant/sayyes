@@ -68,9 +68,14 @@ define([
 		instance.safe_nav = true;
 		instance.data = {};
 		instance.scope = $(scope);
-		instance.tracker = new tracker();
-		instance.tracker.on.error.addOnce(_auth_fail.bind(instance));
 		instance.history = [];
+
+		instance.reporter = new tracker("session-report");
+		instance.reporter.on.success.add(_notify(instance,"report sent!"));
+
+		instance.auth = new tracker("session-tracker");
+		instance.auth.on.error.addOnce(_auth_fail.bind(instance));
+
 		instance.on = {
 			warn : new signals(),
 			info : new signals(),
@@ -93,14 +98,10 @@ define([
 		if (!view_vo) {
 			return;
 		}
-
-		var fd = view.form_data || {},
-			fr = view.form_result || {};
-
+		var fd = view.form_data || {};
 		return {
 			name : view.name,
-			form_data : (!!keys(fd).length) ? fd : null,
-			form_result : (!!keys(fr).length) ? fr : null
+			form_data : (!!keys(fd).length) ? fd : null
 		};
 	}
 
@@ -132,7 +133,9 @@ define([
 
 		if (this.current_view.eol===true){
 			this.history.push(_get_history_from_view(this.current_view));
-			this.on.eol.dispatch(this.current_view);
+			this.reporter.run([{
+				"report" : JSON.stringify(this.history)
+			}]);
 		}
 	}
 
@@ -162,8 +165,10 @@ define([
 		if (!!this.safe_nav) {
 			// nav WITH auth
 			this.scope.addClass("loading");
-			this.tracker.on.success.addOnce(_auth_success.bind(this));
-			this.tracker.request_view(this.view_data.name);
+			this.auth.on.success.addOnce(_auth_success.bind(this));
+			this.auth.run([{
+				"viewName" : this.view_data.name
+			}]);
 			return;
 		}
 		// nav WITHOU auth
@@ -196,8 +201,10 @@ define([
 				_notify(this,"controller got invalid data to initialize. check for missing properties!",log_error)(data);
 				return;
 			}
+
 			this.data = data;
 			this.data.start_with = this.data.start_with || 0;
+
 			var blob;
 			switch (this.data.start_with.constructor.name) {
 				case "Number" : blob = this.data.views[this.data.start_with];
@@ -205,10 +212,12 @@ define([
 				case "String" : blob = _get_view(this.data.start_with,this.data.views);
 				break;
 			}
+
 			if (!blob){
 				_notify(this,"controller => failed to find view: "+this.data.start_with,log_error)();
 				return;
 			}
+
 			this.create_view(blob);
 		},
 

@@ -66,6 +66,8 @@ The main wrapper is the [controller](#controller) model
 
 	- `template_name` **String** must match `/[\w-]+/`
 
+	- `eol` **Boolean** `true` when the view is the *end of line*;
+
 	- `data` intance of [view_data](#view_data)
 
 - ###<a name="view_data"># </a>view_data

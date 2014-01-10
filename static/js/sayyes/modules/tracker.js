@@ -1,5 +1,5 @@
 /*
-@grunt -task=comp-js-all
+@grunt -task=comp-js-all -env=final
 */
 define([
 	"sayyes/util/ajax",
@@ -21,27 +21,30 @@ define([
 
 	input_render = mustache.compile("<input type='hidden' name='{{name}}' value='{{value}}' />");
 
-	function _init (instance) {
-		instance.form = document.getElementsByClassName("session-tracker");
-		if (!instance.form){
-			log.error("AppTracker failed to find 'session-tracker' form");
+	function _init (instance, query) {
+		instance.form = document.getElementsByClassName(query);
+
+		if (!instance.form || instance.form.length>1){
+			log.error("AppTracker failed to find '"+query+"' or many items were found.");
 			return;
 		}
+
 		instance.on ={
 			success : new signals(),
 			error : new signals()
 		};
+
 		instance.form = $(instance.form[0]);
 		instance.service = new ajax();
 	}
 
-	AppTracker = function(){
-		_init(this);
+	AppTracker = function (form_query) {
+		_init(this,form_query);
 	};
 
-	function _updateHidden (key, value, form) {
+	function _update_hidden (key, value, form) {
 		if (!form || !key || !value){
-			log.error("tracker._updateHidden => got invalid arguments to udpate.");
+			log.error("tracker._update_hidden => got invalid arguments to udpate.");
 			return;
 		}
 		var input = form.find("input[name="+key+"]");
@@ -52,12 +55,18 @@ define([
 		form.append(input_render({'name':key,'value':value}));
 	}
 
+	function _update_hiddens (arr, form) {
+		function each_hidden (value, key) {_update_hidden(key, value, form); }
+		function each_item (data, index) {for_own(data,each_hidden); }
+		if (!!arr) {
+			for_each(arr, each_item);
+		}
+	}
+
 	function _parse_success (result) {
 		var form = this.form;
-		function each_hidden (value, key) {_updateHidden(key, value, form); }
-		function each_item (data, index) {for_own(data,each_hidden); }
 		if (!!result.value.hiddens) {
-			for_each(result.value.hiddens, each_item);
+			_update_hiddens(result.value.hiddens,form);
 		}
 		this.on.success.dispatch(result.value);
 	}
@@ -68,18 +77,20 @@ define([
 	}
 
 	AppTracker.prototype = {
-		request_view : function (view_name) {
+		run : function (init_data) {
 			if (!this.form){
 				log.error("impossible to request view, no form found");
 				return;
 			}
 
-			_updateHidden("viewName",view_name,this.form);
+			if (!!init_data){
+				_update_hiddens(init_data,this.form);
+			}
 
 			var data = this.form.serialize();
 
 			if (!data || (!!data && !data.length)) {
-				log.error("AppTracker._on_nav failed to track. for has no data");
+				log.warn("AppTracker._on_nav failed to track. for has no data");
 				return;
 			}
 

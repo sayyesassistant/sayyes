@@ -76,13 +76,13 @@ class DestiniationForm(webapp2.RequestHandler):
                             "required" : "required"
                         },{
                             "name":"date-start",
-                            "type":"date",
-                            "placeholder":"quando gostaria de ir?",
+                            "type":"text",
+                            "placeholder":"data de partida:",
                             "required" : "required"
                         },{
                             "name":"date-end",
-                            "type":"date",
-                            "placeholder":"quantos gostadia de voltar?",
+                            "type":"text",
+                            "placeholder":"data retorno:",
                             "required" : "required"
                         }],
                         "buttons" : [{
@@ -184,4 +184,5 @@ application = webapp2.WSGIApplication([
     ,(r'/mock-service/destination.json', DestiniationForm)
     ,(r'/mock-service/destination-result.json', DestiniationResultForm)
     ,(r'/mock-service/request-view.json', ViewAuthForm)
+    ,(r'/mock-service/reporter.json', ViewAuthForm)
     , (r'/mock-service/foo.json', Foo)], debug=True)
