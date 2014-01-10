@@ -40,6 +40,7 @@ define([
 		instance.template_fn = null;
 		instance.plugin_closures = null;
 		instance.form_result = {};
+		instance.form_data = null;
 
 		//apply values from object
 		mixIn(instance,value);
@@ -121,6 +122,7 @@ define([
 			this.html.addClass(class_open);
 			this.on.open.passed.dispatch(this);
 			this.form_result = {};
+			this.form_data = {};
 		},
 
 		close : function () {

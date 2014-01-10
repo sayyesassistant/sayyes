@@ -3,11 +3,13 @@
 */
 define([
 	"mout/object/mixIn",
+	"mout/queryString/decode",
 	"sayyes/util/log",
 	"signals/signals",
 	"sayyes/util/ajax"
 ],function(
 	mix_in,
+	decode,
 	log,
 	signals,
 	ajax
@@ -45,10 +47,15 @@ define([
 				});
 		}
 
+		var form_data = this.form.serialize();
+		if (form_data!==null && form_data!==undefined){
+			this.view.form_data = decode(form_data);
+		}
+
 		this.form.addClass("loading");
 		this.service
 			.method(this.form.attr("method"))
-			.request(this.form.attr("action"), this.form.serialize());
+			.request(this.form.attr("action"), this.view.form_data);
 	}
 
 	ClosureFormBind = function(config){
