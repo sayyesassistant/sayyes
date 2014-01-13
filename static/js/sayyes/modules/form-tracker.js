@@ -66,7 +66,6 @@ define([
 	function _parse_success (result) {
 		var form = this.form;
 		if (!!result.value.hiddens) {
-			console.error("empty all");
 			this.form.empty();
 			_update_hiddens(result.value.hiddens,form);
 		}

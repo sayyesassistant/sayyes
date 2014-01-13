@@ -35,6 +35,7 @@ define([
 
 	_fail_view = {
 		"name":"__fail_view__",
+		"eol":false,
 		"template_name":"fail_template",
 		"data":{}
 	};
