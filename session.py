@@ -32,12 +32,16 @@ class Start(AppHandler):
         instruction = session.instruction.replace('"', '\\"')
 
         templates = Template.getSessionTemplates(session.instruction)
+        
+        # mustache message
+        mm = '{{#message}}<h2>{{message}}</h2>{{/message}}{{^message}}<h2>Please, try again later.</h2>{{/message}}'
 
         templateValues = {
             'session': session,
             'instruction': instruction,
             'tpls': templates,
             'sessionKey': urlSafeSessionKey,
+            'mustache_message': mm
         }
 
         self.render(Const.SESSION + 'start.html', templateValues)

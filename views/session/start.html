@@ -1,15 +1,17 @@
 {% extends "views/layout/session.html" %}
 <!-- show all templates needed for the session -->
 {% block body %}
-<div id="sayyes-session">
-    <div id="sayyes-assistant"></div>
-    {% for tpl in tpls %}
-    <script id="{{tpl.id}}" type="text/mustache-template" charset="utf-8">
-        {{tpl.html}}
-    </script>
-    {% endfor %}
-</div>
-<div id="sayyes-500" style="display:none">
-    It looks like we are having problems, please restart your session.
-</div>
+    {% if tpls %}
+        <div id="sayyes-assistant" class="view-holder"></div>
+        {% for tpl in tpls %}
+        <script id="{{tpl.id}}" type="text/mustache-template" charset="utf-8">
+            {{tpl.html}}
+        </script>
+        {% endfor %}
+    {% else %}
+        <div id="sayyes-no-template">
+            <h2>Loading session failed.</h2>
+            <h3>Error message: this session has no template.</h3>
+        </div>
+    {% endif %}
 {% endblock %}

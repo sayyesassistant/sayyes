@@ -194,6 +194,7 @@ class CP(AppHandler):
                 "views" : [{
                         "name":"beginning",
                         "template_name":"mock_template",
+                        "eol" : False,
                         "data":{
                                 "title":"O que voce gostaria de fazer?",
                                 "nav":[{
@@ -207,9 +208,39 @@ class CP(AppHandler):
                 } ,{
                         "name":"career",
                         "template_name":"mock_template",
+                        "eol" : False,
                         "data":{
                                 "title":"Trabalhe com a gente",
-                                "description":"Alguma descricao aqui...",
+                                "description":"Receba oportunidades de vagas",
+                                "nav":[{
+                                        "label":"voltar",
+                                        "view":"beginning"
+                                }],
+                                "form" : {
+                                        "action" : None,
+                                        "method" : None,
+                                        "id" : "get-cv",
+                                        "on_success" : "career-feedback",
+                                        "on_error" : "error",
+                                        "inputs" : [{
+                                                        "required":"true",
+                                                        "placeholder":"your email address",
+                                                        "type":"email",
+                                                        "name":"applicant"
+                                                }],
+                                        "buttons":[{
+                                                "name":"submit",
+                                                "label":"Enviar"
+                                        }]
+                                }
+                        }
+                } ,{
+                        "name":"career-feedback",
+                        "template_name":"mock_template",
+                        "eol" : True,
+                        "data":{
+                                "title":"Obrigado!",
+                                "description":"Assim que alguma vaga aparecer vc sera avisado.",
                                 "nav":[{
                                         "label":"voltar",
                                         "view":"beginning"
@@ -218,6 +249,7 @@ class CP(AppHandler):
                 } , {
                         "name":"travell",
                         "template_name":"mock_template",
+                        "eol" : False,
                         "data":{
                                 "title":"Para qual destino?",
                                 "form" : {
@@ -249,6 +281,7 @@ class CP(AppHandler):
                 } , {
                         "name":"error",
                         "template_name":"mock_template",
+                        "eol" : False,
                         "data":{
                                 "title":"Ops!",
                                 "description":"Ocorreu um erro durante sua navegacao.",
@@ -260,7 +293,9 @@ class CP(AppHandler):
                 } , {
                         "name" : "destination",
                         "template_name":"mock_template",
+                        "eol" : False,
                         "data":{
+                                "description" : "Seems that you didn't used the service. this is a static content.",
                                 "nav" : [{
                                         "label":"ver mais destinos",
                                         "view":"travell"
@@ -272,6 +307,7 @@ class CP(AppHandler):
                 } ,  {
                         "name" : "result",
                         "template_name":"mock_template",
+                        "eol" : True,
                         "data":{
                                 "title" : "Obrigado!",
                                 "nav" : [{
@@ -283,7 +319,7 @@ class CP(AppHandler):
                                 }]
                         }
                 }]
-            }
+        }
 
         templateValues['json'] = json.dumps(j)
 
@@ -314,7 +350,7 @@ class TplPut(AppHandler):
                         </nav>
                 {{/nav.length}}
                 {{#form}}
-                        <form id="{{form.id}}" action="{{form.action}}" method="{{form.method}}" data-on-success="{{form.on_success}}" data-on-error="{{form.on_error}}">
+                        <form id="{{form.id}}" {{#form.action}}action="{{form.action}}"{{/form.action}}{{^form.action}}action="#"{{/form.action}} method="{{form.method}}" data-on-success="{{form.on_success}}" data-on-error="{{form.on_error}}">
                                 {{#form.hiddens}}
                                         <input type="hidden" name="{{name}}" value="{{value}}" />
                                 {{/form.hiddens}}
