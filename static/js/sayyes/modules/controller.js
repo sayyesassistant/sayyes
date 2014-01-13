@@ -1,5 +1,5 @@
 /*
-@grunt -task=comp-js-all
+@grunt -task=comp-js-all -env=final
 */
 define([
 	"sayyes/util/log",
@@ -70,9 +70,6 @@ define([
 		instance.scope = $(scope);
 		instance.history = [];
 
-		instance.reporter = new tracker("session-report");
-		instance.reporter.on.success.add(_notify(instance,"report sent!"));
-
 		instance.auth = new tracker("session-tracker");
 		instance.auth.on.error.addOnce(_auth_fail.bind(instance));
 
@@ -133,7 +130,9 @@ define([
 
 		if (this.current_view.eol===true){
 			this.history.push(_get_history_from_view(this.current_view));
-			this.reporter.run([{
+			//send nav report
+			this.auth.on.success.addOnce(_notify(this,"report sent!"));
+			this.auth.run([{
 				"report" : JSON.stringify(this.history)
 			}]);
 		}
