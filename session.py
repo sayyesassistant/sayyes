@@ -33,7 +33,7 @@ class Start(AppHandler):
 
         templates = Template.getSessionTemplates(session.instruction)
         
-        # mustache message
+        # mustache message, nao ta rolando de colocar direto na view por causa do '#'
         mm = '{{#message}}<h2>{{message}}</h2>{{/message}}{{^message}}<h2>Please, try again later.</h2>{{/message}}'
 
         templateValues = {
@@ -50,93 +50,74 @@ class Create(AppHandler):
 
     def post(self):
         #logging.info(self.isAjax())
-        
-        errors = {}
-
         try:
             user = User()
             accessKey = self.request.get('accessKey')
             email = self.request.get('email')
-
             user = self.authKey(accessKey, email);
-
             if user is None:
-                errors['authenticationFailed'] = "Invalid e-mail or access key"
-                errors['accessKeySent'] = accessKey
-                errors['emailSent'] = email
-                raise Exception()
-
+                raise UserWarning("User not found: invalid e-mail or access key")
             session = Session()
             session.title = self.util.stripTags(self.request.get('title'))
             session.instruction = self.request.get('instruction')
             session.user = user.key
-            
             # salva e pega a key
             newKey = session.put()
-
-            if newKey is None:
-                raise Exception()
-
             sessionKey = newKey.get()
             # cria a sessao
             returnObj = {}
             returnObj['url'] = Const.APP_URL + 'session/start/?key=' + str(sessionKey.key.id())
-
             self.jsonSuccess("Session created", returnObj)
-
         except Exception as e:
-            
-            if len(e.args) > 0:
-                errors['appException'] = e.args
-                
-            self.jsonError("Session could not be created", 1, errors)
+            self.jsonError("Session could not be created", 1, e.args)
 
 class RegisterResponse(AppHandler):
     
-    def post(self):
-
-        errors = {}
-
+    def createResponse(self):
         try:
-
-            if not self.isAjax():
-                errors['invalidRequest'] = "only ajax requests are allowed"
-                raise Exception()
-
             sessionKey = ndb.Key(urlsafe=self.request.get('sessionKey'))
-
             if sessionKey is None:
-                errors['sessionKey'] = "session not found"
-                raise Exception()
-            
-            # check if response has already been created
-            if self.request.get('responseKey'):
-                urlSafeResponseKey = self.request.get('responseKey')
-                responseKey = ndb.Key(urlsafe=urlSafeResponseKey)
-                sr = responseKey.get()
-                sr.breadcrumb += ',"' + self.request.get('viewName') + '"'
-                logging.info("response exists")
-            else:
-                sr = SessionResponse()
-                sr.breadcrumb = '"' + self.request.get('viewName') + '"'
-                
+                raise ValueError("Invalid sessionKey")
+            sr = SessionResponse()
             sr.session = sessionKey
-
+            sr.breadcrumb = '"' + self.request.get('viewName') + '"'
             responseKey = sr.put()
-
             responseObj = {
                 "hiddens" : [{"responseKey":responseKey.urlsafe()}],
-                "view_data" : {"title" : "View's title set by mock-service.py"} # TESTE APENAS
+                #"view_data" : {"title" : "View's title set by mock-service.py"} # TESTE APENAS
             }
-
-            self.jsonSuccess('Response registered', responseObj)
-
+            self.jsonSuccess('Response created', responseObj)
         except Exception as e:
-
-            if len(e.args) > 0:
-                errors['appException'] = e.args
-
-            self.jsonError("Response could not be registered", 2, errors)
+            self.jsonError("Response could not be registered", 2, e.args)
+            
+    def updateResponse(self):
+        try:
+            responseKey = ndb.Key(urlsafe=self.request.get('responseKey'))
+            sr = responseKey.get()
+            if sr is None:
+                raise ValueError("Invalid responseKey")
+            sr.breadcrumb += ',"' + self.request.get('viewName') + '"'
+            responseKey = sr.put()
+            responseObj = {
+                "hiddens" : [{"responseKey":responseKey.urlsafe()}],
+                #"view_data" : {"title" : "View's title set by mock-service.py"} # TESTE APENAS
+            }
+            self.jsonSuccess('Response created', responseObj)
+        except Exception as e:
+            self.jsonError("Response could not be registered", 2, e.args)
+    
+    def post(self):
+        try:
+            if not self.isAjax():
+                raise UserWarning("Only ajax requests are allowed")
+            if self.request.get('sessionKey'):
+                self.createResponse()
+            elif self.request.get('responseKey'):
+                self.updateResponse()
+            else:
+                raise ValueError('Please inform either a sessionKey or responseKey')
+        except Exception as e:
+            self.jsonError("Response could not be registered", 2, e.args)
 
 
 config = {}
