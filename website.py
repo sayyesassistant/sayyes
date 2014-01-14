@@ -12,7 +12,6 @@ from google.appengine.ext import ndb
 class HomePage(AppHandler):
 
     def get(self):
-
         templateValues = {'teste':'teste'}
         self.render(Const.WEBSITE + 'index.html', templateValues)
 
@@ -23,7 +22,6 @@ class Profile(AppHandler):
         self.logged()
         if self.auth is None:
             self.redirect('/login')
-
         templateValues = {}
         templateValues['auth'] = self.auth
         templateValues['user'] = User.get_by_id(self.auth['keyId'])
@@ -31,39 +29,25 @@ class Profile(AppHandler):
         self.render(Const.WEBSITE + 'profile.html', templateValues)
 
     def post(self):
-
-        errors = {}
-
         try:
             self.logged()
             user = User.get_by_id(self.auth['keyId'])
             user.name = self.util.stripTags(self.request.get('name'))
             user.companyName = self.util.stripTags(self.request.get('companyName'))
-
             if self.request.get('pwd') is not None:
                 user.pwd = user.hash(self.request.get('pwd'))
-
             user.website = self.request.get('website')
-
             # save and get the key
             userKey = user.put()
-
-            if userKey is None:
-                errors['user'] = "User could not be updated"
-                raise Exception()
-
             # update the browser session
             auth = self.session['auth']
             auth['keyId'] = user.key.id()
             auth['name'] = user.name
-
-            #logging.info(auth)
             self.session['auth'] = auth
-
             self.jsonSuccess("Profile updated")
         except Exception as e:
-            logging.info(e.args)
-            self.jsonError(None, 1, errors)
+            logging.info()
+            self.jsonError("User could not be updated", 1, e.args)
 
 class SignUp(AppHandler):
 
@@ -72,24 +56,16 @@ class SignUp(AppHandler):
         self.logged()
         if self.auth is not None:
             self.redirect('/cp')
-
         self.render(Const.WEBSITE + 'signup.html', {})
 
     def post(self):
-
-        errors = {}
-
         try:
             user = User()
             user.name = self.util.stripTags(self.request.get('name'))
-
             email = self.util.stripTags(self.request.get('email').strip())
             usrEmail = User.query(User.email == email).get()
-
             if usrEmail is not None:
-                errors['email'] = "This e-mail has already been registered"
-                raise Exception()
-
+                raise UserWarning("This e-mail has already been registered")
             user.email = self.request.get('email')
             user.companyName = self.util.stripTags(self.request.get('companyName'))
             user.pwd = user.hash(self.request.get('pwd'))
@@ -97,18 +73,10 @@ class SignUp(AppHandler):
             user.accessKey = user.pwdGenerator(12) + strftime("%y%m%d%H%M%S", gmtime())
             # save and get the key
             userKey = user.put()
-
-            if userKey is None:
-                errors['user'] = "User could not be created"
-                raise Exception()
-
-            # create a browser session
             self.createBrowserSession(user.key.id(), user.name, user.email, user.accessKey)
-
             self.jsonSuccess("Account created")
         except Exception as e:
-            logging.info(e.args)
-            self.jsonError(None, 1, errors)
+            self.jsonError("User could not be created", 1, e.args)
 
 class LogIn(AppHandler):
 
@@ -142,26 +110,26 @@ class ForgotPassword(AppHandler):
         self.render(Const.WEBSITE + 'forgot_password.html', {})
 
     def post(self):
-
-        email = self.request.get('email').strip()
-        user = User.query(User.email == email).get()
-        #logging.info(user.email)
-        if user is not None:
-            # reset pwd
-            newPwd = user.pwdGenerator()
-            user.pwd = user.hash(newPwd)
-            userKey = user.put()
-            # test entity
-            if userKey is None:
-                self.jsonError()
-            #send new pwd
-            nps = NewPasswordSender(newPwd)
-            nps.toName = user.name
-            nps.toEmail = user.email
-            nps.sendNewPassword()
-
-        # returns success anyway as you cannot tell if email was found
-        self.jsonSuccess()
+        try:
+            email = self.request.get('email').strip()
+            user = User.query(User.email == email).get()
+            #logging.info(user.email)
+            if user is not None:
+                # reset pwd
+                newPwd = user.pwdGenerator()
+                user.pwd = user.hash(newPwd)
+                userKey = user.put()
+                # test entity
+                if userKey is None:
+                    raise ValueError("e-mail not registered")
+                #send new pwd
+                nps = NewPasswordSender(newPwd)
+                nps.toName = user.name
+                nps.toEmail = user.email
+                nps.sendNewPassword()
+                self.jsonSuccess()
+        except Exception as e:
+            self.jsonError("User not found", 2, e.args)
 
 class CP(AppHandler):
 

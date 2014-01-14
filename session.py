@@ -97,12 +97,13 @@ class RegisterResponse(AppHandler):
             if sr is None:
                 raise ValueError("Invalid responseKey")
             sr.breadcrumb += ',"' + self.request.get('viewName') + '"'
+            sr.userData = self.request.get('report')
             responseKey = sr.put()
             responseObj = {
                 "hiddens" : [{"responseKey":responseKey.urlsafe()}],
                 #"view_data" : {"title" : "View's title set by mock-service.py"} # TESTE APENAS
             }
-            self.jsonSuccess('Response created', responseObj)
+            self.jsonSuccess('Response updated', responseObj)
         except Exception as e:
             self.jsonError("Response could not be registered", 2, e.args)
     
@@ -118,7 +119,18 @@ class RegisterResponse(AppHandler):
                 raise ValueError('Please inform either a sessionKey or responseKey')
         except Exception as e:
             self.jsonError("Response could not be registered", 2, e.args)
-
+            
+class UserData(AppHandler):
+    def get(self):
+        try:
+            urlSafeResponseKey = self.request.get('key')
+            responseKey = ndb.Key(urlsafe=urlSafeResponseKey)
+            r = responseKey.get()
+            if r is None:
+                raise UserWarning("invalid responsekey")
+            self.jsonSuccess('Response found', r.userData)
+        except Exception as e:
+            self.jsonError("Response not found", 2, e.args)
 
 config = {}
 config['webapp2_extras.sessions'] = {
@@ -130,4 +142,5 @@ application = webapp2.WSGIApplication([
     ('/session/create.py', Create),
     ('/session/start.py', Start),
     ('/session/response.py', RegisterResponse),
+    ('/session/user_data.py', UserData),
 ], debug=True, config=config)
