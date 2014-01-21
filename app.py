@@ -1,12 +1,13 @@
 import json
-
 import jinja2
 import logging
 import os
 import webapp2
-from models import *
-from util import *
 from webapp2_extras import sessions
+from modules.toolbox.util import *
+from modules.toolbox.mail import *
+from modules.models.mix import *
+from modules.models.user import *
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),

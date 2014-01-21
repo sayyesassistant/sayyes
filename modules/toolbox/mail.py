@@ -1,20 +1,5 @@
-import logging
-import re
 from google.appengine.api import mail
-
-class Const(object):
-    WEBSITE = "views/website/"
-    SESSION = "views/session/"
-    INC = "views/includes/"
-    APP_SENDER_NAME = "Say Yes! Assistant Support Team"
-    APP_SENDER_EMAIL = "support@sayyes.cc"
-    APP_URL = "http://www.sayyes.cc/"
-    SESSION_SECRET_KEY = "76859309657453542496749683645DCMS4"
-
-class Util(object):
-    def stripTags(self, str):
-        p = re.compile(r'<.*?>')
-        return p.sub('', str)
+from modules.toolbox.util import *
 
 class MailSender(object):
 
@@ -44,7 +29,7 @@ class NewPasswordSender(MailSender):
         self.subject = "New password request"
         MailSender.__init__(self)
 
-    def buildMsgHTML(self):
+    def __buildMsgHTML(self):
 
         self.msgHTML = "<p><b>*** " + self.subject + " ***</b></p>"
         self.msgHTML = self.msgHTML + "<p>Hi " + self.toName + "!</p>"
@@ -52,7 +37,7 @@ class NewPasswordSender(MailSender):
         self.msgHTML = self.msgHTML + "<p>If you did not request a new password please contact our support team by replying to this e-mail.</p>"
         self.msgHTML = self.msgHTML + "<p>Best regards from <b>" + Const.APP_SENDER_NAME + "</b>.</p>"
 
-    def buildMsgTXT(self):
+    def __buildMsgTXT(self):
 
         self.msgTXT = "*** " + self.subject + " ***\n"
         self.msgTXT = self.msgTXT + "Hi " + self.toName + "!\n"
@@ -62,7 +47,7 @@ class NewPasswordSender(MailSender):
 
     def sendNewPassword(self):
 
-        self.buildMsgHTML()
-        self.buildMsgTXT()
+        self.__buildMsgHTML()
+        self.__buildMsgTXT()
 
         return self.send()

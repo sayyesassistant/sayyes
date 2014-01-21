@@ -33,7 +33,7 @@
             </tr>
             <tr>
                 <td><label>Company Website:</label></td>
-                <td><input type="url" name="website" required placeholder="Ex: http://mysite.com" value="{{user.website}}"></td>
+                <td><input type="url" name="website" placeholder="Ex: http://mysite.com" value="{{user.website}}"></td>
             </tr>
             <tr>
                 <td></td>
@@ -71,8 +71,8 @@
                         alert('Houston, we have a problem.');
                     } else {
                         alert('Updated!');
+                        window.location.href = "/profile";
                     }
-                    window.location.href = "/profile";
                 }, 'json');
                 return false;
             });

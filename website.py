@@ -1,21 +1,22 @@
-
 import logging
 import urllib
 import webapp2
 import json
 from app import AppHandler
-from models import *
-from util import *
-from time import gmtime, strftime
 from google.appengine.ext import ndb
+from modules.toolbox.util import *
+from modules.toolbox.mail import *
+from modules.models.mix import *
+from modules.models.user import *
 
-class HomePage(AppHandler):
+
+class HomePageCtrl(AppHandler):
 
     def get(self):
         templateValues = {'teste':'teste'}
         self.render(Const.WEBSITE + 'index.html', templateValues)
 
-class Profile(AppHandler):
+class ProfileCtrl(AppHandler):
 
     def get(self):
         # check the browser session
@@ -34,8 +35,8 @@ class Profile(AppHandler):
             user = User.get_by_id(self.auth['keyId'])
             user.name = self.util.stripTags(self.request.get('name'))
             user.companyName = self.util.stripTags(self.request.get('companyName'))
-            if self.request.get('pwd') is not None:
-                user.pwd = user.hash(self.request.get('pwd'))
+            if self.request.get('pwd'):
+                user.pwd = self.util.hash(self.request.get('pwd'))
             user.website = self.request.get('website')
             # save and get the key
             userKey = user.put()
@@ -46,10 +47,9 @@ class Profile(AppHandler):
             self.session['auth'] = auth
             self.jsonSuccess("Profile updated")
         except Exception as e:
-            logging.info()
             self.jsonError("User could not be updated", 1, e.args)
 
-class SignUp(AppHandler):
+class SignUpCtrl(AppHandler):
 
     def get(self):
         # check the browser session
@@ -68,9 +68,9 @@ class SignUp(AppHandler):
                 raise UserWarning("This e-mail has already been registered")
             user.email = self.request.get('email')
             user.companyName = self.util.stripTags(self.request.get('companyName'))
-            user.pwd = user.hash(self.request.get('pwd'))
+            user.pwd = self.util.hash(self.request.get('pwd'))
             user.website = self.request.get('website')
-            user.accessKey = user.pwdGenerator(12) + strftime("%y%m%d%H%M%S", gmtime())
+            user.accessKey = self.util.generatePwd(12)
             # save and get the key
             userKey = user.put()
             self.createBrowserSession(user.key.id(), user.name, user.email, user.accessKey)
@@ -78,7 +78,7 @@ class SignUp(AppHandler):
         except Exception as e:
             self.jsonError("User could not be created", 1, e.args)
 
-class LogIn(AppHandler):
+class LogInCtrl(AppHandler):
 
     def get(self):
         # verifica a sessao
@@ -88,8 +88,8 @@ class LogIn(AppHandler):
         self.render(Const.WEBSITE + 'login.html', {})
 
     def post(self):
-        user = User()
-        logged = user.login(self.request.get('email'), self.request.get('pwd'))
+        logger = UserLogger()
+        logged = logger.login(self.request.get('email'), self.request.get('pwd'))
         if logged is None:
             self.jsonError("Wrong username or password")
         else:
@@ -98,13 +98,13 @@ class LogIn(AppHandler):
             self.jsonSuccess()
 
 
-class LogOut(AppHandler):
+class LogOutCtrl(AppHandler):
 
     def get(self):
         del self.session['auth']
         self.redirect('/')
 
-class ForgotPassword(AppHandler):
+class ForgotPasswordCtrl(AppHandler):
 
     def get(self):
         self.render(Const.WEBSITE + 'forgot_password.html', {})
@@ -116,8 +116,9 @@ class ForgotPassword(AppHandler):
             #logging.info(user.email)
             if user is not None:
                 # reset pwd
-                newPwd = user.pwdGenerator()
-                user.pwd = user.hash(newPwd)
+                util = Util()
+                newPwd = util.generatePwd()
+                user.pwd = util.hash(newPwd)
                 userKey = user.put()
                 # test entity
                 if userKey is None:
@@ -131,7 +132,7 @@ class ForgotPassword(AppHandler):
         except Exception as e:
             self.jsonError("User not found", 2, e.args)
 
-class CP(AppHandler):
+class CPCtrl(AppHandler):
 
     def get(self):
 
@@ -294,7 +295,7 @@ class CP(AppHandler):
 
         self.render(Const.WEBSITE + 'cp.html', templateValues)
 
-class TplPut(AppHandler):
+class TplPutCtrl(AppHandler):
 
     def get(self):
         tpl = Template()
@@ -348,12 +349,12 @@ config['webapp2_extras.sessions'] = {
 }
 
 application = webapp2.WSGIApplication([
-    ('/', HomePage),
-    ('/logout', LogOut),
-    ('/login', LogIn),
-    ('/signup', SignUp),
-    ('/forgot_password', ForgotPassword),
-    ('/cp', CP),
-    ('/profile', Profile),
-    ('/template_put', TplPut)
+    ('/', HomePageCtrl),
+    ('/logout', LogOutCtrl),
+    ('/login', LogInCtrl),
+    ('/signup', SignUpCtrl),
+    ('/forgot_password', ForgotPasswordCtrl),
+    ('/cp', CPCtrl),
+    ('/profile', ProfileCtrl),
+    ('/template_put', TplPutCtrl)
 ], debug=True, config=config)

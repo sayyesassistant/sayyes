@@ -1,14 +1,14 @@
-
 import json
-
 import logging
 import urllib
 import webapp2
 from app import AppHandler
 from google.appengine.api import mail
 from google.appengine.ext import ndb
-from models import *
-from util import *
+from modules.toolbox.util import *
+from modules.toolbox.mail import *
+from modules.models.mix import *
+from modules.models.user import *
 
 class Image(webapp2.RequestHandler):
     def get(self):
