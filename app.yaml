@@ -37,6 +37,9 @@ handlers:
 
 - url: /js-src
   static_dir: static/js
+  
+- url: /flat-ui
+  static_dir: static/flat-ui
 
 - url: /static
   mime_type: text/markdown
