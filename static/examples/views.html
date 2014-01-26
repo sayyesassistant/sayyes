@@ -12,29 +12,40 @@
 	<script type="text/javascript">
 		(function(d){ d.className = d.className.replace('no-js', 'js'); })(document.documentElement);
 	</script>
+
+	<!-- flatui stuff -->
 	<link href="/flat-ui/bootstrap/css/bootstrap.css" rel="stylesheet">
 	<link href="/flat-ui/css/flat-ui.css" rel="stylesheet">
+	<!-- flatui stuff -->
+
+		<link rel="stylesheet" type="text/css" href="&#x2F;css-min&#x2F;guideline-min.css" /></link>
 	<!--[if lt IE 9]>
 		<script src="/js-min/third-party/html5shiv.js" charset="utf-8" async></script>
+		<script src="/js-min/third-party/respond.min.js" charset="utf-8" async></script>
 	<![endif]-->
 </head>
 <body>
 <div class="view">
-		<h1>Mock View example</h1>
-		<h2>Some description goes here</h2>
-		<nav>
-			<ul>
-				<a href="#foo" data-role="nav">nav to &lt;view&gt;</a>
-			</ul>
-		</nav>
+		<h3>Mock View example</h3>
+		<h5>Some description goes here</h5>
+		<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</p>
 		<form id="sayyes" action="&#x2F;mock-service&#x2F;foo.json" method="post" data-on-success="nav=a" data-on-error="alert">
+
 				<input type="hidden" name="expect" value="false" />
-				<input type="text" name="name" placeholder="Type your name" required />
-				<input type="email" name="email" placeholder="Type your email" required />
-			<nav>
-				<button name="" value="foo">send</input>
-			</nav>
+
+					<input class="form-control tt-query" type="text" name="name" placeholder="Type your name" required />
+					<input class="form-control tt-query" type="email" name="email" placeholder="Type your email" required />
+
+
+
+				<ul class="nav nav-pills">
+					<li><button class="btn btn-lg btn-block btn-primary" value="foo">send</button></li>
+				</ul>
 		</form>
+		</nav>
+			<a href="#foo" class="btn btn-default btn-block btn-info" data-role="nav">continuar</a>
+			<a href="#0" class="btn btn-default btn-block btn-info" data-role="nav">voltar</a>
+		</nav>
 </div>
 <div class="view fail">
 	<h1>Ops! Parece que tivemos algum problema em nossos servidores.</h1>

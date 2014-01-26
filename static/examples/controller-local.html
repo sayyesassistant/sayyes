@@ -153,12 +153,17 @@
 	}]
 };
 	</script>
+
+	<!-- flatui stuff -->
 	<link href="/flat-ui/bootstrap/css/bootstrap.css" rel="stylesheet">
 	<link href="/flat-ui/css/flat-ui.css" rel="stylesheet">
+	<!-- flatui stuff -->
+
 		<link rel="stylesheet" type="text/css" href="&#x2F;css-min&#x2F;guideline-min.css" /></link>
-		<script src="&#x2F;js-min&#x2F;test-controller-local-min.js" charset="utf-8" async defer></script>
+		<script src="&#x2F;js-min&#x2F;test-controller-local-min.js" charset="utf-8" async></script>
 	<!--[if lt IE 9]>
 		<script src="/js-min/third-party/html5shiv.js" charset="utf-8" async></script>
+		<script src="/js-min/third-party/respond.min.js" charset="utf-8" async></script>
 	<![endif]-->
 </head>
 <body>
@@ -169,41 +174,58 @@
 <script id="mock_template" type="text/mustache-template" charset="utf-8">
 	<div class="view">
 	{{#title}}
-		<h1>{{title}}</h1>
+		<h3>{{title}}</h3>
 	{{/title}}
 	{{#description}}
-		<h2>{{description}}</h2>
+		<h5>{{description}}</h5>
 	{{/description}}
-	{{#nav.length}}
-		<nav>
-			<ul>
-			{{#nav}}
-				<a href="#{{view}}" data-role="nav">{{label}}</a>
-			{{/nav}}
-			</ul>
-		</nav>
-	{{/nav.length}}
+	{{#data.text}}
+		<p>{{{data.text}}}</p>
+	{{/data.text}}
 	{{#form}}
 		<form id="{{form.id}}" {{#form.action}}action="{{form.action}}"{{/form.action}}{{^form.action}}action="#"{{/form.action}} method="{{form.method}}" data-on-success="{{form.on_success}}" data-on-error="{{form.on_error}}">
+
 			{{#form.hiddens}}
-				<input type="hidden" name="{{name}}" value="{{value}}" />
+				<input type="hidden" name="{{{name}}}" value="{{{value}}}" />
 			{{/form.hiddens}}
-			{{#form.inputs}}
-				<input type="{{type}}" name="{{name}}" placeholder="{{placeholder}}" {{required}} />
-			{{/form.inputs}}
+
+			{{#form.inputs.length}}
+				{{#form.inputs}}
+					<input class="form-control tt-query" type="{{{type}}}" name="{{{name}}}" placeholder="{{{placeholder}}}" {{{required}}} />
+				{{/form.inputs}}
+			{{/form.inputs.length}}
+
 			{{#form.radios}}
-				<input type="radio" name="{{name}}" value="{{value}}" {{required}}>{{label}}</input>
+				<label class="radio">
+					<span class="icons">
+						<span class="first-icon fui-radio-unchecked"></span>
+						<span class="second-icon fui-radio-checked"></span>
+					</span>
+					<input type="radio" name="{{name}}" value="{{value}}" data-toggle="radio" {{required}}>
+					{{label}}
+				</label>
 			{{/form.radios}}
+
 			{{#form.checkboxes}}
 				<input type="checkbox" name="{{name}}" value="{{value}}" {{required}}>{{label}}</input>
 			{{/form.checkboxes}}
-			<nav>
-			{{#form.buttons}}
-				<button name="{{name}}" value="{{value}}">{{label}}</input>
-			{{/form.buttons}}
-			</nav>
+
+			{{#form.buttons.length}}
+				<ul class="nav nav-pills">
+				{{#form.buttons}}
+					<li><button class="btn btn-lg btn-block btn-primary" value="{{{value}}}">{{{label}}}</button></li>
+				{{/form.buttons}}
+				</ul>
+			{{/form.buttons.length}}
 		</form>
 	{{/form}}
+	{{#nav.length}}
+		</nav>
+		{{#nav}}
+			<a href="#{{view}}" class="btn btn-default btn-block btn-info" data-role="nav">{{{label}}}</a>
+		{{/nav}}
+		</nav>
+	{{/nav.length}}
 </div>
 </script>
 <script id="fail_template" type="text/mustache-template" charset="utf-8">

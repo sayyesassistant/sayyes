@@ -75,11 +75,6 @@ module.exports = function (grunt) {
 		task.run(grunt, this);
 	});
 
-	grunt.registerTask( "comp-sass" , "Runs sass compiler.\n@usage: grunt comp-sass -env=final|dev (dev is default)\n@see .grunt/sass.json\n", function () {
-		init();
-		require("./.grunt/tasks/task-comp-sass").run(grunt, this);
-	});
-
 	grunt.task.registerTask('comp-js-all', "Run the task 'comp-js' for every app\n@see .grunt/apps.json\n", function () {
 		init();
 		var app = grunt.config.get("app"),
@@ -106,7 +101,7 @@ module.exports = function (grunt) {
 		task.run(grunt, this);
 	});
 
-	grunt.task.registerTask('build', "Combines 'comp-js-all' and 'pages'\nThere is an argument '-reset=true' that removes all tests made before\n", function () {
+	grunt.task.registerTask('build', "Combines 'comp-js-all','pages' and 'sass'\nThere is an argument '-reset=true' that removes all tests made before\n", function () {
 		init();
 		var args = grunt.config.get("arguments");
 		if (!!args && args.reset === "true"){
@@ -115,6 +110,6 @@ module.exports = function (grunt) {
 			grunt.log.warn("Cleaning all tests and generated files...");
 			bash(command,null,grunt);
 		}
-		grunt.task.run(["comp-js-all","pages","comp-sass"]);
+		grunt.task.run(["comp-js-all","pages","sass:final"]);
 	});
 };

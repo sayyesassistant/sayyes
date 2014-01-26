@@ -2,7 +2,9 @@
 @grunt -task=test-views
 -->
 <div class="gl-example">
-	<h2>Headings</h2>
+	<h4{{#data.picture}}
+		<img class="img-rounded img-responsive" src="{{{url}}}" alt="{{{description}}}" />
+	{{/data.picture}}>Headings</h4>
 	<h1>&lt;h1&gt;{{{data.title}}}</h1>
 	<h2>&lt;h2&gt;{{{data.title}}}</h2>
 	<h3>&lt;h3&gt;{{{data.title}}}</h3>
@@ -11,17 +13,17 @@
 	<h6>&lt;h6&gt;{{{data.title}}}</h6>
 </div>
 <div class="gl-example">
-	<h2>Paragraph</h2>
+	<h4>Paragraph</h4>
 	<p>{{{data.text}}}</p>
 </div>
 <div class="gl-example">
-	<h2>Images</h2>
+	<h4>Images</h4>
 	{{#data.picture}}
 		<img class="img-rounded img-responsive" src="{{{url}}}" alt="{{{description}}}" />
 	{{/data.picture}}
 </div>
 <div class="gl-example">
-	<h2>Links</h2>
+	<h4>Links</h4>
 	<a href="#">link 1</a>
 	<a href="#">link 2</a>
 	<a href="#">link 3</a>
@@ -29,7 +31,7 @@
 </div>
 
 <div class="gl-example">
-	<h2>Unordered List</h2>
+	<h4>Unordered List</h4>
 	<ul>
 		<li>level 1</li>
 		<li>
@@ -61,14 +63,32 @@
 	{{#data.form}}
 	<h1>Form example:</h1>
 	<form id="{{{data.form.id}}}" action="{{{data.form.action}}}" method="{{{data.form.method}}}" data-on-sumbit="{{{data.form.on_submit}}}" >
+
 		{{#data.form.hiddens}}
 			<input type="hidden" name="{{{name}}}" value="{{{value}}}" />
 		{{/data.form.hiddens}}
-		{{#data.form.inputs}}
-			<div class="gl-input-holder">
+
+		{{#data.form.inputs.length}}
+			{{#data.form.inputs}}
 				<input class="form-control tt-query" type="{{{type}}}" name="{{{name}}}" placeholder="{{{placeholder}}}" {{{required}}} />
-			</div>
-		{{/data.form.inputs}}
+			{{/data.form.inputs}}
+		{{/data.form.inputs.length}}
+
+		{{#data.form.radios}}
+			<label class="radio">
+				<span class="icons">
+					<span class="first-icon fui-radio-unchecked"></span>
+					<span class="second-icon fui-radio-checked"></span>
+				</span>
+				<input type="radio" name="{{name}}" value="{{value}}" data-toggle="radio" {{required}}>
+				{{label}}
+			</label>
+		{{/data.form.radios}}
+
+		{{#data.form.checkboxes}}
+			<input type="checkbox" name="{{name}}" value="{{value}}" {{required}}>{{label}}</input>
+		{{/data.form.checkboxes}}
+
 		{{#data.form.buttons.length}}
 			<ul class="nav nav-pills">
 			{{#data.form.buttons}}
@@ -76,6 +96,7 @@
 			{{/data.form.buttons}}
 			</ul>
 		{{/data.form.buttons.length}}
+
 	</form>
 	{{/data.form}}
 </div>

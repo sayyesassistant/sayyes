@@ -1,9 +1,14 @@
 {
+	"css" : "<%=paths.www_css_folder%>/guideline-min.css",
 	"title":"Mock View example",
 	"description":"Some description goes here",
+	"text":"Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.",
 	"nav":[{
-		"label":"nav to <view>",
+		"label":"continuar",
 		"view":"foo"
+	},{
+		"label":"voltar",
+		"view":"0"
 	}],
 	"form" : {
 		"action" : "/mock-service/foo.json",

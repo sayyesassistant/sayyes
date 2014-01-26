@@ -12,11 +12,17 @@
 	<script type="text/javascript">
 		(function(d){ d.className = d.className.replace('no-js', 'js'); })(document.documentElement);
 	</script>
+
+	<!-- flatui stuff -->
 	<link href="/flat-ui/bootstrap/css/bootstrap.css" rel="stylesheet">
 	<link href="/flat-ui/css/flat-ui.css" rel="stylesheet">
+	<!-- flatui stuff -->
+
 		<link rel="stylesheet" type="text/css" href="&#x2F;css-min&#x2F;guideline-min.css" /></link>
+		<script src="&#x2F;js-min&#x2F;test-controller-local-min.js" charset="utf-8" async></script>
 	<!--[if lt IE 9]>
 		<script src="/js-min/third-party/html5shiv.js" charset="utf-8" async></script>
+		<script src="/js-min/third-party/respond.min.js" charset="utf-8" async></script>
 	<![endif]-->
 </head>
 <body>
@@ -24,7 +30,9 @@
 @grunt -task=test-views
 -->
 <div class="gl-example">
-	<h2>Headings</h2>
+	<h4
+		<img class="img-rounded img-responsive" src="//placekitten.com/250" alt="Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat" />
+	>Headings</h4>
 	<h1>&lt;h1&gt;Lorem ipsum dolor sit amet</h1>
 	<h2>&lt;h2&gt;Lorem ipsum dolor sit amet</h2>
 	<h3>&lt;h3&gt;Lorem ipsum dolor sit amet</h3>
@@ -33,15 +41,15 @@
 	<h6>&lt;h6&gt;Lorem ipsum dolor sit amet</h6>
 </div>
 <div class="gl-example">
-	<h2>Paragraph</h2>
+	<h4>Paragraph</h4>
 	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
 </div>
 <div class="gl-example">
-	<h2>Images</h2>
+	<h4>Images</h4>
 		<img class="img-rounded img-responsive" src="//placekitten.com/250" alt="Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat" />
 </div>
 <div class="gl-example">
-	<h2>Links</h2>
+	<h4>Links</h4>
 	<a href="#">link 1</a>
 	<a href="#">link 2</a>
 	<a href="#">link 3</a>
@@ -49,7 +57,7 @@
 </div>
 
 <div class="gl-example">
-	<h2>Unordered List</h2>
+	<h4>Unordered List</h4>
 	<ul>
 		<li>level 1</li>
 		<li>
@@ -80,18 +88,36 @@
 <div class="gl-example">
 	<h1>Form example:</h1>
 	<form id="sayyes" action="{{{www_mock_service}}}/foo.json" method="POST" data-on-sumbit="" >
+
 			<input type="hidden" name="foo" value="bar" />
 			<input type="hidden" name="hello" value="world" />
-			<div class="gl-input-holder">
+
 				<input class="form-control tt-query" type="text" name="name" placeholder="Type your name"  />
-			</div>
-			<div class="gl-input-holder">
 				<input class="form-control tt-query" type="email" name="email" placeholder="Type your email" required />
-			</div>
+
+			<label class="radio">
+				<span class="icons">
+					<span class="first-icon fui-radio-unchecked"></span>
+					<span class="second-icon fui-radio-checked"></span>
+				</span>
+				<input type="radio" name="controll1" value="foo" data-toggle="radio" >
+				button a
+			</label>
+			<label class="radio">
+				<span class="icons">
+					<span class="first-icon fui-radio-unchecked"></span>
+					<span class="second-icon fui-radio-checked"></span>
+				</span>
+				<input type="radio" name="controll1" value="bar" data-toggle="radio" >
+				button b
+			</label>
+
+
 			<ul class="nav nav-pills">
 				<li><button class="btn btn-lg btn-block btn-primary" value="foo">button a</button></li>
 				<li><button class="btn btn-lg btn-block btn-primary" value="bar">button b</button></li>
 			</ul>
+
 	</form>
 </div>
 <script>

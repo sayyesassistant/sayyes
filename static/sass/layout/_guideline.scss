@@ -19,28 +19,12 @@ section {
 }
 
 .gl-example {
-	display: block;
-	border:3px solid black;
-	margin-bottom: 10px;
-	max-width: 80%;
-
-	@include center-content();
-
-	& img {
-		@include center-content();
-	}
-
-	& form {
-		max-width:98%;
-		@include center-content();
-	}
-
-	& .gl-input-holder {
-		@include center-content();
-		margin-bottom: 10px;
-	}
+	@include base-view();
 }
 
-.gl-input-holder {
-
+.view {
+	@include base-view();
+	max-width:50%;
+	text-align:center;
+	padding:15px;
 }
