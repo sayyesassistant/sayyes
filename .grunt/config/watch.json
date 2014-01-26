@@ -1,5 +1,12 @@
 {
 	"scripts" : {
+		"files" : ["static/js/sayyes/**/*.js"],
+		"tasks": ["comp-js-all"],
+		"options": {
+			"spawn": false
+		}
+	},
+	"sass" : {
 		"files" : ["static/sass/**/*.scss"],
 		"tasks": ["comp-sass"],
 		"options": {

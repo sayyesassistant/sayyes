@@ -12,8 +12,12 @@
 	<script type="text/javascript">
 		(function(d){ d.className = d.className.replace('no-js', 'js'); })(document.documentElement);
 	</script>
+	<link href="/flat-ui/bootstrap/css/bootstrap.css" rel="stylesheet">
+	<link href="/flat-ui/css/flat-ui.css" rel="stylesheet">
 		<link rel="stylesheet" type="text/css" href="&#x2F;css-min&#x2F;guideline-min.css" /></link>
-	<script src="/js-min/third-party/html5shiv.js" charset="utf-8" async defer></script>
+	<!--[if lt IE 9]>
+		<script src="/js-min/third-party/html5shiv.js" charset="utf-8" async></script>
+	<![endif]-->
 </head>
 <body>
 <!--
@@ -22,7 +26,7 @@
 <div class="gl-example">
 	<h2>Headings</h2>
 	<h1>&lt;h1&gt;Lorem ipsum dolor sit amet</h1>
-	<h2>&lt;h2&gt;Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</h2>
+	<h2>&lt;h2&gt;Lorem ipsum dolor sit amet</h2>
 	<h3>&lt;h3&gt;Lorem ipsum dolor sit amet</h3>
 	<h4>&lt;h4&gt;Lorem ipsum dolor sit amet</h4>
 	<h5>&lt;h5&gt;Lorem ipsum dolor sit amet</h5>
@@ -34,11 +38,14 @@
 </div>
 <div class="gl-example">
 	<h2>Images</h2>
-		<img src="//placekitten.com/250" alt="Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat" />
+		<img class="img-rounded img-responsive" src="//placekitten.com/250" alt="Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat" />
 </div>
 <div class="gl-example">
 	<h2>Links</h2>
-	<a href="#">link</a>
+	<a href="#">link 1</a>
+	<a href="#">link 2</a>
+	<a href="#">link 3</a>
+	<a href="#">link 4</a>
 </div>
 
 <div class="gl-example">
@@ -63,11 +70,11 @@
 
 <div class="gl-example">
 	<h2>Navigation list</h2>
-	<nav>
-		<a href="#viewname" data-role="nav">nav link a</a>
-		<a href="#viewname" data-role="nav">nav link b</a>
-		<a href="#viewname" data-role="nav">nav link c</a>
-	</nav>
+	<ul class="nav nav-pills">
+		<li><a href="#viewname" data-role="nav">nav link a</a></li>
+		<li><a href="#viewname" data-role="nav">nav link b</a></li>
+		<li><a href="#viewname" data-role="nav">nav link c</a></li>
+	</ul>
 </div>
 
 <div class="gl-example">
@@ -75,12 +82,16 @@
 	<form id="sayyes" action="{{{www_mock_service}}}/foo.json" method="POST" data-on-sumbit="" >
 			<input type="hidden" name="foo" value="bar" />
 			<input type="hidden" name="hello" value="world" />
-			<input type="text" name="name" placeholder="Type your name"  />
-			<input type="email" name="email" placeholder="Type your email" required />
-		<nav>
-			<button value="foo">button a</button>
-			<button value="bar">button b</button>
-		</nav>
+			<div class="gl-input-holder">
+				<input class="form-control tt-query" type="text" name="name" placeholder="Type your name"  />
+			</div>
+			<div class="gl-input-holder">
+				<input class="form-control tt-query" type="email" name="email" placeholder="Type your email" required />
+			</div>
+			<ul class="nav nav-pills">
+				<li><button class="btn btn-lg btn-block btn-primary" value="foo">button a</button></li>
+				<li><button class="btn btn-lg btn-block btn-primary" value="bar">button b</button></li>
+			</ul>
 	</form>
 </div>
 <script>

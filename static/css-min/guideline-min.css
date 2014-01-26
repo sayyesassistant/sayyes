@@ -1,1 +1,73 @@
-code{display:block;border:gray;padding:11px;font:Courier;background-color:lightsteelblue}div.gl-example{display:block;border:1px solid black;margin-bottom:10px}div.gl-example+h2{display:block;font-size:2em;margin:0;padding:0}section{display:block;background-color:lightblue}input[type=text]{display:block;width:50%}div.alert{display:none}div.show{display:block}.view-holder{background:white}.view-holder.loading{background:gray}
+/*
+@grunt -task=comp-sass -env=dev
+*/
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/igor\/Dropbox\/exchange\/sayyesassistant\/static\/sass\/layout\/_guideline\.scss}line{font-family:\000031}}
+code {
+  display: block;
+  border: gray;
+  padding: 11px;
+  font: Courier;
+  background-color: lightsteelblue;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/igor\/Dropbox\/exchange\/sayyesassistant\/static\/sass\/layout\/_guideline\.scss}line{font-family:\000039}}
+section {
+  display: block;
+  background-color: lightblue;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/igor\/Dropbox\/exchange\/sayyesassistant\/static\/sass\/layout\/_guideline\.scss}line{font-family:\0000314}}
+.view-holder {
+  background: white;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/igor\/Dropbox\/exchange\/sayyesassistant\/static\/sass\/layout\/_guideline\.scss}line{font-family:\0000315}}
+.view-holder.loading {
+  background: gray;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/igor\/Dropbox\/exchange\/sayyesassistant\/static\/sass\/layout\/_guideline\.scss}line{font-family:\0000321}}
+.gl-example {
+  display: block;
+  border: 3px solid black;
+  margin-bottom: 10px;
+  max-width: 80%;
+  left: 50%;
+  position: relative;
+  -webkit-transform: translateX(-50%);
+  -moz-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  -o-transform: translateX(-50%);
+  transform: translateX(-50%);
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/igor\/Dropbox\/exchange\/sayyesassistant\/static\/sass\/layout\/_guideline\.scss}line{font-family:\0000329}}
+.gl-example img {
+  left: 50%;
+  position: relative;
+  -webkit-transform: translateX(-50%);
+  -moz-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  -o-transform: translateX(-50%);
+  transform: translateX(-50%);
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/igor\/Dropbox\/exchange\/sayyesassistant\/static\/sass\/layout\/_guideline\.scss}line{font-family:\0000333}}
+.gl-example form {
+  max-width: 98%;
+  left: 50%;
+  position: relative;
+  -webkit-transform: translateX(-50%);
+  -moz-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  -o-transform: translateX(-50%);
+  transform: translateX(-50%);
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/igor\/Dropbox\/exchange\/sayyesassistant\/static\/sass\/layout\/_guideline\.scss}line{font-family:\0000338}}
+.gl-example .gl-input-holder {
+  left: 50%;
+  position: relative;
+  -webkit-transform: translateX(-50%);
+  -moz-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  -o-transform: translateX(-50%);
+  transform: translateX(-50%);
+  margin-bottom: 10px;
+}

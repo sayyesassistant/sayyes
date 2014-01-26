@@ -3,11 +3,5 @@
 */
 @import "bourbon/app/assets/stylesheets/bourbon",
 		"gs/sass/gs",
+		"../mixin/_center-content",
 		"../layout/guideline";
-
-.view-holder {
-	&.loading {
-		background: gray;
-	}
-	background: white;
-}

@@ -4,7 +4,7 @@
 <div class="gl-example">
 	<h2>Headings</h2>
 	<h1>&lt;h1&gt;{{{data.title}}}</h1>
-	<h2>&lt;h2&gt;{{{data.description}}}</h2>
+	<h2>&lt;h2&gt;{{{data.title}}}</h2>
 	<h3>&lt;h3&gt;{{{data.title}}}</h3>
 	<h4>&lt;h4&gt;{{{data.title}}}</h4>
 	<h5>&lt;h5&gt;{{{data.title}}}</h5>
@@ -17,12 +17,15 @@
 <div class="gl-example">
 	<h2>Images</h2>
 	{{#data.picture}}
-		<img src="{{{url}}}" alt="{{{description}}}" />
+		<img class="img-rounded img-responsive" src="{{{url}}}" alt="{{{description}}}" />
 	{{/data.picture}}
 </div>
 <div class="gl-example">
 	<h2>Links</h2>
-	<a href="#">link</a>
+	<a href="#">link 1</a>
+	<a href="#">link 2</a>
+	<a href="#">link 3</a>
+	<a href="#">link 4</a>
 </div>
 
 <div class="gl-example">
@@ -47,11 +50,11 @@
 
 <div class="gl-example">
 	<h2>Navigation list</h2>
-	<nav>
+	<ul class="nav nav-pills">
 	{{#data.nav}}
-		<a href="#{{{view}}}" data-role="nav">{{{label}}}</a>
+		<li><a href="#{{{view}}}" data-role="nav">{{{label}}}</a></li>
 	{{/data.nav}}
-	</nav>
+	</ul>
 </div>
 
 <div class="gl-example">
@@ -62,13 +65,17 @@
 			<input type="hidden" name="{{{name}}}" value="{{{value}}}" />
 		{{/data.form.hiddens}}
 		{{#data.form.inputs}}
-			<input type="{{{type}}}" name="{{{name}}}" placeholder="{{{placeholder}}}" {{{required}}} />
+			<div class="gl-input-holder">
+				<input class="form-control tt-query" type="{{{type}}}" name="{{{name}}}" placeholder="{{{placeholder}}}" {{{required}}} />
+			</div>
 		{{/data.form.inputs}}
-		<nav>
-		{{#data.form.buttons}}
-			<button value="{{{value}}}">{{{label}}}</button>
-		{{/data.form.buttons}}
-		</nav>
+		{{#data.form.buttons.length}}
+			<ul class="nav nav-pills">
+			{{#data.form.buttons}}
+				<li><button class="btn btn-lg btn-block btn-primary" value="{{{value}}}">{{{label}}}</button></li>
+			{{/data.form.buttons}}
+			</ul>
+		{{/data.form.buttons.length}}
 	</form>
 	{{/data.form}}
 </div>

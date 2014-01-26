@@ -17,12 +17,16 @@
 		var mock = {{{raw.mock_data}}};
 	</script>
 	{{/raw.mock_data}}
+	<link href="/flat-ui/bootstrap/css/bootstrap.css" rel="stylesheet">
+	<link href="/flat-ui/css/flat-ui.css" rel="stylesheet">
 	{{#data.css}}
 		<link rel="stylesheet" type="text/css" href="{{data.css}}" /></link>
 	{{/data.css}}
 	{{#data.js}}
 		<script src="{{data.js}}" charset="utf-8" async defer></script>
 	{{/data.js}}
-	<script src="/js-min/third-party/html5shiv.js" charset="utf-8" async defer></script>
+	<!--[if lt IE 9]>
+		<script src="/js-min/third-party/html5shiv.js" charset="utf-8" async></script>
+	<![endif]-->
 </head>
 <body>

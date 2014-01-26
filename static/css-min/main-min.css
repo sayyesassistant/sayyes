@@ -1,1 +1,16 @@
-body{font-family:Verdana, Helvetica, sans-serif;background-color:#DDDDDD}h3.ajaxMessage{display:none;color:red}.errorForm{color:red}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/igor\/Dropbox\/exchange\/sayyesassistant\/static\/sass\/output\/main\.scss}line{font-family:\000031}}
+body {
+  font-family: Verdana, Helvetica, sans-serif;
+  background-color: #DDDDDD;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/igor\/Dropbox\/exchange\/sayyesassistant\/static\/sass\/output\/main\.scss}line{font-family:\000035}}
+h3.ajaxMessage {
+  display: none;
+  color: red;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/igor\/Dropbox\/exchange\/sayyesassistant\/static\/sass\/output\/main\.scss}line{font-family:\000039}}
+.errorForm {
+  color: red;
+}
