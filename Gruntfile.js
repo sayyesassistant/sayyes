@@ -14,25 +14,18 @@ module.exports = function (grunt) {
 	ready = false;
 
 	config = {
-		env : {
-			src : ".",
-			static : "static",
-			bower_path : "bower_components",
-		},
-		arguments : {
-			env : "dev",
-			__warn : "don't change! this object will be auto-filled"
-		},
-		concat : {},
-		jshint : grunt.file.readJSON("./.grunt/config/jshint.json"),
-		watch : grunt.file.readJSON("./.grunt/config/watch.json"),
-		requirejs : grunt.file.readJSON("./.grunt/config/requirejs.json"),
-		tasks : grunt.file.readJSON("./.grunt/config/tasks.json"),
-		app : grunt.file.readJSON("./.grunt/config/app.json"),
-		paths : grunt.file.readJSON("./.grunt/config/paths.json"),
-		sass : grunt.file.readJSON("./.grunt/config/sass.json"),
-		pages : grunt.file.readJSON("./.grunt/config/pages.json"),
-		imagemin : grunt.file.readJSON("./.grunt/config/imagemin.json"),
+		"arguments" : {"env" : "final"},
+		"concat" : {},
+		"env" : grunt.file.readJSON("./.grunt/config/env.json"),
+		"jshint" : grunt.file.readJSON("./.grunt/config/jshint.json"),
+		"watch" : grunt.file.readJSON("./.grunt/config/watch.json"),
+		"requirejs" : grunt.file.readJSON("./.grunt/config/requirejs.json"),
+		"tasks" : grunt.file.readJSON("./.grunt/config/tasks.json"),
+		"js" : grunt.file.readJSON("./.grunt/config/javascript.json"),
+		"paths" : grunt.file.readJSON("./.grunt/config/paths.json"),
+		"sass" : grunt.file.readJSON("./.grunt/config/sass.json"),
+		"pages" : grunt.file.readJSON("./.grunt/config/pages.json"),
+		"imagemin" : grunt.file.readJSON("./.grunt/config/imagemin.json"),
 	};
 	grunt.initConfig(config);
 
@@ -63,7 +56,7 @@ module.exports = function (grunt) {
 		}
 	});
 
-	grunt.registerTask('comp-js', "Build AMD module.\n@usage grunt comp-js -app=app_name -env=final|dev (dev is default)\n@see .grunt/requirejs-config.json\n", function (app) {
+	grunt.registerTask('js', "Build AMD module.\n@usage grunt js -app=app_name -env=final|dev (dev is default)\n@see .grunt/requirejs-config.json\n", function (app) {
 		init();
 		if (!!app){
 			var args = grunt.config.get("arguments");
@@ -75,14 +68,14 @@ module.exports = function (grunt) {
 		task.run(grunt, this);
 	});
 
-	grunt.task.registerTask('comp-js-all', "Run the task 'comp-js' for every app\n@see .grunt/apps.json\n", function () {
+	grunt.task.registerTask('jss', "Run the task 'js' for every app\n@see .grunt/javascript.json\n", function () {
 		init();
-		var app = grunt.config.get("app"),
+		var app = grunt.config.get("js"),
 			forOwn = require("mout/object/forOwn"),
 			tasks = ["jshint"];
 			each_app = function(list){
 				return function(value,prop){
-					list.push("comp-js:"+prop);
+					list.push("js:"+prop);
 				};
 			};
 		forOwn(app,each_app(tasks));
@@ -101,7 +94,7 @@ module.exports = function (grunt) {
 		task.run(grunt, this);
 	});
 
-	grunt.task.registerTask('build', "Combines 'comp-js-all','pages' and 'sass'\nThere is an argument '-reset=true' that removes all tests made before\n", function () {
+	grunt.task.registerTask('build', "Combines all tasks. '\nThere is an argument '-reset=true' that removes all tests made before\n", function () {
 		init();
 		var args = grunt.config.get("arguments");
 		if (!!args && args.reset === "true"){
@@ -110,6 +103,6 @@ module.exports = function (grunt) {
 			grunt.log.warn("Cleaning all tests and generated files...");
 			bash(command,null,grunt);
 		}
-		grunt.task.run(["comp-js-all","pages","sass:final"]);
+		grunt.task.run(["jss","pages","sass:final"]);
 	});
 };

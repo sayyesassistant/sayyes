@@ -13,7 +13,7 @@ exports.run = function (grunt, scope) {
 		return;
 	}
 
-	app_name = grunt.config.get("app")[args.app];
+	app_name = grunt.config.get("js")[args.app];
 
 	if (!app_name){
 		grunt.fail.fatal("Couldn't find target main:'"+args.app+"'");
