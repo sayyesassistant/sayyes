@@ -1,5 +1,5 @@
 /*
-@grunt -task=comp-js-all
+@grunt -task=jss
 */
 require([
 	"sayyes/util/log",

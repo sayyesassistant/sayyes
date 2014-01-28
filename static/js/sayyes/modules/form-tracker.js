@@ -1,5 +1,5 @@
 /*
-@grunt -task=comp-js-all -env=final
+@grunt -task=jss -env=final
 */
 define([
 	"sayyes/util/ajax",

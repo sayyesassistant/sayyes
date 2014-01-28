@@ -1,5 +1,5 @@
 /*
-@grunt -task=comp-js-all
+@grunt -task=jss
 */
 define([
 	"sayyes/util/log",
