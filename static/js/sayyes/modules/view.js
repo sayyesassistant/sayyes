@@ -8,6 +8,7 @@ define([
 	"mustache/mustache",
 	"signals/signals",
 	"sayyes/util/log",
+	"sayyes/modules/ui",
 	"sayyes/plugins/plugin-nav",
 	"sayyes/plugins/plugin-form"
 ], function (
@@ -17,13 +18,14 @@ define([
 	mustache,
 	signal,
 	log,
+	ui,
 	plugin_nav,
 	plugin_form
 ) {
 	var View, _count, plugin_list,
 		class_open, class_close;
 
-	plugin_list = [plugin_nav, plugin_form];
+	plugin_list = [plugin_nav, plugin_form, ui];
 
 	class_open = "open";
 	class_close = "close";
