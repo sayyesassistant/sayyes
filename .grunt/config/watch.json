@@ -1,14 +1,21 @@
 {
 	"scripts" : {
 		"files" : ["static/js/sayyes/**/*.js"],
-		"tasks": ["comp-js-all"],
+		"tasks": ["jss"],
 		"options": {
 			"spawn": false
 		}
 	},
 	"sass" : {
 		"files" : ["static/sass/**/*.scss"],
-		"tasks": ["comp-sass"],
+		"tasks": ["sass:final"],
+		"options": {
+			"spawn": false
+		}
+	},
+	"pages" : {
+		"files" : ["static/templates/**/*.mustache"],
+		"tasks": ["pages"],
 		"options": {
 			"spawn": false
 		}
