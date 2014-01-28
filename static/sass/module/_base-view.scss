@@ -16,6 +16,10 @@
 		@include center-content();
 	}
 
+	& p {
+		text-align: left;
+	}
+
 	& input,
 	& label, {
 		margin-bottom: 10px;
@@ -24,5 +28,10 @@
 
 	& form ul.nav li{
 		margin-right:10px;
+		margin-bottom:10px;
+	}
+
+	& label{
+		text-align: left;
 	}
 }

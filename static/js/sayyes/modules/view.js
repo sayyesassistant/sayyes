@@ -38,7 +38,6 @@ define([
 		instance.template_name = null;
 		instance.template_raw = null;
 		instance.template_fn = null;
-		instance.plugin_closures = null;
 		instance.form_result = {};
 		instance.form_data = null;
 
@@ -94,24 +93,25 @@ define([
 		},
 
 		enable_ux : function () {
-			this.plugin_closures = [];
-			if (!!this.html) {
-				var passed = every(plugin_list,function(self){
-					return function(val){
-						return val(self);
-					};
-				}(this));
+			if (!this.html) {
+				log.warn("view.enable_ux => has no html");
+				return;
 			}
+			function init_closure(self) {
+				return function (c) {
+					c.run(self);
+					c = null;
+				};
+			}
+			forEach(plugin_list,init_closure(this));
 		},
 
 		disable_ux : function () {
 			function dispose_closure(c) {
+				console.log("dispose plugin:",c);
 				c.dispose(); c = null;
 			}
-			if (!!this.html) {
-				forEach(this.plugin_closures,dispose_closure);
-			}
-			this.plugin_closures = null;
+			forEach(plugin_list,dispose_closure);
 		},
 
 		open : function () {
