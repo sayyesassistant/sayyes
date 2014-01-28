@@ -1,5 +1,6 @@
 {
 	"css" : "<%=paths.www_css_folder%>/guideline-min.css",
+	"js" :  "<%=paths.www_js_folder%>/test-view-min.js",
 	"title":"Mock View example",
 	"description":"Some description goes here",
 	"text":"Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.",
@@ -34,6 +35,17 @@
 			"type":"email",
 			"placeholder":"Type your email",
 			"required":"required"
+		}],
+		"radios" : [{
+				"required":"true",
+				"label":"africa",
+				"value":"africa",
+				"name":"destination"
+			} , {
+				"required":"true",
+				"label":"patagonia",
+				"value":"patagonia",
+				"name":"destination"
 		}]
 	}
 }
