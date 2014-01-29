@@ -2,15 +2,13 @@ exports.run = function (grunt, scope) {
 
 	var args = grunt.config.get("arguments"),
 		mustache = require("mustache"),
-		task = grunt.config.get("tasks")["comp-js"],
+		task = grunt.config.get("command")["comp-js"],
 		requirejs = grunt.config.get("requirejs"),
 		bash = require("../modules/mod-run").bash,
 		mix_in = require("mout/object/mixIn"),
 		command;
 
-	console.log(scope.target);
-
-	/*command = task[args.env];
+	command = task[args.env];
 
 	if (!command){
 		grunt.fail.fatal("Couldn't find command for env:'"+args.env+"'");
@@ -29,5 +27,5 @@ exports.run = function (grunt, scope) {
 		}
 	);
 
-	bash(command, scope.async(), grunt);*/
+	bash(command, scope.async(), grunt);
 };

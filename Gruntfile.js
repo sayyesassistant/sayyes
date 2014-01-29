@@ -20,7 +20,7 @@ module.exports = function (grunt) {
 		"jshint" : grunt.file.readJSON("./.grunt/config/jshint.json"),
 		"watch" : grunt.file.readJSON("./.grunt/config/watch.json"),
 		"requirejs" : grunt.file.readJSON("./.grunt/config/requirejs.json"),
-		"tasks" : grunt.file.readJSON("./.grunt/config/tasks.json"),
+		"command" : grunt.file.readJSON("./.grunt/config/command.json"),
 		"js" : grunt.file.readJSON("./.grunt/config/javascript.json"),
 		"paths" : grunt.file.readJSON("./.grunt/config/paths.json"),
 		"sass" : grunt.file.readJSON("./.grunt/config/sass.json"),
@@ -71,12 +71,12 @@ module.exports = function (grunt) {
 		require("./.grunt/tasks/task-render-file").run(grunt, this);
 	});
 
-	grunt.task.registerTask('build', "Combines all tasks. '\nThere is an argument '-reset=true' that removes all tests made before\n", function () {
+	grunt.task.registerTask('build', "Comcommandes all tasks. '\nThere is an argument '-reset=true' that removes all tests made before\n", function () {
 		init();
 		var args = grunt.config.get("arguments");
 		if (!!args && args.reset === "true"){
 			var bash = require("./.grunt/modules/mod-run").bash,
-				command = grunt.config.get("tasks")["clear-tests"];
+				command = grunt.config.get("command")["clear-tests"];
 			grunt.log.warn("Cleaning all tests and generated files...");
 			bash(command,null,grunt);
 		}
