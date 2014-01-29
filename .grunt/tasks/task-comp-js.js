@@ -6,21 +6,11 @@ exports.run = function (grunt, scope) {
 		requirejs = grunt.config.get("requirejs"),
 		bash = require("../modules/mod-run").bash,
 		mix_in = require("mout/object/mixIn"),
-		app_name, command;
+		command;
 
-	if(!args.app){
-		grunt.fail.fatal("No app set on config.");
-		return;
-	}
+	console.log(scope.target);
 
-	app_name = grunt.config.get("js")[args.app];
-
-	if (!app_name){
-		grunt.fail.fatal("Couldn't find target main:'"+args.app+"'");
-		return;
-	}
-
-	command = task[args.env];
+	/*command = task[args.env];
 
 	if (!command){
 		grunt.fail.fatal("Couldn't find command for env:'"+args.env+"'");
@@ -29,7 +19,7 @@ exports.run = function (grunt, scope) {
 
 	command.args = require("mout/array/map")(
 		command.args,function(value, prop){
-			return mustache.render(value,mix_in(requirejs,app_name));
+			return mustache.render(value,mix_in(requirejs,scope.data));
 		}
 	);
 
@@ -39,5 +29,5 @@ exports.run = function (grunt, scope) {
 		}
 	);
 
-	bash(command, scope.async(), grunt);
+	bash(command, scope.async(), grunt);*/
 };

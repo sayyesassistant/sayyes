@@ -56,42 +56,19 @@ module.exports = function (grunt) {
 		}
 	});
 
-	grunt.registerTask('js', "Build AMD module.\n@usage grunt js -app=app_name -env=final|dev (dev is default)\n@see .grunt/requirejs-config.json\n", function (app) {
+	grunt.registerMultiTask('js', "Build AMD module.\n\n@see .grunt/requirejs-config.json\n", function (app) {
 		init();
-		if (!!app){
-			var args = grunt.config.get("arguments");
-				args.app = app;
-			grunt.config.set("arguments",args);
-			grunt.log.writeflags(args);
-		}
-		var task = require("./.grunt/tasks/task-comp-js");
-		task.run(grunt, this);
-	});
-
-	grunt.task.registerTask('jss', "Run the task 'js' for every app\n@see .grunt/javascript.json\n", function () {
-		init();
-		var app = grunt.config.get("js"),
-			forOwn = require("mout/object/forOwn"),
-			tasks = ["jshint"];
-			each_app = function(list){
-				return function(value,prop){
-					list.push("js:"+prop);
-				};
-			};
-		forOwn(app,each_app(tasks));
-		grunt.task.run(tasks);
+		require("./.grunt/tasks/task-comp-js").run(grunt, this);
 	});
 
 	grunt.registerMultiTask('pages', "Create all pages\n@see .grunt/pages.json", function () {
 		init();
-		var task = require("./.grunt/tasks/task-create-page");
-		task.run(grunt, this);
+		require("./.grunt/tasks/task-create-page").run(grunt, this);
 	});
 
 	grunt.task.registerTask('render-template', "Render target argument as mustache template using page data object\n@see .grunt/pages.json\n", function (test_name) {
 		init();
-		var task = require("./.grunt/tasks/task-render-file");
-		task.run(grunt, this);
+		require("./.grunt/tasks/task-render-file").run(grunt, this);
 	});
 
 	grunt.task.registerTask('build', "Combines all tasks. '\nThere is an argument '-reset=true' that removes all tests made before\n", function () {
@@ -103,6 +80,6 @@ module.exports = function (grunt) {
 			grunt.log.warn("Cleaning all tests and generated files...");
 			bash(command,null,grunt);
 		}
-		grunt.task.run(["jss","pages","sass:final"]);
+		grunt.task.run(["jshint","js","pages","sass:final"]);
 	});
 };
