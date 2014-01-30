@@ -1,0 +1,5 @@
+@mixin center-content() {
+	left: 50%;
+	position: relative;
+	@include transform(translateX(-50%));
+}

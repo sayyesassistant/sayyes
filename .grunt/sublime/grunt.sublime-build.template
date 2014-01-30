@@ -1,5 +1,0 @@
-{
-    "cmd": ["grunt", "default:$file", "--no-color"],
-    "selector": "source.js, source.json, source.sass, source.scss",
-    "path": "/usr/local/bin:/usr/bin/"
-}

@@ -3,11 +3,6 @@
 */
 @import "bourbon/app/assets/stylesheets/bourbon",
 		"gs/sass/gs",
+		"../mixin/_center-content",
+		"../module/_base-view",
 		"../layout/guideline";
-
-.view-holder {
-	&.loading {
-		background: gray;
-	}
-	background: white;
-}

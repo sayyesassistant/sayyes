@@ -1,21 +1,23 @@
 /*
-@grunt -task=comp-js-all
+@grunt -task=jss
 */
 define([
 	"mout/object/mixIn",
 	"mout/queryString/decode",
+	"mout/array/forEach",
 	"sayyes/util/log",
 	"signals/signals",
 	"sayyes/util/ajax"
 ],function(
 	mix_in,
 	decode,
+	forEach,
 	log,
 	signals,
 	ajax
 ){
 
-	var ClosureFormBind, blob, submit_event, reg_action;
+	var ClosureFormBind, blob, submit_event, reg_action, instances;
 
 	reg_action = /^[\w]+$/;
 
@@ -84,8 +86,8 @@ define([
 		}
 	};
 
-	return function(view){
-
+	function _init(view){
+		instances = [];
 		function each_form (index,node) {
 			if (!!node){
 				var view_on_success = node.getAttribute("data-on-success"),
@@ -97,18 +99,33 @@ define([
 						"on_success":view_on_success,
 						"on_error":view_on_error
 					});
-					view.plugin_closures.push(blob);
+					instances.push(blob);
 				} else {
 					log.error("plugin-form :: failed to init form, missing base attribute");
 				}
 			}
 		}
-
-		if (!view || (!!view && !view.html)) {
-			log.error("plugin-form got no view!");
-			return false;
-		}
 		view.html.find("form").each(each_form);
-		return true;
+	}
+
+	function _dispose(closure){
+		closure.dispose();
+		closure = null;
+	}
+
+	return  {
+		run : function (view) {
+			if (!view || (!!view && !view.html)) {
+				log.error("plugin-form got no view!");
+				return;
+			}
+			_init(view);
+		},
+		dispose : function(){
+			if (!!instances){
+				forEach(instances, _dispose);
+				instances = null;
+			}
+		}
 	};
 });

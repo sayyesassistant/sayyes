@@ -31,7 +31,7 @@ There are some files here that are related to the tasks we have:
 		"tests"            : "static/tests",
 
 
-- ###<a name="app.json"># </a>app.json
+- ###<a name="javascript.json"># </a>javascript.json
 
 	This document defines the javascripts that will be used by the guideline, examples, tests, and the actual site. This json could be described like:
 
@@ -45,7 +45,7 @@ There are some files here that are related to the tasks we have:
 			"dest":"{{{dest_js_folder}}}/test-view-min.js"
 		}
 
-	This json will be used by the [task comp-js](#comp-js) to create the target javascript file with all modules and dependencies.
+	This json will be used by the [task js](#js) to create the target javascript file with all modules and dependencies.
 
 
 - ###<a name="pages.json"># </a>pages.json
@@ -75,7 +75,7 @@ There are some files here that are related to the tasks we have:
 
 
 - ###<a name="requirejs-config.json"># </a>requirejs-config.json
-	This document will be used by [task comp-js](#comp-js) to provide all namespaces that will be used by [requirejs](http://requirejs.org/docs/api.html#config)
+	This document will be used by [task js](#js) to provide all namespaces that will be used by [requirejs](http://requirejs.org/docs/api.html#config)
 
 - ###<a name="sass.json"># </a>sass.json
 
@@ -97,9 +97,9 @@ We have a few tasks that helps during the development/deployment.
 ###Following the main grunt tasks:
 
 
-- `$: grunt` [comp-js](#comp-js)
+- `$: grunt` [js](#js)
 
-- `$: grunt` [comp-js-all](#comp-js-all)
+- `$: grunt` [jss](#jss)
 
 - `$: grunt` [comp-sass](#comp-sass)
 
@@ -115,13 +115,13 @@ We have a few tasks that helps during the development/deployment.
 
 ---
 
-- ###<a name="comp-js"># </a>comp-js
+- ###<a name="js"># </a>js
 
-	This task uses the [require optimizer](http://requirejs.org/docs/optimization.html) setting the config file as [requirejs-config.json](#requirejs-config.json) to create the javascript that will be loaded by the [pages](#app.json) we have.
+	This task uses the [require optimizer](http://requirejs.org/docs/optimization.html) setting the config file as [requirejs-config.json](#requirejs-config.json) to create the javascript that will be loaded by the [pages](#javascript.json) we have.
 
-- ###<a name="comp-js-all"># </a>comp-js-all
+- ###<a name="jss"># </a>jss
 
-	This is just an *alias task* to run [comp-js](#comp-js) through all [pages](#app.json) we have. Before running the comp-js for each app we also run jshint to make sure that all javascript won't fail.
+	This is just an *alias task* to run [js](#js) through all [pages](#javascript.json) we have. Before running the js for each app we also run jshint to make sure that all javascript won't fail.
 
 - ###<a name="comp-sass"># </a>comp-sass
 
@@ -138,6 +138,6 @@ We have a few tasks that helps during the development/deployment.
 
 - ###<a name="build"># </a>build
 
-	This task combines **comp-js-all**, **pages**, **comp-sass**
+	This task combines **jss**, **pages**, **comp-sass**
 
 [#top](#top)

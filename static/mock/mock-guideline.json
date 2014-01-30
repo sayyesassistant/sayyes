@@ -1,7 +1,8 @@
 {
-	"css" : "/css-min/guideline-min.css",
-	"title": "Lorem ipsum dolor sit amet"
+	"css" : "/css-min/guideline-min.css"
+	,"title": "Lorem ipsum dolor sit amet"
 	,"description":"Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+	,"js" : "<%=paths.www_js_folder%>/test-controller-local-min.js"
 	,"text" : "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco."
 	,"picture" : {
 		"url" : "//placekitten.com/250"
@@ -36,6 +37,15 @@
 		},{
 			"label":"button b",
 			"value":"bar"
+		}],
+		"radios" : [{
+			"label":"button a",
+			"value":"foo",
+			"name":"controll1"
+		},{
+			"label":"button b",
+			"value":"bar",
+			"name":"controll1"
 		}],
 		"inputs" : [{
 			"name":"name",

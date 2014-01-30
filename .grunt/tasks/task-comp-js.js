@@ -2,23 +2,11 @@ exports.run = function (grunt, scope) {
 
 	var args = grunt.config.get("arguments"),
 		mustache = require("mustache"),
-		task = grunt.config.get("tasks")["comp-js"],
+		task = grunt.config.get("command")["comp-js"],
 		requirejs = grunt.config.get("requirejs"),
 		bash = require("../modules/mod-run").bash,
 		mix_in = require("mout/object/mixIn"),
-		app_name, command;
-
-	if(!args.app){
-		grunt.fail.fatal("No app set on config.");
-		return;
-	}
-
-	app_name = grunt.config.get("app")[args.app];
-
-	if (!app_name){
-		grunt.fail.fatal("Couldn't find target main:'"+args.app+"'");
-		return;
-	}
+		command;
 
 	command = task[args.env];
 
@@ -29,7 +17,7 @@ exports.run = function (grunt, scope) {
 
 	command.args = require("mout/array/map")(
 		command.args,function(value, prop){
-			return mustache.render(value,mix_in(requirejs,app_name));
+			return mustache.render(value,mix_in(requirejs,scope.data));
 		}
 	);
 

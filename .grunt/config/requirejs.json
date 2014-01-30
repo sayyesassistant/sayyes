@@ -1,13 +1,14 @@
 {
 	"baseUrl": ".",
 	"paths": {
-		"test": "<%=paths.static%>/test",
+		"test": "<%=env.static%>/test",
 		"lib": "<%=paths.js_sources%>/libs",
 		"sayyes": "<%=paths.js_sources%>/sayyes",
 		"mout": "<%=env.bower_path%>/mout/src",
 		"signals": "<%=env.bower_path%>/js-signals/dist",
 		"zepto": "<%=env.bower_path%>/zeptojs/src",
 		"req": "<%=env.bower_path%>/requirejs",
-		"mustache": "<%=env.bower_path%>/mustache/"
+		"mustache": "<%=env.bower_path%>/mustache",
+		"flatui": "<%=env.static%>/flat-ui/js"
 	}
 }

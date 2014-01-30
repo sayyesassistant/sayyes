@@ -5,28 +5,26 @@ code {
 	font: Courier;
 	background-color:lightsteelblue;
 }
-div.gl-example{
-	display: block;
-	border:1px solid black;
-	margin-bottom: 10px;
-}
-div.gl-example + h2{
-	display: block;
-	font-size: 2em;
-	margin:0;
-	padding: 0;
-}
-section{
+
+section {
 	display: block;
 	background-color: lightblue;
 }
-input[type=text]{
-	display: block;
-	width: 50%;
+
+.view-holder {
+	&.loading {
+		background: gray;
+	}
+	background: white;
 }
-div.alert{
-	display: none;
+
+.gl-example {
+	@include base-view();
 }
-div.show {
-	display: block;
+
+.view {
+	@include base-view();
+	max-width:50%;
+	text-align:center;
+	padding:15px;
 }

@@ -1,18 +1,19 @@
 /*
-@grunt -task=comp-js-all
+@grunt -task=jss
 */
 define([
-	"sayyes/util/log"
+	"sayyes/util/log",
+	"mout/array/forEach"
 ],function(
-	log
+	log,
+	forEach
 ){
 
-	var ClosureNav, blob, click_event, reg;
+	var ClosureNav, blob, click_event, reg, instances;
 
 	click_event = "click";
 
 	reg = /([\w-]+)$/;
-
 
 	function _click_handle (event){
 		var nav_to = event.target.href.match(reg);
@@ -43,22 +44,35 @@ define([
 		}
 	};
 
-	return function(view){
-
+	function _init(view){
+		instances = [];
 		function each_link (index,node) {
 			if (!!node){
 				blob = new ClosureNav(node, view);
-				view.plugin_closures.push(blob);
+				instances.push(blob);
 			}
 		}
-
-		if (!view || (!!view && !view.html)) {
-			log.error("plugin-nav got no view!");
-			return false;
-		}
-
 		view.html.find("[data-role='nav']").each(each_link);
-		return true;
+	}
 
+	function _dispose(closure){
+		closure.dispose();
+		closure = null;
+	}
+
+	return {
+		run : function (view) {
+			if (!view || (!!view && !view.html)) {
+				log.error("plugin-nav got no view!");
+				return;
+			}
+			_init(view);
+		},
+		dispose : function(){
+			if (!!instances){
+				forEach(instances, _dispose);
+				instances = null;
+			}
+		}
 	};
 });

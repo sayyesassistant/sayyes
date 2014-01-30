@@ -1,0 +1,46 @@
+{
+	"build_systems":
+	[
+		{
+			"cmd":
+			[
+				"grunt",
+				"pages",
+				"--no-color"
+			],
+			"name": "Grunt Mustache",
+			"path": "/bin/:/usr/local/bin:/usr/bin/",
+			"selector": "source.mustache"
+		},
+		{
+			"cmd":
+			[
+				"grunt",
+				"sass:final",
+				"--no-color"
+			],
+			"name": "Grunt SASS",
+			"path": "/usr/local/bin:/usr/bin/",
+			"selector": "source.sass, source.scss"
+		},
+		{
+			"cmd":
+			[
+				"grunt",
+				"js",
+				"--no-color"
+			],
+			"name": "Grunt Javascript",
+			"path": "/usr/local/bin:/usr/bin/",
+			"selector": "source.js"
+		}
+	],
+	"folders":
+	[
+		{
+			"path": ".",
+			"folder_exclude_patterns":
+			[".sass-cache","nbproject","views","modules","static/js-min","static/css-min","static/flat-ui"]
+		}
+	]
+}
