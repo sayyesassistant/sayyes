@@ -44,17 +44,17 @@ class Start(AppHandler):
             'mustache_message': mm
         }
 
-        self.render(Const.SESSION + 'start.html', templateValues)
+        self.render(Const.SESSION_PATH + 'start.html', templateValues)
 
 class Create(AppHandler):
 
     def post(self):
         #logging.info(self.isAjax())
         try:
-            user = User()
+            userLogger = UserLogger()
             accessKey = self.request.get('accessKey')
             email = self.request.get('email')
-            user = self.authKey(accessKey, email);
+            user = userLogger.authByEmailAccessKey(email, accessKey);
             if user is None:
                 raise UserWarning("User not found: invalid e-mail or access key")
             session = Session()
@@ -127,7 +127,7 @@ class UserData(AppHandler):
             responseKey = ndb.Key(urlsafe=urlSafeResponseKey)
             r = responseKey.get()
             if r is None:
-                raise UserWarning("invalid responsekey")
+                raise UserWarning("Invalid responsekey")
             self.jsonSuccess('Response found', r.userData)
         except Exception as e:
             self.jsonError("Response not found", 2, e.args)

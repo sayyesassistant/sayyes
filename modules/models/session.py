@@ -1,9 +1,6 @@
 import json
-
 import hashlib
 import logging
-import random
-import string
 from modules.models.user import *
 from google.appengine.ext import ndb
 

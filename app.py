@@ -96,16 +96,6 @@ class AppHandler(webapp2.RequestHandler):
         else:
             return False
 
-    def authKey(self, accessKey, email):
-        
-        user = User()
-        user = User.query(User.email == email).get()
-
-        if user is None or user.accessKey != accessKey:
-            return None
-
-        return user
-
     def createBrowserSession(self, keyId, name, email, accessKey):
         auth = {}
         auth['keyId'] = keyId

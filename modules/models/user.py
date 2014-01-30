@@ -27,3 +27,12 @@ class UserLogger(object):
         
         pwd = self.util.hash(pwd.strip())
         return self.user.query(User.email == email.strip(), User.pwd == pwd).get()
+    
+    def authByEmailAccessKey(self, email, accessKey):
+        
+        self.user = User.query(User.email == email.strip()).get()
+
+        if self.user is None or user.accessKey != accessKey:
+            return None
+
+        return self.user

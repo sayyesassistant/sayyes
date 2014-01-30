@@ -14,7 +14,7 @@ class HomePageCtrl(AppHandler):
 
     def get(self):
         templateValues = {'teste':'teste'}
-        self.render(Const.WEBSITE + 'index.html', templateValues)
+        self.render(Const.WEBSITE_PATH + 'index.html', templateValues)
 
 class ProfileCtrl(AppHandler):
 
@@ -27,7 +27,7 @@ class ProfileCtrl(AppHandler):
         templateValues['auth'] = self.auth
         templateValues['user'] = User.get_by_id(self.auth['keyId'])
 
-        self.render(Const.WEBSITE + 'profile.html', templateValues)
+        self.render(Const.WEBSITE_PATH + 'profile.html', templateValues)
 
     def post(self):
         try:
@@ -56,7 +56,7 @@ class SignUpCtrl(AppHandler):
         self.logged()
         if self.auth is not None:
             self.redirect('/cp')
-        self.render(Const.WEBSITE + 'signup.html', {})
+        self.render(Const.WEBSITE_PATH + 'signup.html', {})
 
     def post(self):
         try:
@@ -66,7 +66,7 @@ class SignUpCtrl(AppHandler):
             usrEmail = User.query(User.email == email).get()
             if usrEmail is not None:
                 raise UserWarning("This e-mail has already been registered")
-            user.email = self.request.get('email')
+            user.email = email
             user.companyName = self.util.stripTags(self.request.get('companyName'))
             user.pwd = self.util.hash(self.request.get('pwd'))
             user.website = self.request.get('website')
@@ -85,7 +85,7 @@ class LogInCtrl(AppHandler):
         self.logged()
         if self.auth is not None:
             self.redirect('/cp')
-        self.render(Const.WEBSITE + 'login.html', {})
+        self.render(Const.WEBSITE_PATH + 'login.html', {})
 
     def post(self):
         logger = UserLogger()
@@ -107,7 +107,7 @@ class LogOutCtrl(AppHandler):
 class ForgotPasswordCtrl(AppHandler):
 
     def get(self):
-        self.render(Const.WEBSITE + 'forgot_password.html', {})
+        self.render(Const.WEBSITE_PATH + 'forgot_password.html', {})
 
     def post(self):
         try:
@@ -293,7 +293,7 @@ class CPCtrl(AppHandler):
         templateValues['json'] = json.dumps(j)
 
 
-        self.render(Const.WEBSITE + 'cp.html', templateValues)
+        self.render(Const.WEBSITE_PATH + 'cp.html', templateValues)
 
 class TplPutCtrl(AppHandler):
 
