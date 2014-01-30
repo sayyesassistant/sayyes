@@ -6,7 +6,7 @@ import webapp2
 from webapp2_extras import sessions
 from modules.toolbox.util import *
 from modules.toolbox.mail import *
-from modules.models.mix import *
+from modules.models.session import *
 from modules.models.user import *
 
 JINJA_ENVIRONMENT = jinja2.Environment(
@@ -33,7 +33,7 @@ class AppHandler(webapp2.RequestHandler):
             self.auth = None
             return False
         
-    # workaround p/ trabalhar com sessoes
+    # workaround to work with custom session using memcache
     # http://webapp-improved.appspot.com/api/webapp2_extras/sessions.html
     def dispatch(self):
         # Get a session store for this request.

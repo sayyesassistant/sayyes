@@ -6,7 +6,7 @@ from app import AppHandler
 from google.appengine.ext import ndb
 from modules.toolbox.util import *
 from modules.toolbox.mail import *
-from modules.models.mix import *
+from modules.models.session import *
 from modules.models.user import *
 
 
